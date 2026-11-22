@@ -286,8 +286,11 @@ export function PortfolioWebsite() {
     fetch(endpoint)
       .then(response => response.ok ? response.json() : Promise.reject(new Error("Sanity request failed")))
       .then(payload => {
-        if (!cancelled && Array.isArray(payload.result) && payload.result.length > 0) {
-          setWorks(payload.result as Work[]);
+        if (!cancelled && Array.isArray(payload.result)) {
+          const cmsWorks = payload.result as Work[];
+          const cmsIds = new Set(cmsWorks.map(work => work.id));
+          const retainedFallback = fallbackWorks.filter(work => !cmsIds.has(work.id));
+          setWorks([...retainedFallback, ...cmsWorks]);
         }
       })
       .catch(() => {
