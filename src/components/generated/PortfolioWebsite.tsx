@@ -278,25 +278,20 @@ function SectionHeading({
 }
 export function PortfolioWebsite() {
   const [active, setActive] = useState("首页");
+  const editableWorkFiles = import.meta.glob("../../../content/works/*.json", {
+    eager: true,
+    import: "default"
+  }) as Record<string, Work>;
   const [works, setWorks] = useState<Work[]>(fallbackWorks);
   useEffect(() => {
-    let cancelled = false;
-    const query = '*[_type == "work" && isVisible != false] | order(sortOrder asc, _createdAt asc) { "id": coalesce(legacyId, _id), title, "type": type, "desc": description, role, result, tags, detail, tone, category, "coverImage": coverImage.asset->url, "gallery": gallery[].asset->url, videoUrl, externalUrl, sortOrder }';
-    const endpoint = "https://df88b3b0.apicdn.sanity.io/v2025-02-19/data/query/production?query=" + encodeURIComponent(query);
-    fetch(endpoint)
-      .then(response => response.ok ? response.json() : Promise.reject(new Error("Sanity request failed")))
-      .then(payload => {
-        if (!cancelled && Array.isArray(payload.result)) {
-          const cmsWorks = payload.result as Work[];
-          const cmsIds = new Set(cmsWorks.map(work => work.id));
-          const retainedFallback = fallbackWorks.filter(work => !cmsIds.has(work.id));
-          setWorks([...retainedFallback, ...cmsWorks]);
-        }
-      })
-      .catch(() => {
-        // Keep the original portfolio content visible if the CMS is empty or temporarily unavailable.
-      });
-    return () => { cancelled = true; };
+    const cmsWorks = Object.values(editableWorkFiles).filter(
+      (work): work is Work => Boolean(work && work.id && work.title)
+    );
+    const cmsIds = new Set(cmsWorks.map(work => work.id));
+    const retainedFallback = fallbackWorks.filter(work => !cmsIds.has(work.id));
+    setWorks([...retainedFallback, ...cmsWorks].sort(
+      (a, b) => (a.sortOrder ?? 9999) - (b.sortOrder ?? 9999)
+    ));
   }, []);
   const [selected, setSelected] = useState<Work | null>(null);
   const [mobileMenu, setMobileMenu] = useState(false);
