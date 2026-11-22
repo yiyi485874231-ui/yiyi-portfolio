@@ -18,5 +18,10 @@
     "项目渠道支付金额突破 6,000 元，为团队项目成果。"
   ],
   "tone": "peach",
+  "coverImage": "/uploads/covers/1-1.png",
+  "gallery": [
+    "/uploads/gallery/1.jpg",
+    "/uploads/gallery/2.png"
+  ],
   "sortOrder": 10
 }
