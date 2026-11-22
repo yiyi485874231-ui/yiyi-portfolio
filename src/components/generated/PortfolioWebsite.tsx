@@ -14,6 +14,7 @@ type Work = {
   coverImage?: string;
   gallery?: string[];
   videoUrl?: string;
+  videoFile?: string;
   externalUrl?: string;
   sortOrder?: number;
 };
@@ -401,6 +402,7 @@ export function PortfolioWebsite() {
             <span className="absolute inset-4 border border-white/60 pointer-events-none"></span>
           </div>
           {selected.gallery && selected.gallery.length > 0 && <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">{selected.gallery.map((src, index) => <img key={index} src={src} alt={selected.title + " " + (index + 1)} className="w-full h-auto object-contain bg-white" />)}</div>}
+          {selected.videoFile && <video className="mt-5 w-full max-h-[560px] bg-black" src={selected.videoFile} controls playsInline />}
           {(selected.videoUrl || selected.externalUrl) && <div className="mt-5 flex flex-wrap gap-3">{selected.videoUrl && <a href={selected.videoUrl} target="_blank" rel="noreferrer" className="text-sm underline underline-offset-4">观看视频 ↗</a>}{selected.externalUrl && <a href={selected.externalUrl} target="_blank" rel="noreferrer" className="text-sm underline underline-offset-4">打开作品链接 ↗</a>}</div>}
           <div className="mt-8 grid md:grid-cols-[1fr_1fr] gap-7">
             <div><h3 className="text-sm font-semibold">项目 / 作品说明</h3><ul className="mt-3 space-y-2">{selected.detail.map((d, i) => <li key={i} className="text-sm leading-7 text-stone-500">· {d}</li>)}</ul></div>
