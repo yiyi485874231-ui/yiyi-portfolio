@@ -1,0 +1,32 @@
+name: Deploy Sanity Studio
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "studio/**"
+      - ".github/workflows/deploy-sanity-studio.yml"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    if: ${{ secrets.SANITY_AUTH_TOKEN != '' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: studio
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: studio/package.json
+      - name: Install Studio dependencies
+        run: npm install
+      - name: Deploy Studio to Sanity hosting
+        env:
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+        run: npx sanity@latest deploy --url yiyi-portfolio-editor --yes
