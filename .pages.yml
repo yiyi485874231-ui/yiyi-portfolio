@@ -1,0 +1,96 @@
+media:
+  input: public/uploads
+  output: /uploads
+  rename: safe
+
+content:
+  - name: works
+    label: 作品管理
+    type: collection
+    path: content/works
+    format: json
+    filename: "{primary}.json"
+    exclude:
+      - .gitkeep
+    view:
+      primary: title
+      fields:
+        - title
+        - category
+        - type
+        - sortOrder
+      sort: sortOrder
+      order: asc
+    fields:
+      - name: id
+        label: 作品 ID
+        type: string
+        required: true
+      - name: title
+        label: 作品名称
+        type: string
+        required: true
+      - name: category
+        label: 所属分类
+        type: select
+        options:
+          values:
+            - label: 内容运营与策划
+              value: 运营
+            - label: 视频与 AI 创作
+              value: 视频
+            - label: 视觉设计作品
+              value: 视觉
+            - label: 其他作品
+              value: 其他
+      - name: type
+        label: 作品类型
+        type: string
+      - name: desc
+        label: 作品简介
+        type: text
+      - name: role
+        label: 个人职责
+        type: text
+      - name: result
+        label: 项目成果
+        type: text
+      - name: tags
+        label: 作品标签
+        type: string
+        list: true
+      - name: detail
+        label: 详细说明
+        type: text
+        list: true
+      - name: tone
+        label: 卡片底色
+        type: select
+        options:
+          values:
+            - peach
+            - lavender
+            - sage
+            - sand
+            - rose
+      - name: coverImage
+        label: 封面图片
+        type: image
+        options:
+          path: public/uploads/covers
+      - name: gallery
+        label: 作品图片 / 视觉展示
+        type: image
+        options:
+          multiple:
+            max: 30
+          path: public/uploads/gallery
+      - name: videoUrl
+        label: 视频链接
+        type: string
+      - name: externalUrl
+        label: 外部作品链接
+        type: string
+      - name: sortOrder
+        label: 排序数字
+        type: number
