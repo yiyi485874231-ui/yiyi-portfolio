@@ -19,8 +19,10 @@ content:
         - category
         - type
         - sortOrder
-      sort: sortOrder
-      order: asc
+      sort: [sortOrder, title]
+      default:
+        sort: sortOrder
+        order: asc
     fields:
       - name: id
         label: 作品 ID
@@ -88,6 +90,12 @@ content:
       - name: videoUrl
         label: 视频链接
         type: string
+      - name: videoFile
+        label: 视频文件
+        type: file
+        options:
+          categories: [video]
+          path: public/uploads/videos
       - name: externalUrl
         label: 外部作品链接
         type: string
