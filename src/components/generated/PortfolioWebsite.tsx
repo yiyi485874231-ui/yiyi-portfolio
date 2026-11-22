@@ -1,5 +1,5 @@
 import './portfolio-fonts.css';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 type Work = {
   id: string;
   title: string;
@@ -10,6 +10,12 @@ type Work = {
   tags: string[];
   detail: string[];
   tone: string;
+  category?: string;
+  coverImage?: string;
+  gallery?: string[];
+  videoUrl?: string;
+  externalUrl?: string;
+  sortOrder?: number;
 };
 const categories = [{
   id: "运营",
@@ -32,7 +38,7 @@ const categories = [{
   en: "OTHER WORKS",
   intro: "交互项目、内容工具、采访写作、摄影摄像及跨媒介实践。"
 }];
-const works: Work[] = [{
+const fallbackWorks: Work[] = [{
   id: "mt",
   title: "磨铁文化｜童书内容运营",
   type: "内容运营 / 小红书",
@@ -272,6 +278,23 @@ function SectionHeading({
 }
 export function PortfolioWebsite() {
   const [active, setActive] = useState("首页");
+  const [works, setWorks] = useState<Work[]>(fallbackWorks);
+  useEffect(() => {
+    let cancelled = false;
+    const query = '*[_type == "work" && isVisible != false] | order(sortOrder asc, _createdAt asc) { "id": coalesce(legacyId, _id), title, "type": type, "desc": description, role, result, tags, detail, tone, category, "coverImage": coverImage.asset->url, "gallery": gallery[].asset->url, videoUrl, externalUrl, sortOrder }';
+    const endpoint = "https://df88b3b0.apicdn.sanity.io/v2025-02-19/data/query/production?query=" + encodeURIComponent(query);
+    fetch(endpoint)
+      .then(response => response.ok ? response.json() : Promise.reject(new Error("Sanity request failed")))
+      .then(payload => {
+        if (!cancelled && Array.isArray(payload.result) && payload.result.length > 0) {
+          setWorks(payload.result as Work[]);
+        }
+      })
+      .catch(() => {
+        // Keep the original portfolio content visible if the CMS is empty or temporarily unavailable.
+      });
+    return () => { cancelled = true; };
+  }, []);
   const [selected, setSelected] = useState<Work | null>(null);
   const [mobileMenu, setMobileMenu] = useState(false);
   const go = (id: string) => {
@@ -282,12 +305,12 @@ export function PortfolioWebsite() {
       block: "start"
     });
   };
-  const grouped = (id: string) => works.filter(w => id === "运营" ? ["mt", "1688", "sanxiang", "college", "personal"].includes(w.id) : id === "视频" ? w.id.startsWith("v") : id === "视觉" ? w.id.startsWith("d") : w.id.startsWith("o"));
+  const grouped = (id: string) => works.filter(w => w.category ? w.category === id : id === "运营" ? ["mt", "1688", "sanxiang", "college", "personal"].includes(w.id) : id === "视频" ? w.id.startsWith("v") : id === "视觉" ? w.id.startsWith("d") : w.id.startsWith("o"));
   const card = (w: Work, i: number) => <button key={w.id} onClick={() => setSelected(w)} className="text-left group bg-white border border-stone-200/80 p-5 md:p-6 flex flex-col min-h-[250px] hover:border-stone-400 hover:-translate-y-0.5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-500">
     <div className="flex justify-between gap-3 text-[11px] text-stone-400"><span>{w.type}</span><span>{String(i + 1).padStart(2, "0")}</span></div>
     <div className={"mt-5 mb-5 aspect-[16/7] flex items-center justify-center relative overflow-hidden " + (toneClass[w.tone] || "bg-stone-100")}>
-      <span className="text-4xl font-light text-stone-500/50">{String(i + 1).padStart(2, "0")}</span>
-      <span className="absolute inset-3 border border-white/60"></span>
+      {w.coverImage ? <img src={w.coverImage} alt={w.title} className="absolute inset-0 w-full h-full object-cover" /> : <span className="text-4xl font-light text-stone-500/50">{String(i + 1).padStart(2, "0")}</span>}
+      <span className="absolute inset-3 border border-white/60 pointer-events-none"></span>
     </div>
     <h3 className="text-base md:text-lg font-semibold tracking-tight">{w.title}</h3>
     <p className="mt-2 text-xs md:text-sm leading-6 text-stone-500 line-clamp-2">{w.desc}</p>
@@ -376,9 +399,11 @@ export function PortfolioWebsite() {
           <h2 className="mt-3 text-2xl md:text-3xl font-semibold tracking-tight">{selected.title}</h2>
           <p className="mt-4 text-sm md:text-base text-stone-500 leading-7">{selected.desc}</p>
           <div className={"mt-7 aspect-[16/7] min-h-[150px] flex items-center justify-center relative " + (toneClass[selected.tone] || "bg-stone-100")}>
-            <span className="text-5xl font-light text-stone-500/50">作品展示区</span>
-            <span className="absolute inset-4 border border-white/60"></span>
+            {selected.coverImage ? <img src={selected.coverImage} alt={selected.title} className="absolute inset-0 w-full h-full object-contain" /> : <span className="text-5xl font-light text-stone-500/50">作品展示区</span>}
+            <span className="absolute inset-4 border border-white/60 pointer-events-none"></span>
           </div>
+          {selected.gallery && selected.gallery.length > 0 && <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">{selected.gallery.map((src, index) => <img key={index} src={src} alt={selected.title + " " + (index + 1)} className="w-full h-auto object-contain bg-white" />)}</div>}
+          {(selected.videoUrl || selected.externalUrl) && <div className="mt-5 flex flex-wrap gap-3">{selected.videoUrl && <a href={selected.videoUrl} target="_blank" rel="noreferrer" className="text-sm underline underline-offset-4">观看视频 ↗</a>}{selected.externalUrl && <a href={selected.externalUrl} target="_blank" rel="noreferrer" className="text-sm underline underline-offset-4">打开作品链接 ↗</a>}</div>}
           <div className="mt-8 grid md:grid-cols-[1fr_1fr] gap-7">
             <div><h3 className="text-sm font-semibold">项目 / 作品说明</h3><ul className="mt-3 space-y-2">{selected.detail.map((d, i) => <li key={i} className="text-sm leading-7 text-stone-500">· {d}</li>)}</ul></div>
             <div><h3 className="text-sm font-semibold">个人参与</h3><p className="mt-3 text-sm leading-7 text-stone-500">{selected.role}</p>{selected.result && <><h3 className="mt-6 text-sm font-semibold">项目结果</h3><p className="mt-2 text-sm leading-7 text-stone-700">{selected.result}</p></>}</div>
