@@ -27,9 +27,9 @@
       "width": "full",
       "radius": 16,
       "image": "/uploads/gallery/3.png",
-      "imageWidth": 25,
+      "imageWidth": 50,
       "imageRatio": "original",
-      "imageAlign": "center"
+      "imageAlign": "left"
     }
   ],
   "sortOrder": 40
