@@ -16,5 +16,21 @@
     "公众号用户规模达到 7,680+。"
   ],
   "tone": "sand",
+  "coverImage": "/uploads/covers/file-1.png",
+  "coverFit": "contain",
+  "coverRatio": "wide",
+  "canvasBlocks": [
+    {
+      "type": "canvas",
+      "placement": "after_project_info",
+      "background": "#F5F0E6",
+      "width": "full",
+      "radius": 16,
+      "image": "/uploads/gallery/3.png",
+      "imageWidth": 25,
+      "imageRatio": "original",
+      "imageAlign": "center"
+    }
+  ],
   "sortOrder": 40
 }
