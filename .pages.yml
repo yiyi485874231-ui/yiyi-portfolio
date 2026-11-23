@@ -151,6 +151,111 @@ content:
               value: before
             - label: 项目说明之后
               value: after
+      - name: canvasBlocks
+        label: 自由展示模块（可重复添加）
+        type: block
+        list:
+          max: 20
+          collapsible:
+            collapsed: true
+            summary: "{title} ({index})"
+        blockKey: type
+        blocks:
+          - name: color_panel
+            label: 色块画布
+            fields:
+              - name: title
+                label: 模块标题
+                type: string
+              - name: background
+                label: 背景颜色（HEX）
+                type: string
+                description: 例如 #F1E7DF
+              - name: width
+                label: 色块宽度
+                type: select
+                options:
+                  values:
+                    - label: 整行
+                      value: full
+                    - label: 半行
+                      value: half
+                    - label: 三分之一
+                      value: third
+              - name: height
+                label: 色块最小高度（像素）
+                type: number
+              - name: padding
+                label: 内边距（像素）
+                type: number
+              - name: radius
+                label: 圆角大小（像素）
+                type: number
+              - name: layout
+                label: 图片与文字排列
+                type: select
+                options:
+                  values:
+                    - label: 图片在上，文字在下
+                      value: vertical
+                    - label: 图片与文字左右排列
+                      value: horizontal
+              - name: image
+                label: 色块内图片
+                type: image
+                options:
+                  path: public/uploads/gallery
+              - name: imagePosition
+                label: 图片位置
+                type: select
+                options:
+                  values:
+                    - label: 左侧 / 上方
+                      value: start
+                    - label: 右侧 / 下方
+                      value: end
+              - name: body
+                label: 模块说明文字
+                type: text
+          - name: image
+            label: 独立图片模块
+            fields:
+              - name: image
+                label: 图片
+                type: image
+                options:
+                  path: public/uploads/gallery
+              - name: width
+                label: 图片宽度
+                type: select
+                options:
+                  values:
+                    - label: 整行
+                      value: full
+                    - label: 半行
+                      value: half
+                    - label: 三分之一
+                      value: third
+          - name: text
+            label: 文字说明模块
+            fields:
+              - name: title
+                label: 标题
+                type: string
+              - name: body
+                label: 说明文字
+                type: text
+              - name: width
+                label: 模块宽度
+                type: select
+                options:
+                  values:
+                    - label: 整行
+                      value: full
+                    - label: 半行
+                      value: half
+                    - label: 三分之一
+                      value: third
       - name: videoUrl
         label: 视频链接
         type: string
