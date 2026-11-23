@@ -2,7 +2,7 @@
   "id": "v4",
   "title": "锦年 MV",
   "category": "视频",
-  "type": "音乐视频 / 剪辑",
+  "type": "AI音乐视频 / 剪辑",
   "desc": "AI音乐视频作品。",
   "role": "视频剪辑与AI创作实践。",
   "tags": [
@@ -10,10 +10,10 @@
     "视频剪辑"
   ],
   "detail": [
-    "音乐视频作品，后续可补充完整视频及创作说明。"
+    "AI音乐MV视频作品\n以细腻国风动画演绎蜀绣非遗之美，在一针一线的流转中诉说跨越时光的锦年情思。"
   ],
   "tone": "sand",
-  "coverImage": "/uploads/covers/jingnian1.jpg",
+  "coverImage": "/uploads/covers/jingnian1-1.jpg",
   "coverFit": "cover",
   "coverRatio": "wide",
   "sortOrder": 90
