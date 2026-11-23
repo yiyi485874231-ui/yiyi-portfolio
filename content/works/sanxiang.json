@@ -23,6 +23,8 @@
       "placement": "after_project_info",
       "background": "#F5F0E6",
       "width": "full",
+      "moduleAlign": "left",
+      "spacing": "compact",
       "size": "standard",
       "radius": 16,
       "image": "/uploads/gallery/file-1.jpg",
