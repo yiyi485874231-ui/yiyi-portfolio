@@ -12,6 +12,9 @@ type CanvasBlock = {
   radius?: number;
   layout?: "vertical" | "horizontal";
   image?: string;
+  imageWidth?: number;
+  imageRatio?: "original" | "landscape" | "square" | "portrait";
+  imageAlign?: "left" | "center" | "right";
   imagePosition?: "start" | "end";
   body?: string;
 };
@@ -359,7 +362,7 @@ export function PortfolioWebsite() {
         const horizontal = (block.type === "color_panel" || block.type === "canvas") && block.layout === "horizontal" && hasText;
         const imageFirst = block.imagePosition !== "end";
         return <div key={index} style={blockStyle} className={widthClass + " " + (horizontal ? "flex flex-col md:flex-row" : "flex flex-col") + (isImageOnly ? "" : " gap-5") + " items-center overflow-hidden"}>
-          {block.image && <img src={block.image} alt={selected.title + " 模块图片"} className={horizontal ? "w-full md:w-1/2 h-auto object-contain" : "w-full h-auto object-contain"} style={{ order: horizontal && !imageFirst ? 2 : 1 }} />}
+          {block.image && <img src={block.image} alt={selected.title + " 模块图片"} className={horizontal ? "max-w-full h-auto object-contain" : "h-auto object-contain"} style={{ width: block.imageWidth && block.imageWidth > 0 ? Math.min(100, Math.max(10, block.imageWidth)) + "%" : (horizontal ? "50%" : "100%"), aspectRatio: block.imageRatio === "square" ? "1 / 1" : block.imageRatio === "portrait" ? "3 / 4" : block.imageRatio === "landscape" ? "4 / 3" : undefined, objectFit: "contain", alignSelf: block.imageAlign === "left" ? "flex-start" : block.imageAlign === "right" ? "flex-end" : "center", order: horizontal && !imageFirst ? 2 : 1 }} />}
           {hasText && <div className="flex-1 min-w-0 w-full" style={{ order: horizontal && !imageFirst ? 1 : 2 }}>
             {block.title && <h3 className="text-lg font-semibold">{block.title}</h3>}
             {block.body && <p className="mt-3 text-sm leading-7 text-stone-700 whitespace-pre-line">{block.body}</p>}
