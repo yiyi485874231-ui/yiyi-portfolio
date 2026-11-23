@@ -404,10 +404,32 @@ export function PortfolioWebsite() {
           {selected.gallery && selected.gallery.length > 0 && <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">{selected.gallery.map((src, index) => <img key={index} src={src} alt={selected.title + " " + (index + 1)} className="w-full h-auto object-contain bg-white" />)}</div>}
           {selected.videoFile && <video className="mt-5 w-full max-h-[560px] bg-black" src={selected.videoFile} controls playsInline />}
           {(selected.videoUrl || selected.externalUrl) && <div className="mt-5 flex flex-wrap gap-3">{selected.videoUrl && <a href={selected.videoUrl} target="_blank" rel="noreferrer" className="text-sm underline underline-offset-4">观看视频 ↗</a>}{selected.externalUrl && <a href={selected.externalUrl} target="_blank" rel="noreferrer" className="text-sm underline underline-offset-4">打开作品链接 ↗</a>}</div>}
-          <div className="mt-8 grid md:grid-cols-[1fr_1fr] gap-7">
+          {selected.id === "1688" ? <>
+            <div className="mt-7 grid grid-cols-3 gap-2 md:gap-3">
+              {[["30","模拟参与商家"],["14天","模拟活动周期"],["≥70%","模拟体验目标"]].map(([value,label]) => <div key={label} className="bg-[#eeeaf3] px-3 py-4 md:px-5 md:py-5"><div className="text-xl md:text-2xl font-semibold tracking-tight text-stone-900">{value}</div><div className="mt-1 text-[10px] md:text-xs text-stone-500">{label}</div></div>)}
+            </div>
+            <div className="mt-8">
+              <div className="text-[10px] tracking-[.2em] text-stone-400 mb-4">PROJECT HIGHLIGHTS / 核心能力</div>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {selected.detail.map((d, i) => {
+                  const [heading, ...body] = d.split("\\n");
+                  return <div key={i} className={"p-4 md:p-5 " + (i === 0 ? "bg-[#eeeaf3] sm:col-span-2" : "bg-white border border-stone-200")}>
+                    <div className="text-xs text-stone-400 mb-2">{String(i + 1).padStart(2, "0")}</div>
+                    <h3 className="text-sm md:text-base font-semibold">{heading.replace(/^\\d+｜/, "")}</h3>
+                    <p className="mt-2 text-sm leading-6 text-stone-500">{body.join(" ")}</p>
+                  </div>;
+                })}
+              </div>
+            </div>
+            <div className="mt-7 bg-stone-900 text-white p-5 md:p-6">
+              <div className="text-xs text-stone-400 mb-2">MY ROLE / 个人职责</div>
+              <p className="text-sm leading-7 text-stone-200">{selected.role}</p>
+            </div>
+            <p className="mt-4 text-xs leading-6 text-stone-400">注：30名商家、14天及≥70%均为模拟方案设定，不代表真实招募、执行或业务结果。项目基于公开资料与个人体验，尚未进行真实用户访谈。</p>
+          </> : <div className="mt-8 grid md:grid-cols-[1fr_1fr] gap-7">
             <div><h3 className="text-sm font-semibold">项目 / 作品说明</h3><ul className="mt-3 space-y-2">{selected.detail.map((d, i) => <li key={i} className="text-sm leading-7 text-stone-500">· {d}</li>)}</ul></div>
             <div><h3 className="text-sm font-semibold">个人参与</h3><p className="mt-3 text-sm leading-7 text-stone-500">{selected.role}</p>{selected.result && <><h3 className="mt-6 text-sm font-semibold">项目结果</h3><p className="mt-2 text-sm leading-7 text-stone-700">{selected.result}</p></>}</div>
-          </div>
+          </div>}
           <div className="mt-7 flex flex-wrap gap-2">{selected.tags.map(t => <span key={t} className="text-xs bg-stone-100 text-stone-500 px-3 py-2">{t}</span>)}</div>
           <p className="mt-8 pt-5 border-t border-stone-200 text-xs leading-6 text-stone-400">当前为作品详情结构预览，正式素材（图片、视频、文档或外部链接）将在下一步通过内容后台逐项补充。</p>
         </div>
