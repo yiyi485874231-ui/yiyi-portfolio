@@ -358,7 +358,7 @@ export function PortfolioWebsite() {
         const sizePadding = block.size === "compact" ? 8 : block.size === "spacious" ? 24 : 16;
         const blockStyle: React.CSSProperties = {
           minHeight: block.height && block.height > 0 ? block.height : undefined,
-          padding: isSanxiangInfoImage ? 0 : (block.padding ?? sizePadding),
+          padding: block.padding ?? sizePadding,
           borderRadius: block.type === "color_panel" || block.type === "canvas" ? (block.radius ?? 8) : 0,
           backgroundColor: block.type === "color_panel" || block.type === "canvas" ? (block.background || "#F1E7DF") : undefined,
           marginTop: isSanxiangInfoImage ? 0 : moduleSpacing,
