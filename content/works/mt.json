@@ -29,7 +29,7 @@
     {
       "type": "color_panel",
       "placement": "after_project_info",
-      "background": "#F5F0E6",
+      "background": "#E8EFE7",
       "width": "half",
       "size": "standard",
       "radius": 16,
