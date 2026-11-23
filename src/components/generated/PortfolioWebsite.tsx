@@ -348,11 +348,13 @@ export function PortfolioWebsite() {
     const blocks = selected.canvasBlocks.filter(block => (block.placement || "after_cover") === placement);
     if (!blocks.length) return null;
     const isSanxiangInfoImage = selected?.id === "sanxiang" && placement === "after_project_info";
-    return <div className={(isSanxiangInfoImage ? "mt-0" : "mt-6") + " grid grid-cols-1 md:grid-cols-6 gap-4"}>
+    const isCollegeInfoImage = selected?.id === "college" && placement === "after_project_info";
+    const isPortfolioInfoImage = isSanxiangInfoImage || isCollegeInfoImage;
+    return <div className={(isPortfolioInfoImage ? "mt-0" : "mt-6") + " grid grid-cols-1 md:grid-cols-6 gap-4"}>
       {blocks.map((block, index) => {
         const hasText = Boolean(block.title || block.body);
         const isImageOnly = Boolean(block.image && !hasText);
-        const hasIndependentImageWidth = block.type === "canvas" && Boolean(block.image && block.imageWidth && block.imageWidth > 0) && !isSanxiangInfoImage;
+        const hasIndependentImageWidth = block.type === "canvas" && Boolean(block.image && block.imageWidth && block.imageWidth > 0) && !isPortfolioInfoImage;
         const widthClass = hasIndependentImageWidth ? "col-span-1 md:col-span-6" : block.width === "third" ? "col-span-1 md:col-span-2" : block.width === "half" ? "col-span-1 md:col-span-3" : "col-span-1 md:col-span-6";
         const moduleSpacing = block.spacing === "compact" ? 8 : block.spacing === "spacious" ? 40 : 24;
         const sizePadding = block.size === "compact" ? 8 : block.size === "spacious" ? 24 : 16;
@@ -361,7 +363,7 @@ export function PortfolioWebsite() {
           padding: block.padding ?? sizePadding,
           borderRadius: block.type === "color_panel" || block.type === "canvas" ? (block.radius ?? 8) : 0,
           backgroundColor: block.type === "color_panel" || block.type === "canvas" ? (block.background || "#F1E7DF") : undefined,
-          marginTop: isSanxiangInfoImage ? 0 : moduleSpacing,
+          marginTop: isPortfolioInfoImage ? 0 : moduleSpacing,
           justifySelf: block.moduleAlign === "left" ? "start" : block.moduleAlign === "right" ? "end" : "center",
           ...(hasIndependentImageWidth ? {
             width: Math.min(100, Math.max(10, block.imageWidth!)) + "%"
@@ -496,7 +498,7 @@ export function PortfolioWebsite() {
               <p className="text-sm leading-7 text-stone-200">{selected.role}</p>
             </div>
             <p className="mt-4 text-xs leading-6 text-stone-400">注：30名商家、14天及≥70%均为模拟方案设定，不代表真实招募、执行或业务结果。项目基于公开资料与个人体验，尚未进行真实用户访谈。</p>
-          </> : selected.id === "sanxiang" ? <div className="mt-8 grid md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] gap-7 md:gap-9 items-start">
+          </> : (selected.id === "sanxiang" || selected.id === "college") ? <div className="mt-8 grid md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] gap-7 md:gap-9 items-start">
             <div className="min-w-0">{renderCanvasBlocks("after_project_info")}</div>
             <div className="min-w-0 space-y-7">
               <section><h3 className="text-sm font-semibold">项目 / 作品说明</h3><ul className="mt-3 space-y-2">{selected.detail.map((d, i) => <li key={i} className="text-sm leading-7 text-stone-500">· {d}</li>)}</ul></section>
@@ -512,7 +514,7 @@ export function PortfolioWebsite() {
           {selected.galleryPosition === "after" && renderCanvasBlocks("before_gallery")}
           {selected.galleryPosition === "after" && selected.gallery && selected.gallery.length > 0 && <div className="mt-5 grid gap-3" style={{ gridTemplateColumns: `repeat(${Math.min(3, Math.max(1, Number(selected.galleryColumns) || 2))}, minmax(0, 1fr))` }}>{selected.gallery.map((src, index) => <div key={index} className="bg-white overflow-hidden" style={{ aspectRatio: selected.galleryRatio === "square" ? "1 / 1" : selected.galleryRatio === "portrait" ? "3 / 4" : selected.galleryRatio === "landscape" ? "4 / 3" : undefined }}><img src={src} alt={selected.title + " " + (index + 1)} className={selected.galleryRatio === "original" || !selected.galleryRatio ? "w-full h-auto" : "w-full h-full"} style={{ objectFit: selected.galleryRatio === "original" || !selected.galleryRatio ? "contain" : selected.galleryFit === "cover" ? "cover" : "contain" }} /></div>)}</div>}
           {selected.galleryPosition === "after" && renderCanvasBlocks("after_gallery")}
-          {selected.id !== "sanxiang" && renderCanvasBlocks("after_project_info")}
+          {selected.id !== "sanxiang" && selected.id !== "college" && renderCanvasBlocks("after_project_info")}
           {renderCanvasBlocks("bottom")}
           <div className="mt-7 flex flex-wrap gap-2">{selected.tags.map(t => <span key={t} className="text-xs bg-stone-100 text-stone-500 px-3 py-2">{t}</span>)}</div>
           <p className="mt-8 pt-5 border-t border-stone-200 text-xs leading-6 text-stone-400">当前为作品详情结构预览，正式素材（图片、视频、文档或外部链接）将在下一步通过内容后台逐项补充。</p>
