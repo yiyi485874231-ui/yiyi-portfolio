@@ -15,5 +15,24 @@
     "播放量 1.4 万。"
   ],
   "tone": "peach",
+  "coverImage": "/uploads/covers/douyin1.jpg",
+  "coverFit": "contain",
+  "coverRatio": "wide",
+  "canvasBlocks": [
+    {
+      "type": "canvas",
+      "placement": "after_project_info",
+      "background": "#F5F0E6",
+      "width": "full",
+      "moduleAlign": "center",
+      "spacing": "standard",
+      "size": "standard",
+      "radius": 16,
+      "image": "/uploads/gallery/2-2.jpg",
+      "imageWidth": 50,
+      "imageRatio": "original",
+      "imageAlign": "center"
+    }
+  ],
   "sortOrder": 60
 }
