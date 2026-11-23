@@ -337,6 +337,37 @@ export function PortfolioWebsite() {
     <p className="mt-2 text-xs md:text-sm leading-6 text-stone-500 line-clamp-2">{w.desc}</p>
     <span className="mt-auto pt-4 text-xs text-stone-500 flex items-center gap-2">查看作品详情 <span className="group-hover:translate-x-1 transition-transform">→</span></span>
   </button>;
+
+  const renderCanvasBlocks = (placement: NonNullable<CanvasBlock["placement"]>) => {
+    if (selected?.id === "1688" || !selected?.canvasBlocks?.length) return null;
+    const blocks = selected.canvasBlocks.filter(block => (block.placement || "after_cover") === placement);
+    if (!blocks.length) return null;
+    return <div className="mt-6 grid grid-cols-1 md:grid-cols-6 gap-4">
+      {blocks.map((block, index) => {
+        const widthClass = block.width === "third" ? "col-span-1 md:col-span-2" : block.width === "half" ? "col-span-1 md:col-span-3" : "col-span-1 md:col-span-6";
+        const hasText = Boolean(block.title || block.body);
+        const isImageOnly = Boolean(block.image && !hasText);
+        const sizePadding = block.size === "compact" ? 12 : block.size === "spacious" ? 32 : 20;
+        const blockStyle: React.CSSProperties = {
+          minHeight: block.height && block.height > 0 ? block.height : undefined,
+          padding: isImageOnly ? 0 : (block.padding ?? sizePadding),
+          borderRadius: block.type === "color_panel" ? (block.radius ?? 8) : 0,
+          backgroundColor: block.type === "color_panel" ? (block.background || "#F1E7DF") : undefined
+        };
+        if (block.type === "image") return block.image ? <div key={index} className={widthClass + " overflow-hidden"}><img src={block.image} alt={selected.title + " 展示图片"} className="block w-full h-auto object-contain" /></div> : null;
+        if (block.type === "text") return <div key={index} style={blockStyle} className={widthClass + " bg-white border border-stone-200"}><h3 className="font-semibold text-base">{block.title}</h3><p className="mt-3 text-sm leading-7 text-stone-600 whitespace-pre-line">{block.body}</p></div>;
+        const horizontal = block.layout === "horizontal" && hasText;
+        const imageFirst = block.imagePosition !== "end";
+        return <div key={index} style={blockStyle} className={widthClass + " " + (horizontal ? "flex flex-col md:flex-row" : "flex flex-col") + (isImageOnly ? "" : " gap-5") + " items-center overflow-hidden"}>
+          {block.image && <img src={block.image} alt={selected.title + " 模块图片"} className={horizontal ? "w-full md:w-1/2 h-auto object-contain" : "w-full h-auto object-contain"} style={{ order: horizontal && !imageFirst ? 2 : 1 }} />}
+          {hasText && <div className="flex-1 min-w-0 w-full" style={{ order: horizontal && !imageFirst ? 1 : 2 }}>
+            {block.title && <h3 className="text-lg font-semibold">{block.title}</h3>}
+            {block.body && <p className="mt-3 text-sm leading-7 text-stone-700 whitespace-pre-line">{block.body}</p>}
+          </div>}
+        </div>;
+      })}
+    </div>;
+  };
   return <main className="min-h-screen bg-[#faf9f6] text-stone-900 selection:bg-stone-200">
     <header className="sticky top-0 z-30 border-b border-stone-200/80 bg-[#faf9f6]/95 backdrop-blur">
       <div className="mx-auto max-w-7xl px-5 md:px-10 h-[68px] flex items-center justify-between gap-4">
@@ -423,44 +454,14 @@ export function PortfolioWebsite() {
             {selected.coverImage ? <img src={selected.coverImage} alt={selected.title} className="absolute inset-0 w-full h-full" style={{ objectFit: selected.id === "1688" || selected.coverFit === "contain" ? "contain" : "cover" }} /> : <span className="text-5xl font-light text-stone-500/50">作品展示区</span>}
             <span className="absolute inset-4 border border-white/60 pointer-events-none"></span>
           </div>
+          {renderCanvasBlocks("after_cover")}
+          {renderCanvasBlocks("before_gallery")}
+          {renderCanvasBlocks("before_gallery")}
           {selected.galleryPosition !== "after" && selected.gallery && selected.gallery.length > 0 && <div className="mt-5 grid gap-3" style={{ gridTemplateColumns: `repeat(${Math.min(3, Math.max(1, Number(selected.galleryColumns) || 2))}, minmax(0, 1fr))` }}>{selected.gallery.map((src, index) => <div key={index} className="bg-white overflow-hidden" style={{ aspectRatio: selected.galleryRatio === "square" ? "1 / 1" : selected.galleryRatio === "portrait" ? "3 / 4" : selected.galleryRatio === "landscape" ? "4 / 3" : undefined }}><img src={src} alt={selected.title + " " + (index + 1)} className={selected.galleryRatio === "original" || !selected.galleryRatio ? "w-full h-auto" : "w-full h-full"} style={{ objectFit: selected.galleryRatio === "original" || !selected.galleryRatio ? "contain" : selected.galleryFit === "cover" ? "cover" : "contain" }} /></div>)}</div>}
-          {selected.id !== "1688" && selected.canvasBlocks && selected.canvasBlocks.length > 0 && (() => {
-            const renderCanvasBlocks = (placement: NonNullable<CanvasBlock["placement"]>) => selected.canvasBlocks!
-              .filter(block => (block.placement || "after_cover") === placement)
-              .map((block, index) => {
-                const widthClass = block.width === "third" ? "col-span-1 md:col-span-2" : block.width === "half" ? "col-span-1 md:col-span-3" : "col-span-1 md:col-span-6";
-                const hasText = Boolean(block.title || block.body);
-                const isImageOnly = Boolean(block.image && !hasText);
-                const sizePadding = block.size === "compact" ? 12 : block.size === "spacious" ? 32 : 20;
-                const blockStyle: React.CSSProperties = {
-                  minHeight: block.height && block.height > 0 ? block.height : undefined,
-                  padding: isImageOnly ? 0 : (block.padding ?? sizePadding),
-                  borderRadius: block.type === "color_panel" ? (block.radius ?? 8) : 0,
-                  backgroundColor: block.type === "color_panel" ? (block.background || "#F1E7DF") : undefined
-                };
-                if (block.type === "image") return block.image ? <div key={index} className={widthClass + " overflow-hidden"}><img src={block.image} alt={selected.title + " 展示图片"} className="block w-full h-auto object-contain" /></div> : null;
-                if (block.type === "text") return <div key={index} style={blockStyle} className={widthClass + " bg-white border border-stone-200"}><h3 className="font-semibold text-base">{block.title}</h3><p className="mt-3 text-sm leading-7 text-stone-600 whitespace-pre-line">{block.body}</p></div>;
-                const horizontal = block.layout === "horizontal" && hasText;
-                const imageFirst = block.imagePosition !== "end";
-                return <div key={index} style={blockStyle} className={widthClass + " " + (horizontal ? "flex flex-col md:flex-row" : "flex flex-col") + (isImageOnly ? "" : " gap-5") + " items-center overflow-hidden"}>
-                  {block.image && <img src={block.image} alt={selected.title + " 模块图片"} className={horizontal ? "w-full md:w-1/2 h-auto object-contain" : "w-full h-auto object-contain"} style={{ order: horizontal && !imageFirst ? 2 : 1 }} />}
-                  {hasText && <div className="flex-1 min-w-0 w-full" style={{ order: horizontal && !imageFirst ? 1 : 2 }}>
-                    {block.title && <h3 className="text-lg font-semibold">{block.title}</h3>}
-                    {block.body && <p className="mt-3 text-sm leading-7 text-stone-700 whitespace-pre-line">{block.body}</p>}
-                  </div>}
-                </div>;
-              });
-            return <div className="mt-6 grid grid-cols-1 md:grid-cols-6 gap-4">
-              {renderCanvasBlocks("after_cover")}
-              {renderCanvasBlocks("before_gallery")}
-              {renderCanvasBlocks("after_gallery")}
-              {renderCanvasBlocks("before_project_info")}
-              {renderCanvasBlocks("after_project_info")}
-              {renderCanvasBlocks("bottom")}
-            </div>;
-          })()}
           {selected.videoFile && <video className="mt-5 w-full max-h-[560px] bg-black" src={selected.videoFile} controls playsInline />}
           {(selected.videoUrl || selected.externalUrl) && <div className="mt-5 flex flex-wrap gap-3">{selected.videoUrl && <a href={selected.videoUrl} target="_blank" rel="noreferrer" className="text-sm underline underline-offset-4">观看视频 ↗</a>}{selected.externalUrl && <a href={selected.externalUrl} target="_blank" rel="noreferrer" className="text-sm underline underline-offset-4">打开作品链接 ↗</a>}</div>}
+          {renderCanvasBlocks("after_gallery")}
+          {renderCanvasBlocks("before_project_info")}
           {selected.id === "1688" ? <>
             <div className="mt-7 grid grid-cols-3 gap-2 md:gap-3">
               {[["30","模拟参与商家"],["14天","模拟活动周期"],["≥70%","模拟体验目标"]].map(([value,label]) => <div key={label} className="bg-[#eeeaf3] px-3 py-4 md:px-5 md:py-5"><div className="text-xl md:text-2xl font-semibold tracking-tight text-stone-900">{value}</div><div className="mt-1 text-[10px] md:text-xs text-stone-500">{label}</div></div>)}
@@ -487,7 +488,11 @@ export function PortfolioWebsite() {
             <div><h3 className="text-sm font-semibold">项目 / 作品说明</h3><ul className="mt-3 space-y-2">{selected.detail.map((d, i) => <li key={i} className="text-sm leading-7 text-stone-500">· {d}</li>)}</ul></div>
             <div><h3 className="text-sm font-semibold">个人参与</h3><p className="mt-3 text-sm leading-7 text-stone-500">{selected.role}</p>{selected.result && <><h3 className="mt-6 text-sm font-semibold">项目结果</h3><p className="mt-2 text-sm leading-7 text-stone-700">{selected.result}</p></>}</div>
           </div>}
+          {renderCanvasBlocks("after_gallery")}
+          {renderCanvasBlocks("before_project_info")}
           {selected.galleryPosition === "after" && selected.gallery && selected.gallery.length > 0 && <div className="mt-5 grid gap-3" style={{ gridTemplateColumns: `repeat(${Math.min(3, Math.max(1, Number(selected.galleryColumns) || 2))}, minmax(0, 1fr))` }}>{selected.gallery.map((src, index) => <div key={index} className="bg-white overflow-hidden" style={{ aspectRatio: selected.galleryRatio === "square" ? "1 / 1" : selected.galleryRatio === "portrait" ? "3 / 4" : selected.galleryRatio === "landscape" ? "4 / 3" : undefined }}><img src={src} alt={selected.title + " " + (index + 1)} className={selected.galleryRatio === "original" || !selected.galleryRatio ? "w-full h-auto" : "w-full h-full"} style={{ objectFit: selected.galleryRatio === "original" || !selected.galleryRatio ? "contain" : selected.galleryFit === "cover" ? "cover" : "contain" }} /></div>)}</div>}
+          {renderCanvasBlocks("after_project_info")}
+          {renderCanvasBlocks("bottom")}
           <div className="mt-7 flex flex-wrap gap-2">{selected.tags.map(t => <span key={t} className="text-xs bg-stone-100 text-stone-500 px-3 py-2">{t}</span>)}</div>
           <p className="mt-8 pt-5 border-t border-stone-200 text-xs leading-6 text-stone-400">当前为作品详情结构预览，正式素材（图片、视频、文档或外部链接）将在下一步通过内容后台逐项补充。</p>
         </div>
