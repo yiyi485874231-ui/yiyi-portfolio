@@ -10,8 +10,11 @@
     "创意制作"
   ],
   "detail": [
-    "通过逐帧拍摄与画面组织完成动画表达，正式发布前可替换为原视频。"
+    "通过逐帧拍摄与画面组织完成动画表达\n以拟人化的牙齿形象演绎口腔守护故事，温柔诠释产品 “根源修护力” 的核心功效。"
   ],
   "tone": "sage",
+  "coverImage": "/uploads/covers/naaisi1.jpg",
+  "coverFit": "cover",
+  "coverRatio": "wide",
   "sortOrder": 110
 }
