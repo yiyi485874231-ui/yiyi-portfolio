@@ -233,6 +233,34 @@ content:
                 type: image
                 options:
                   path: public/uploads/gallery
+              - name: imageWidth
+                label: 图片显示宽度（百分比）
+                type: number
+                description: 填写 25–100，例如 50 表示占模块宽度的一半；留空默认 100
+              - name: imageRatio
+                label: 图片显示比例
+                type: select
+                options:
+                  values:
+                    - label: 保持原图比例
+                      value: original
+                    - label: 横版 4:3
+                      value: landscape
+                    - label: 正方形 1:1
+                      value: square
+                    - label: 竖版 3:4
+                      value: portrait
+              - name: imageAlign
+                label: 图片对齐方式
+                type: select
+                options:
+                  values:
+                    - label: 左对齐
+                      value: left
+                    - label: 居中
+                      value: center
+                    - label: 右对齐
+                      value: right
               - name: imagePosition
                 label: 图片位置
                 type: select
