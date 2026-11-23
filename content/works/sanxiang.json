@@ -21,7 +21,7 @@
     {
       "type": "canvas",
       "placement": "after_project_info",
-      "background": "#303C35",
+      "background": "#F5F0E6",
       "width": "full",
       "size": "standard",
       "radius": 16,
