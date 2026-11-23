@@ -7,6 +7,8 @@ type CanvasBlock = {
   title?: string;
   background?: string;
   width?: "full" | "half" | "third";
+  moduleAlign?: "left" | "center" | "right";
+  spacing?: "compact" | "standard" | "spacious";
   height?: number;
   padding?: number;
   radius?: number;
@@ -351,15 +353,17 @@ export function PortfolioWebsite() {
         const isImageOnly = Boolean(block.image && !hasText);
         const hasIndependentImageWidth = block.type === "canvas" && Boolean(block.image && block.imageWidth && block.imageWidth > 0);
         const widthClass = hasIndependentImageWidth ? "col-span-1 md:col-span-6" : block.width === "third" ? "col-span-1 md:col-span-2" : block.width === "half" ? "col-span-1 md:col-span-3" : "col-span-1 md:col-span-6";
+        const moduleSpacing = block.spacing === "compact" ? 8 : block.spacing === "spacious" ? 40 : 24;
         const sizePadding = block.size === "compact" ? 8 : block.size === "spacious" ? 24 : 16;
         const blockStyle: React.CSSProperties = {
           minHeight: block.height && block.height > 0 ? block.height : undefined,
           padding: block.padding ?? sizePadding,
           borderRadius: block.type === "color_panel" || block.type === "canvas" ? (block.radius ?? 8) : 0,
           backgroundColor: block.type === "color_panel" || block.type === "canvas" ? (block.background || "#F1E7DF") : undefined,
+          marginTop: moduleSpacing,
+          justifySelf: block.moduleAlign === "left" ? "start" : block.moduleAlign === "right" ? "end" : "center",
           ...(hasIndependentImageWidth ? {
-            width: Math.min(100, Math.max(10, block.imageWidth!)) + "%",
-            justifySelf: block.imageAlign === "left" ? "start" : block.imageAlign === "right" ? "end" : "center"
+            width: Math.min(100, Math.max(10, block.imageWidth!)) + "%"
           } : {})
         };
         if (block.type === "image") return block.image ? <div key={index} className={widthClass + " overflow-hidden"}><img src={block.image} alt={selected.title + " 展示图片"} className="block w-full h-auto object-contain" /></div> : null;
