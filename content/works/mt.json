@@ -29,9 +29,9 @@
     {
       "type": "color_panel",
       "placement": "after_project_info",
-      "background": "#303C35",
+      "background": "#F5F0E6",
       "width": "half",
-      "size": "standard",
+      "size": "spacious",
       "radius": 16,
       "image": "/uploads/gallery/1-2.jpg"
     }
