@@ -22,11 +22,11 @@
       "type": "canvas",
       "placement": "after_project_info",
       "background": "#F5F0E6",
-      "width": "full",
+      "width": "third",
       "size": "standard",
       "radius": 16,
       "image": "/uploads/gallery/file-1.jpg",
-      "imageWidth": 50,
+      "imageWidth": 25,
       "imageRatio": "original",
       "imageAlign": "center"
     }
