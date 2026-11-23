@@ -425,18 +425,18 @@ export function PortfolioWebsite() {
           {selected.id !== "1688" && selected.canvasBlocks && selected.canvasBlocks.length > 0 && <div className="mt-6 grid grid-cols-1 md:grid-cols-6 gap-4">
             {selected.canvasBlocks.map((block, index) => {
               const span = block.width === "third" ? 2 : block.width === "half" ? 3 : 6;
+              const widthClass = block.width === "third" ? "col-span-1 md:col-span-2" : block.width === "half" ? "col-span-1 md:col-span-3" : "col-span-1 md:col-span-6";
               const blockStyle: React.CSSProperties = {
-                gridColumn: window.innerWidth >= 768 ? `span ${span} / span ${span}` : "span 1 / span 1",
                 minHeight: block.type === "color_panel" ? (block.height || 220) : undefined,
                 padding: block.type === "color_panel" ? (block.padding ?? 28) : undefined,
                 borderRadius: block.type === "color_panel" ? (block.radius ?? 8) : 0,
                 backgroundColor: block.type === "color_panel" ? (block.background || "#F1E7DF") : undefined
               };
-              if (block.type === "image") return block.image ? <div key={index} style={blockStyle} className="overflow-hidden bg-white"><img src={block.image} alt={selected.title + " 展示图片"} className="w-full h-auto object-contain" /></div> : null;
-              if (block.type === "text") return <div key={index} style={blockStyle} className="bg-white border border-stone-200 p-6"><h3 className="font-semibold text-base">{block.title}</h3><p className="mt-3 text-sm leading-7 text-stone-600 whitespace-pre-line">{block.body}</p></div>;
+              if (block.type === "image") return block.image ? <div key={index} style={blockStyle} className={widthClass + " overflow-hidden bg-white"}><img src={block.image} alt={selected.title + " 展示图片"} className="w-full h-auto object-contain" /></div> : null;
+              if (block.type === "text") return <div key={index} style={blockStyle} className={widthClass + " bg-white border border-stone-200 p-6"}><h3 className="font-semibold text-base">{block.title}</h3><p className="mt-3 text-sm leading-7 text-stone-600 whitespace-pre-line">{block.body}</p></div>;
               const horizontal = block.layout === "horizontal";
               const imageFirst = block.imagePosition !== "end";
-              return <div key={index} style={blockStyle} className="flex flex-col md:flex-row gap-5 items-center overflow-hidden" >
+              return <div key={index} style={blockStyle} className={widthClass + " " + (horizontal ? "flex flex-col md:flex-row" : "flex flex-col") + " gap-5 items-center overflow-hidden"} >
                 {block.image && <img src={block.image} alt={selected.title + " 模块图片"} className={horizontal ? "w-full md:w-1/2 max-h-[420px] object-contain" : "w-full max-h-[420px] object-contain"} style={{ order: horizontal && !imageFirst ? 2 : 1 }} />}
                 {(block.title || block.body) && <div className="flex-1 min-w-0" style={{ order: horizontal && !imageFirst ? 1 : 2 }}>
                   {block.title && <h3 className="text-lg font-semibold">{block.title}</h3>}
