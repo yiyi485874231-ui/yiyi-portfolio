@@ -164,6 +164,23 @@ content:
           - name: color_panel
             label: 色块画布
             fields:
+              - name: placement
+                label: 模块在页面中的位置
+                type: select
+                options:
+                  values:
+                    - label: 封面之后
+                      value: after_cover
+                    - label: 作品图片之前
+                      value: before_gallery
+                    - label: 作品图片之后
+                      value: after_gallery
+                    - label: 项目介绍之前
+                      value: before_project_info
+                    - label: 项目介绍之后
+                      value: after_project_info
+                    - label: 页面底部
+                      value: bottom
               - name: title
                 label: 模块标题
                 type: string
@@ -182,11 +199,22 @@ content:
                       value: half
                     - label: 三分之一
                       value: third
+              - name: size
+                label: 模块尺寸
+                type: select
+                options:
+                  values:
+                    - label: 紧凑
+                      value: compact
+                    - label: 标准
+                      value: standard
+                    - label: 宽松
+                      value: spacious
               - name: height
-                label: 色块最小高度（像素）
+                label: 自定义最小高度（高级选项，可留空）
                 type: number
               - name: padding
-                label: 内边距（像素）
+                label: 自定义内边距（高级选项，可留空）
                 type: number
               - name: radius
                 label: 圆角大小（像素）
@@ -220,6 +248,23 @@ content:
           - name: image
             label: 独立图片模块
             fields:
+              - name: placement
+                label: 模块在页面中的位置
+                type: select
+                options:
+                  values:
+                    - label: 封面之后
+                      value: after_cover
+                    - label: 作品图片之前
+                      value: before_gallery
+                    - label: 作品图片之后
+                      value: after_gallery
+                    - label: 项目介绍之前
+                      value: before_project_info
+                    - label: 项目介绍之后
+                      value: after_project_info
+                    - label: 页面底部
+                      value: bottom
               - name: image
                 label: 图片
                 type: image
@@ -239,6 +284,23 @@ content:
           - name: text
             label: 文字说明模块
             fields:
+              - name: placement
+                label: 模块在页面中的位置
+                type: select
+                options:
+                  values:
+                    - label: 封面之后
+                      value: after_cover
+                    - label: 作品图片之前
+                      value: before_gallery
+                    - label: 作品图片之后
+                      value: after_gallery
+                    - label: 项目介绍之前
+                      value: before_project_info
+                    - label: 项目介绍之后
+                      value: after_project_info
+                    - label: 页面底部
+                      value: bottom
               - name: title
                 label: 标题
                 type: string
