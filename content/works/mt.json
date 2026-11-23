@@ -19,15 +19,22 @@
   ],
   "tone": "peach",
   "coverImage": "/uploads/covers/1-1.png",
-  "gallery": [
-    "/uploads/gallery/1.jpg",
-    "/uploads/gallery/2.png"
-  ],
   "coverFit": "contain",
   "coverRatio": "wide",
   "galleryColumns": "2",
   "galleryRatio": "original",
   "galleryFit": "contain",
   "galleryPosition": "after",
+  "canvasBlocks": [
+    {
+      "type": "color_panel",
+      "background": "#F5F0E6",
+      "width": "half",
+      "height": 240,
+      "padding": 32,
+      "radius": 16,
+      "image": "/uploads/gallery/1-2.jpg"
+    }
+  ],
   "sortOrder": 10
 }
