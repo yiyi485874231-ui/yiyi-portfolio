@@ -28,10 +28,10 @@
   "canvasBlocks": [
     {
       "type": "color_panel",
+      "placement": "after_project_info",
       "background": "#F5F0E6",
       "width": "half",
-      "height": 240,
-      "padding": 32,
+      "size": "standard",
       "radius": 16,
       "image": "/uploads/gallery/1-2.jpg"
     }
