@@ -23,5 +23,11 @@
     "/uploads/gallery/1.jpg",
     "/uploads/gallery/2.png"
   ],
+  "coverFit": "contain",
+  "coverRatio": "wide",
+  "galleryColumns": "2",
+  "galleryRatio": "original",
+  "galleryFit": "contain",
+  "galleryPosition": "after",
   "sortOrder": 10
 }
