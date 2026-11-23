@@ -17,7 +17,7 @@
   ],
   "tone": "rose",
   "coverImage": "/uploads/covers/1-2.png",
-  "coverFit": "contain",
+  "coverFit": "cover",
   "coverRatio": "wide",
   "canvasBlocks": [
     {
