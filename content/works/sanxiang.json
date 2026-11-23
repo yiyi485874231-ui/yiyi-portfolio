@@ -17,8 +17,15 @@
   ],
   "tone": "sage",
   "coverImage": "/uploads/covers/file.jpg",
-  "gallery": [
-    "/uploads/gallery/file.jpg"
+  "canvasBlocks": [
+    {
+      "type": "canvas",
+      "placement": "after_project_info",
+      "background": "#303C35",
+      "width": "full",
+      "size": "standard",
+      "radius": 16
+    }
   ],
   "videoUrl": "https://v.douyin.com/GfHQnPyvVs0/",
   "sortOrder": 30
