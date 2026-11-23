@@ -347,10 +347,10 @@ export function PortfolioWebsite() {
         const widthClass = block.width === "third" ? "col-span-1 md:col-span-2" : block.width === "half" ? "col-span-1 md:col-span-3" : "col-span-1 md:col-span-6";
         const hasText = Boolean(block.title || block.body);
         const isImageOnly = Boolean(block.image && !hasText);
-        const sizePadding = block.size === "compact" ? 12 : block.size === "spacious" ? 32 : 20;
+        const sizePadding = block.size === "compact" ? 8 : block.size === "spacious" ? 24 : 16;
         const blockStyle: React.CSSProperties = {
           minHeight: block.height && block.height > 0 ? block.height : undefined,
-          padding: isImageOnly ? 0 : (block.padding ?? sizePadding),
+          padding: block.padding ?? sizePadding,
           borderRadius: block.type === "color_panel" ? (block.radius ?? 8) : 0,
           backgroundColor: block.type === "color_panel" ? (block.background || "#F1E7DF") : undefined
         };
