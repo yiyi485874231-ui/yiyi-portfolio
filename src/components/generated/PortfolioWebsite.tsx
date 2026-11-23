@@ -347,22 +347,27 @@ export function PortfolioWebsite() {
     if (!blocks.length) return null;
     return <div className="mt-6 grid grid-cols-1 md:grid-cols-6 gap-4">
       {blocks.map((block, index) => {
-        const widthClass = block.width === "third" ? "col-span-1 md:col-span-2" : block.width === "half" ? "col-span-1 md:col-span-3" : "col-span-1 md:col-span-6";
         const hasText = Boolean(block.title || block.body);
         const isImageOnly = Boolean(block.image && !hasText);
+        const hasIndependentImageWidth = block.type === "canvas" && Boolean(block.image && block.imageWidth && block.imageWidth > 0);
+        const widthClass = hasIndependentImageWidth ? "col-span-1 md:col-span-6" : block.width === "third" ? "col-span-1 md:col-span-2" : block.width === "half" ? "col-span-1 md:col-span-3" : "col-span-1 md:col-span-6";
         const sizePadding = block.size === "compact" ? 8 : block.size === "spacious" ? 24 : 16;
         const blockStyle: React.CSSProperties = {
           minHeight: block.height && block.height > 0 ? block.height : undefined,
           padding: block.padding ?? sizePadding,
           borderRadius: block.type === "color_panel" || block.type === "canvas" ? (block.radius ?? 8) : 0,
-          backgroundColor: block.type === "color_panel" || block.type === "canvas" ? (block.background || "#F1E7DF") : undefined
+          backgroundColor: block.type === "color_panel" || block.type === "canvas" ? (block.background || "#F1E7DF") : undefined,
+          ...(hasIndependentImageWidth ? {
+            width: Math.min(100, Math.max(10, block.imageWidth!)) + "%",
+            justifySelf: block.imageAlign === "left" ? "start" : block.imageAlign === "right" ? "end" : "center"
+          } : {})
         };
         if (block.type === "image") return block.image ? <div key={index} className={widthClass + " overflow-hidden"}><img src={block.image} alt={selected.title + " 展示图片"} className="block w-full h-auto object-contain" /></div> : null;
         if (block.type === "text") return <div key={index} style={blockStyle} className={widthClass + " bg-white border border-stone-200"}><h3 className="font-semibold text-base">{block.title}</h3><p className="mt-3 text-sm leading-7 text-stone-600 whitespace-pre-line">{block.body}</p></div>;
         const horizontal = (block.type === "color_panel" || block.type === "canvas") && block.layout === "horizontal" && hasText;
         const imageFirst = block.imagePosition !== "end";
         return <div key={index} style={blockStyle} className={widthClass + " " + (horizontal ? "flex flex-col md:flex-row" : "flex flex-col") + (isImageOnly ? "" : " gap-5") + " items-center overflow-hidden"}>
-          {block.image && <img src={block.image} alt={selected.title + " 模块图片"} className={horizontal ? "max-w-full h-auto object-contain" : "h-auto object-contain"} style={{ width: block.imageWidth && block.imageWidth > 0 ? Math.min(100, Math.max(10, block.imageWidth)) + "%" : (horizontal ? "50%" : "100%"), aspectRatio: block.imageRatio === "square" ? "1 / 1" : block.imageRatio === "portrait" ? "3 / 4" : block.imageRatio === "landscape" ? "4 / 3" : undefined, objectFit: "contain", alignSelf: block.imageAlign === "left" ? "flex-start" : block.imageAlign === "right" ? "flex-end" : "center", order: horizontal && !imageFirst ? 2 : 1 }} />}
+          {block.image && <img src={block.image} alt={selected.title + " 模块图片"} className={horizontal ? "max-w-full h-auto object-contain" : "h-auto object-contain"} style={{ width: hasIndependentImageWidth ? "100%" : (horizontal ? "50%" : "100%"), aspectRatio: block.imageRatio === "square" ? "1 / 1" : block.imageRatio === "portrait" ? "3 / 4" : block.imageRatio === "landscape" ? "4 / 3" : undefined, objectFit: "contain", alignSelf: block.imageAlign === "left" ? "flex-start" : block.imageAlign === "right" ? "flex-end" : "center", order: horizontal && !imageFirst ? 2 : 1 }} />}
           {hasText && <div className="flex-1 min-w-0 w-full" style={{ order: horizontal && !imageFirst ? 1 : 2 }}>
             {block.title && <h3 className="text-lg font-semibold">{block.title}</h3>}
             {block.body && <p className="mt-3 text-sm leading-7 text-stone-700 whitespace-pre-line">{block.body}</p>}
