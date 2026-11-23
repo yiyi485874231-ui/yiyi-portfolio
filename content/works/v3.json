@@ -14,5 +14,8 @@
     "围绕《捣练图》展开影像创作尝试，探索 AI 工具在传统文化内容表达中的应用。"
   ],
   "tone": "lavender",
+  "coverImage": "/uploads/covers/file-3.jpg",
+  "coverFit": "cover",
+  "coverRatio": "wide",
   "sortOrder": 80
 }
