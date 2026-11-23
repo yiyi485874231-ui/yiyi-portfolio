@@ -87,6 +87,70 @@ content:
           multiple:
             max: 30
           path: public/uploads/gallery
+      - name: coverFit
+        label: 封面图片显示
+        type: select
+        options:
+          values:
+            - label: 完整显示（不裁切）
+              value: contain
+            - label: 填充区域（允许裁切）
+              value: cover
+      - name: coverRatio
+        label: 封面图片比例
+        type: select
+        options:
+          values:
+            - label: 横版 16:7
+              value: wide
+            - label: 横版 4:3
+              value: landscape
+            - label: 正方形 1:1
+              value: square
+            - label: 竖版 3:4
+              value: portrait
+      - name: galleryColumns
+        label: 作品图片每行数量
+        type: select
+        options:
+          values:
+            - label: 单列（大图）
+              value: "1"
+            - label: 双列
+              value: "2"
+            - label: 三列
+              value: "3"
+      - name: galleryRatio
+        label: 作品图片比例
+        type: select
+        options:
+          values:
+            - label: 保持原始比例
+              value: original
+            - label: 横版 4:3
+              value: landscape
+            - label: 正方形 1:1
+              value: square
+            - label: 竖版 3:4
+              value: portrait
+      - name: galleryFit
+        label: 作品图片显示
+        type: select
+        options:
+          values:
+            - label: 完整显示（不裁切）
+              value: contain
+            - label: 填充区域（允许裁切）
+              value: cover
+      - name: galleryPosition
+        label: 作品图片位置
+        type: select
+        options:
+          values:
+            - label: 项目说明之前
+              value: before
+            - label: 项目说明之后
+              value: after
       - name: videoUrl
         label: 视频链接
         type: string
