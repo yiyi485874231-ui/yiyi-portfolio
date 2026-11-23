@@ -17,6 +17,9 @@
   ],
   "tone": "sage",
   "coverImage": "/uploads/covers/file.jpg",
+  "gallery": [
+    "/uploads/gallery/file.jpg"
+  ],
   "videoUrl": "https://v.douyin.com/GfHQnPyvVs0/",
   "sortOrder": 30
 }
