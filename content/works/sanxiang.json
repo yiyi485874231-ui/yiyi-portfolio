@@ -24,7 +24,8 @@
       "background": "#303C35",
       "width": "full",
       "size": "standard",
-      "radius": 16
+      "radius": 16,
+      "image": "/uploads/gallery/file-1.jpg"
     }
   ],
   "videoUrl": "https://v.douyin.com/GfHQnPyvVs0/",
