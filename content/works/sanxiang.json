@@ -22,7 +22,7 @@
       "type": "canvas",
       "placement": "after_project_info",
       "background": "#303C35",
-      "width": "full",
+      "width": "third",
       "size": "standard",
       "radius": 16,
       "image": "/uploads/gallery/file-1.jpg"
