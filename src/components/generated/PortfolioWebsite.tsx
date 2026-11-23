@@ -456,11 +456,10 @@ export function PortfolioWebsite() {
           </div>
           {renderCanvasBlocks("after_cover")}
           {renderCanvasBlocks("before_gallery")}
-          {renderCanvasBlocks("before_gallery")}
           {selected.galleryPosition !== "after" && selected.gallery && selected.gallery.length > 0 && <div className="mt-5 grid gap-3" style={{ gridTemplateColumns: `repeat(${Math.min(3, Math.max(1, Number(selected.galleryColumns) || 2))}, minmax(0, 1fr))` }}>{selected.gallery.map((src, index) => <div key={index} className="bg-white overflow-hidden" style={{ aspectRatio: selected.galleryRatio === "square" ? "1 / 1" : selected.galleryRatio === "portrait" ? "3 / 4" : selected.galleryRatio === "landscape" ? "4 / 3" : undefined }}><img src={src} alt={selected.title + " " + (index + 1)} className={selected.galleryRatio === "original" || !selected.galleryRatio ? "w-full h-auto" : "w-full h-full"} style={{ objectFit: selected.galleryRatio === "original" || !selected.galleryRatio ? "contain" : selected.galleryFit === "cover" ? "cover" : "contain" }} /></div>)}</div>}
+          {selected.galleryPosition !== "after" && renderCanvasBlocks("after_gallery")}
           {selected.videoFile && <video className="mt-5 w-full max-h-[560px] bg-black" src={selected.videoFile} controls playsInline />}
           {(selected.videoUrl || selected.externalUrl) && <div className="mt-5 flex flex-wrap gap-3">{selected.videoUrl && <a href={selected.videoUrl} target="_blank" rel="noreferrer" className="text-sm underline underline-offset-4">观看视频 ↗</a>}{selected.externalUrl && <a href={selected.externalUrl} target="_blank" rel="noreferrer" className="text-sm underline underline-offset-4">打开作品链接 ↗</a>}</div>}
-          {renderCanvasBlocks("after_gallery")}
           {renderCanvasBlocks("before_project_info")}
           {selected.id === "1688" ? <>
             <div className="mt-7 grid grid-cols-3 gap-2 md:gap-3">
@@ -490,7 +489,9 @@ export function PortfolioWebsite() {
           </div>}
           {renderCanvasBlocks("after_gallery")}
           {renderCanvasBlocks("before_project_info")}
+          {selected.galleryPosition === "after" && renderCanvasBlocks("before_gallery")}
           {selected.galleryPosition === "after" && selected.gallery && selected.gallery.length > 0 && <div className="mt-5 grid gap-3" style={{ gridTemplateColumns: `repeat(${Math.min(3, Math.max(1, Number(selected.galleryColumns) || 2))}, minmax(0, 1fr))` }}>{selected.gallery.map((src, index) => <div key={index} className="bg-white overflow-hidden" style={{ aspectRatio: selected.galleryRatio === "square" ? "1 / 1" : selected.galleryRatio === "portrait" ? "3 / 4" : selected.galleryRatio === "landscape" ? "4 / 3" : undefined }}><img src={src} alt={selected.title + " " + (index + 1)} className={selected.galleryRatio === "original" || !selected.galleryRatio ? "w-full h-auto" : "w-full h-full"} style={{ objectFit: selected.galleryRatio === "original" || !selected.galleryRatio ? "contain" : selected.galleryFit === "cover" ? "cover" : "contain" }} /></div>)}</div>}
+          {selected.galleryPosition === "after" && renderCanvasBlocks("after_gallery")}
           {renderCanvasBlocks("after_project_info")}
           {renderCanvasBlocks("bottom")}
           <div className="mt-7 flex flex-wrap gap-2">{selected.tags.map(t => <span key={t} className="text-xs bg-stone-100 text-stone-500 px-3 py-2">{t}</span>)}</div>
