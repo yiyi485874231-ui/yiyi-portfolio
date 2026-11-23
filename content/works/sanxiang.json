@@ -22,10 +22,13 @@
       "type": "canvas",
       "placement": "after_project_info",
       "background": "#303C35",
-      "width": "third",
+      "width": "full",
       "size": "standard",
       "radius": 16,
-      "image": "/uploads/gallery/file-1.jpg"
+      "image": "/uploads/gallery/file-1.jpg",
+      "imageWidth": 50,
+      "imageRatio": "original",
+      "imageAlign": "center"
     }
   ],
   "videoUrl": "https://v.douyin.com/GfHQnPyvVs0/",
