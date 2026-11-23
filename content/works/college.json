@@ -17,7 +17,7 @@
   ],
   "tone": "sand",
   "coverImage": "/uploads/covers/file-1.png",
-  "coverFit": "contain",
+  "coverFit": "cover",
   "coverRatio": "wide",
   "canvasBlocks": [
     {
