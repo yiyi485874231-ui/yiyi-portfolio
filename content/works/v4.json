@@ -3,8 +3,8 @@
   "title": "锦年 MV",
   "category": "视频",
   "type": "音乐视频 / 剪辑",
-  "desc": "音乐视频作品。",
-  "role": "视频剪辑与创作实践。",
+  "desc": "AI音乐视频作品。",
+  "role": "视频剪辑与AI创作实践。",
   "tags": [
     "MV",
     "视频剪辑"
@@ -13,5 +13,8 @@
     "音乐视频作品，后续可补充完整视频及创作说明。"
   ],
   "tone": "sand",
+  "coverImage": "/uploads/covers/jingnian1.jpg",
+  "coverFit": "cover",
+  "coverRatio": "wide",
   "sortOrder": 90
 }
