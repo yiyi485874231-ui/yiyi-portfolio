@@ -1,5 +1,18 @@
 import './portfolio-fonts.css';
 import React, { useEffect, useState } from "react";
+type CanvasBlock = {
+  type: "color_panel" | "image" | "text";
+  title?: string;
+  background?: string;
+  width?: "full" | "half" | "third";
+  height?: number;
+  padding?: number;
+  radius?: number;
+  layout?: "vertical" | "horizontal";
+  image?: string;
+  imagePosition?: "start" | "end";
+  body?: string;
+};
 type Work = {
   id: string;
   title: string;
@@ -22,6 +35,7 @@ type Work = {
   galleryRatio?: string;
   galleryFit?: string;
   galleryPosition?: string;
+  canvasBlocks?: CanvasBlock[];
   sortOrder?: number;
 };
 const categories = [{
@@ -408,6 +422,29 @@ export function PortfolioWebsite() {
             <span className="absolute inset-4 border border-white/60 pointer-events-none"></span>
           </div>
           {selected.galleryPosition !== "after" && selected.gallery && selected.gallery.length > 0 && <div className="mt-5 grid gap-3" style={{ gridTemplateColumns: `repeat(${Math.min(3, Math.max(1, Number(selected.galleryColumns) || 2))}, minmax(0, 1fr))` }}>{selected.gallery.map((src, index) => <div key={index} className="bg-white overflow-hidden" style={{ aspectRatio: selected.galleryRatio === "square" ? "1 / 1" : selected.galleryRatio === "portrait" ? "3 / 4" : selected.galleryRatio === "landscape" ? "4 / 3" : undefined }}><img src={src} alt={selected.title + " " + (index + 1)} className={selected.galleryRatio === "original" || !selected.galleryRatio ? "w-full h-auto" : "w-full h-full"} style={{ objectFit: selected.galleryRatio === "original" || !selected.galleryRatio ? "contain" : selected.galleryFit === "cover" ? "cover" : "contain" }} /></div>)}</div>}
+          {selected.id !== "1688" && selected.canvasBlocks && selected.canvasBlocks.length > 0 && <div className="mt-6 grid grid-cols-1 md:grid-cols-6 gap-4">
+            {selected.canvasBlocks.map((block, index) => {
+              const span = block.width === "third" ? 2 : block.width === "half" ? 3 : 6;
+              const blockStyle: React.CSSProperties = {
+                gridColumn: window.innerWidth >= 768 ? `span ${span} / span ${span}` : "span 1 / span 1",
+                minHeight: block.type === "color_panel" ? (block.height || 220) : undefined,
+                padding: block.type === "color_panel" ? (block.padding ?? 28) : undefined,
+                borderRadius: block.type === "color_panel" ? (block.radius ?? 8) : 0,
+                backgroundColor: block.type === "color_panel" ? (block.background || "#F1E7DF") : undefined
+              };
+              if (block.type === "image") return block.image ? <div key={index} style={blockStyle} className="overflow-hidden bg-white"><img src={block.image} alt={selected.title + " 展示图片"} className="w-full h-auto object-contain" /></div> : null;
+              if (block.type === "text") return <div key={index} style={blockStyle} className="bg-white border border-stone-200 p-6"><h3 className="font-semibold text-base">{block.title}</h3><p className="mt-3 text-sm leading-7 text-stone-600 whitespace-pre-line">{block.body}</p></div>;
+              const horizontal = block.layout === "horizontal";
+              const imageFirst = block.imagePosition !== "end";
+              return <div key={index} style={blockStyle} className="flex flex-col md:flex-row gap-5 items-center overflow-hidden" >
+                {block.image && <img src={block.image} alt={selected.title + " 模块图片"} className={horizontal ? "w-full md:w-1/2 max-h-[420px] object-contain" : "w-full max-h-[420px] object-contain"} style={{ order: horizontal && !imageFirst ? 2 : 1 }} />}
+                {(block.title || block.body) && <div className="flex-1 min-w-0" style={{ order: horizontal && !imageFirst ? 1 : 2 }}>
+                  {block.title && <h3 className="text-lg font-semibold">{block.title}</h3>}
+                  {block.body && <p className="mt-3 text-sm leading-7 text-stone-700 whitespace-pre-line">{block.body}</p>}
+                </div>}
+              </div>;
+            })}
+          </div>}
           {selected.videoFile && <video className="mt-5 w-full max-h-[560px] bg-black" src={selected.videoFile} controls playsInline />}
           {(selected.videoUrl || selected.externalUrl) && <div className="mt-5 flex flex-wrap gap-3">{selected.videoUrl && <a href={selected.videoUrl} target="_blank" rel="noreferrer" className="text-sm underline underline-offset-4">观看视频 ↗</a>}{selected.externalUrl && <a href={selected.externalUrl} target="_blank" rel="noreferrer" className="text-sm underline underline-offset-4">打开作品链接 ↗</a>}</div>}
           {selected.id === "1688" ? <>
