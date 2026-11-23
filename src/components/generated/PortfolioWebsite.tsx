@@ -347,21 +347,21 @@ export function PortfolioWebsite() {
     if (selected?.id === "1688" || !selected?.canvasBlocks?.length) return null;
     const blocks = selected.canvasBlocks.filter(block => (block.placement || "after_cover") === placement);
     if (!blocks.length) return null;
-    return <div className="mt-6 grid grid-cols-1 md:grid-cols-6 gap-4">
+    const isSanxiangInfoImage = selected?.id === "sanxiang" && placement === "after_project_info";
+    return <div className={(isSanxiangInfoImage ? "mt-0" : "mt-6") + " grid grid-cols-1 md:grid-cols-6 gap-4"}>
       {blocks.map((block, index) => {
         const hasText = Boolean(block.title || block.body);
         const isImageOnly = Boolean(block.image && !hasText);
-        const isSanxiangInfoImage = selected?.id === "sanxiang" && placement === "after_project_info";
         const hasIndependentImageWidth = block.type === "canvas" && Boolean(block.image && block.imageWidth && block.imageWidth > 0) && !isSanxiangInfoImage;
         const widthClass = hasIndependentImageWidth ? "col-span-1 md:col-span-6" : block.width === "third" ? "col-span-1 md:col-span-2" : block.width === "half" ? "col-span-1 md:col-span-3" : "col-span-1 md:col-span-6";
         const moduleSpacing = block.spacing === "compact" ? 8 : block.spacing === "spacious" ? 40 : 24;
         const sizePadding = block.size === "compact" ? 8 : block.size === "spacious" ? 24 : 16;
         const blockStyle: React.CSSProperties = {
           minHeight: block.height && block.height > 0 ? block.height : undefined,
-          padding: block.padding ?? sizePadding,
+          padding: isSanxiangInfoImage ? 0 : (block.padding ?? sizePadding),
           borderRadius: block.type === "color_panel" || block.type === "canvas" ? (block.radius ?? 8) : 0,
           backgroundColor: block.type === "color_panel" || block.type === "canvas" ? (block.background || "#F1E7DF") : undefined,
-          marginTop: moduleSpacing,
+          marginTop: isSanxiangInfoImage ? 0 : moduleSpacing,
           justifySelf: block.moduleAlign === "left" ? "start" : block.moduleAlign === "right" ? "end" : "center",
           ...(hasIndependentImageWidth ? {
             width: Math.min(100, Math.max(10, block.imageWidth!)) + "%"
