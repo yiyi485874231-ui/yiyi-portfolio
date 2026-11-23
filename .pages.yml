@@ -228,8 +228,25 @@ content:
                       value: vertical
                     - label: 图片与文字左右排列
                       value: horizontal
-              - name: color_panel
-            label: 色块画布
+              - name: image
+                label: 模块图片
+                type: image
+                options:
+                  path: public/uploads/gallery
+              - name: imagePosition
+                label: 图片位置
+                type: select
+                options:
+                  values:
+                    - label: 左侧 / 上方
+                      value: start
+                    - label: 右侧 / 下方
+                      value: end
+              - name: body
+                label: 模块说明文字
+                type: text
+          - name: color_panel
+            label: 旧版色块画布（兼容已有内容）
             fields:
               - name: placement
                 label: 模块在页面中的位置
@@ -254,9 +271,8 @@ content:
               - name: background
                 label: 背景颜色（HEX）
                 type: string
-                description: 例如 #F1E7DF
               - name: width
-                label: 色块宽度
+                label: 模块宽度
                 type: select
                 options:
                   values:
@@ -271,30 +287,25 @@ content:
                 type: select
                 options:
                   values:
-                    - label: 紧凑
-                      value: compact
-                    - label: 标准
-                      value: standard
-                    - label: 宽松
-                      value: spacious
+                    - compact
+                    - standard
+                    - spacious
               - name: height
-                label: 自定义最小高度（高级选项，可留空）
+                label: 自定义最小高度
                 type: number
               - name: padding
-                label: 自定义内边距（高级选项，可留空）
+                label: 自定义内边距
                 type: number
               - name: radius
-                label: 圆角大小（像素）
+                label: 圆角大小
                 type: number
               - name: layout
                 label: 图片与文字排列
                 type: select
                 options:
                   values:
-                    - label: 图片在上，文字在下
-                      value: vertical
-                    - label: 图片与文字左右排列
-                      value: horizontal
+                    - vertical
+                    - horizontal
               - name: image
                 label: 色块内图片
                 type: image
@@ -305,15 +316,13 @@ content:
                 type: select
                 options:
                   values:
-                    - label: 左侧 / 上方
-                      value: start
-                    - label: 右侧 / 下方
-                      value: end
+                    - start
+                    - end
               - name: body
                 label: 模块说明文字
                 type: text
           - name: image
-            label: 独立图片模块
+            label: 旧版独立图片模块（兼容已有内容）
             fields:
               - name: placement
                 label: 模块在页面中的位置
@@ -342,14 +351,11 @@ content:
                 type: select
                 options:
                   values:
-                    - label: 整行
-                      value: full
-                    - label: 半行
-                      value: half
-                    - label: 三分之一
-                      value: third
+                    - full
+                    - half
+                    - third
           - name: text
-            label: 文字说明模块
+            label: 旧版文字模块（兼容已有内容）
             fields:
               - name: placement
                 label: 模块在页面中的位置
@@ -379,12 +385,9 @@ content:
                 type: select
                 options:
                   values:
-                    - label: 整行
-                      value: full
-                    - label: 半行
-                      value: half
-                    - label: 三分之一
-                      value: third
+                    - full
+                    - half
+                    - third
       - name: videoUrl
         label: 视频链接
         type: string
