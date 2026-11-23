@@ -16,6 +16,12 @@ type Work = {
   videoUrl?: string;
   videoFile?: string;
   externalUrl?: string;
+  coverFit?: string;
+  coverRatio?: string;
+  galleryColumns?: string;
+  galleryRatio?: string;
+  galleryFit?: string;
+  galleryPosition?: string;
   sortOrder?: number;
 };
 const categories = [{
@@ -307,8 +313,8 @@ export function PortfolioWebsite() {
   const grouped = (id: string) => works.filter(w => w.category ? w.category === id : id === "运营" ? ["mt", "1688", "sanxiang", "college", "personal"].includes(w.id) : id === "视频" ? w.id.startsWith("v") : id === "视觉" ? w.id.startsWith("d") : w.id.startsWith("o"));
   const card = (w: Work, i: number) => <button key={w.id} onClick={() => setSelected(w)} className="text-left group bg-white border border-stone-200/80 p-5 md:p-6 flex flex-col min-h-[250px] hover:border-stone-400 hover:-translate-y-0.5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-500">
     <div className="flex justify-between gap-3 text-[11px] text-stone-400"><span>{w.type}</span><span>{String(i + 1).padStart(2, "0")}</span></div>
-    <div className={"mt-5 mb-5 aspect-[16/7] flex items-center justify-center relative overflow-hidden " + (toneClass[w.tone] || "bg-stone-100")}>
-      {w.coverImage ? <img src={w.coverImage} alt={w.title} className="absolute inset-0 w-full h-full object-cover" /> : <span className="text-4xl font-light text-stone-500/50">{String(i + 1).padStart(2, "0")}</span>}
+    <div className={"mt-5 mb-5 flex items-center justify-center relative overflow-hidden " + (toneClass[w.tone] || "bg-stone-100")} style={{ aspectRatio: w.coverRatio === "square" ? "1 / 1" : w.coverRatio === "portrait" ? "3 / 4" : w.coverRatio === "landscape" ? "4 / 3" : "16 / 7" }}>
+      {w.coverImage ? <img src={w.coverImage} alt={w.title} className="absolute inset-0 w-full h-full" style={{ objectFit: w.coverFit === "contain" ? "contain" : "cover" }} /> : <span className="text-4xl font-light text-stone-500/50">{String(i + 1).padStart(2, "0")}</span>}
       <span className="absolute inset-3 border border-white/60 pointer-events-none"></span>
     </div>
     <h3 className="text-base md:text-lg font-semibold tracking-tight">{w.title}</h3>
@@ -397,11 +403,11 @@ export function PortfolioWebsite() {
           <div className="text-xs text-stone-400">{selected.type}</div>
           <h2 className="mt-3 text-2xl md:text-3xl font-semibold tracking-tight">{selected.title}</h2>
           <p className="mt-4 text-sm md:text-base text-stone-500 leading-7">{selected.desc}</p>
-          <div className={"mt-7 aspect-[16/7] min-h-[150px] flex items-center justify-center relative " + (toneClass[selected.tone] || "bg-stone-100")}>
-            {selected.coverImage ? <img src={selected.coverImage} alt={selected.title} className="absolute inset-0 w-full h-full object-contain" /> : <span className="text-5xl font-light text-stone-500/50">作品展示区</span>}
+          <div className={"mt-7 min-h-[150px] flex items-center justify-center relative overflow-hidden " + (toneClass[selected.tone] || "bg-stone-100")} style={{ aspectRatio: selected.coverRatio === "square" ? "1 / 1" : selected.coverRatio === "portrait" ? "3 / 4" : selected.coverRatio === "landscape" ? "4 / 3" : "16 / 7" }}>
+            {selected.coverImage ? <img src={selected.coverImage} alt={selected.title} className="absolute inset-0 w-full h-full" style={{ objectFit: selected.coverFit === "contain" ? "contain" : "cover" }} /> : <span className="text-5xl font-light text-stone-500/50">作品展示区</span>}
             <span className="absolute inset-4 border border-white/60 pointer-events-none"></span>
           </div>
-          {selected.gallery && selected.gallery.length > 0 && <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">{selected.gallery.map((src, index) => <img key={index} src={src} alt={selected.title + " " + (index + 1)} className="w-full h-auto object-contain bg-white" />)}</div>}
+          {selected.galleryPosition !== "after" && selected.gallery && selected.gallery.length > 0 && <div className="mt-5 grid gap-3" style={{ gridTemplateColumns: `repeat(${Math.min(3, Math.max(1, Number(selected.galleryColumns) || 2))}, minmax(0, 1fr))` }}>{selected.gallery.map((src, index) => <div key={index} className="bg-white overflow-hidden" style={{ aspectRatio: selected.galleryRatio === "square" ? "1 / 1" : selected.galleryRatio === "portrait" ? "3 / 4" : selected.galleryRatio === "landscape" ? "4 / 3" : "auto" }}><img src={src} alt={selected.title + " " + (index + 1)} className="w-full h-full" style={{ objectFit: selected.galleryRatio === "original" || !selected.galleryRatio ? "contain" : selected.galleryFit === "cover" ? "cover" : "contain" }} /></div>)}</div>}
           {selected.videoFile && <video className="mt-5 w-full max-h-[560px] bg-black" src={selected.videoFile} controls playsInline />}
           {(selected.videoUrl || selected.externalUrl) && <div className="mt-5 flex flex-wrap gap-3">{selected.videoUrl && <a href={selected.videoUrl} target="_blank" rel="noreferrer" className="text-sm underline underline-offset-4">观看视频 ↗</a>}{selected.externalUrl && <a href={selected.externalUrl} target="_blank" rel="noreferrer" className="text-sm underline underline-offset-4">打开作品链接 ↗</a>}</div>}
           {selected.id === "1688" ? <>
@@ -430,6 +436,7 @@ export function PortfolioWebsite() {
             <div><h3 className="text-sm font-semibold">项目 / 作品说明</h3><ul className="mt-3 space-y-2">{selected.detail.map((d, i) => <li key={i} className="text-sm leading-7 text-stone-500">· {d}</li>)}</ul></div>
             <div><h3 className="text-sm font-semibold">个人参与</h3><p className="mt-3 text-sm leading-7 text-stone-500">{selected.role}</p>{selected.result && <><h3 className="mt-6 text-sm font-semibold">项目结果</h3><p className="mt-2 text-sm leading-7 text-stone-700">{selected.result}</p></>}</div>
           </div>}
+          {selected.galleryPosition === "after" && selected.gallery && selected.gallery.length > 0 && <div className="mt-5 grid gap-3" style={{ gridTemplateColumns: `repeat(${Math.min(3, Math.max(1, Number(selected.galleryColumns) || 2))}, minmax(0, 1fr))` }}>{selected.gallery.map((src, index) => <div key={index} className="bg-white overflow-hidden" style={{ aspectRatio: selected.galleryRatio === "square" ? "1 / 1" : selected.galleryRatio === "portrait" ? "3 / 4" : selected.galleryRatio === "landscape" ? "4 / 3" : "auto" }}><img src={src} alt={selected.title + " " + (index + 1)} className="w-full h-full" style={{ objectFit: selected.galleryRatio === "original" || !selected.galleryRatio ? "contain" : selected.galleryFit === "cover" ? "cover" : "contain" }} /></div>)}</div>}
           <div className="mt-7 flex flex-wrap gap-2">{selected.tags.map(t => <span key={t} className="text-xs bg-stone-100 text-stone-500 px-3 py-2">{t}</span>)}</div>
           <p className="mt-8 pt-5 border-t border-stone-200 text-xs leading-6 text-stone-400">当前为作品详情结构预览，正式素材（图片、视频、文档或外部链接）将在下一步通过内容后台逐项补充。</p>
         </div>
