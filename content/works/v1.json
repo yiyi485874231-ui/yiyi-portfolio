@@ -16,7 +16,7 @@
   ],
   "tone": "peach",
   "coverImage": "/uploads/covers/douyin1.jpg",
-  "coverFit": "contain",
+  "coverFit": "cover",
   "coverRatio": "wide",
   "canvasBlocks": [
     {
