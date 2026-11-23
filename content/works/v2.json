@@ -13,5 +13,25 @@
     "主题短片作品，正式素材可在后台替换为视频或封面。"
   ],
   "tone": "sage",
+  "coverImage": "/uploads/covers/file-2.jpg",
+  "coverFit": "cover",
+  "coverRatio": "wide",
+  "canvasBlocks": [
+    {
+      "type": "canvas",
+      "placement": "after_project_info",
+      "background": "#F5F0E6",
+      "width": "full",
+      "moduleAlign": "center",
+      "spacing": "standard",
+      "size": "standard",
+      "radius": 16,
+      "image": "/uploads/gallery/mengyuantiang-2.jpg",
+      "imageWidth": 50,
+      "imageRatio": "original",
+      "imageAlign": "center"
+    }
+  ],
+  "videoUrl": "https://v.douyin.com/n2gNbUnktA0/",
   "sortOrder": 70
 }
