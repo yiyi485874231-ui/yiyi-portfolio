@@ -637,6 +637,7 @@ export function PortfolioWebsite() {
                 </g>
               </svg>
             </div>
+            <div className="absolute left-[12%] bottom-[12%] text-[9px] md:text-[10px] tracking-[.3em] text-stone-600">SELECTED WORKS / 2026</div>
             <div className="absolute right-[12%] bottom-[12%] text-6xl md:text-7xl font-light text-white/80 tracking-[-.08em]">T.Y.D</div>
           </div>
         </div>
