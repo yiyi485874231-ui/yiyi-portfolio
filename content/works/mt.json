@@ -43,6 +43,20 @@
       "size": "standard",
       "radius": 16,
       "image": "/uploads/gallery/2-1.jpg"
+    },
+    {
+      "type": "canvas",
+      "placement": "after_project_info",
+      "background": "#F5F0E6",
+      "width": "full",
+      "moduleAlign": "center",
+      "spacing": "standard",
+      "size": "standard",
+      "radius": 16,
+      "image": "/uploads/gallery/20261124-200610.jpg",
+      "imageWidth": 50,
+      "imageRatio": "original",
+      "imageAlign": "center"
     }
   ],
   "sortOrder": 10
