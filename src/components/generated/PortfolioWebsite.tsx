@@ -362,7 +362,7 @@ export function PortfolioWebsite() {
   const videoTouchStart = useRef<{x:number;y:number} | null>(null);
   const videoWheelLocked = useRef(false);
   const videoWheelTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const finishVideoTouch = (event: React.TouchEvent<HTMLElement>) => { if (!videoTouchStart.current || !event.changedTouches.length) return; const touch = event.changedTouches[0]; const dx = touch.clientX - videoTouchStart.current.x; const dy = touch.clientY - videoTouchStart.current.y; const delta = Math.abs(dx) > Math.abs(dy) ? dx : dy; if (Math.abs(delta) >= 42) moveVideo(delta < 0 ? 1 : -1); videoTouchStart.current = null; };
+  const finishVideoTouch = (event: React.TouchEvent<HTMLElement>) => { if (!videoTouchStart.current || !event.changedTouches.length) return; const touch = event.changedTouches[0]; const dx = touch.clientX - videoTouchStart.current.x; const dy = touch.clientY - videoTouchStart.current.y; if (Math.abs(dy) >= 42 && Math.abs(dy) > Math.abs(dx) * 1.15) moveVideoMobile(dy < 0 ? 1 : -1); videoTouchStart.current = null; };
   const handleVideoWheel = (event: React.WheelEvent<HTMLElement>) => { event.preventDefault(); const delta = Math.abs(event.deltaY) >= Math.abs(event.deltaX) ? event.deltaY : event.deltaX; if (videoWheelLocked.current || Math.abs(delta) < 12) return; videoWheelLocked.current = true; moveVideo(delta > 0 ? 1 : -1); if (videoWheelTimer.current) clearTimeout(videoWheelTimer.current); videoWheelTimer.current = setTimeout(() => { videoWheelLocked.current = false; }, 280); };
   const go = (id: string) => {
     setActive(id);
@@ -376,6 +376,7 @@ export function PortfolioWebsite() {
   const videoWorks = grouped("视频");
   const activeVideoWork = videoWorks.length ? videoWorks[activeVideo % videoWorks.length] : null;
   const moveVideo = (direction: number) => setActiveVideo(current => (current + direction + Math.max(videoWorks.length, 1)) % Math.max(videoWorks.length, 1));
+  const moveVideoMobile = (direction: number) => setActiveVideo(current => Math.min(Math.max(videoWorks.length - 1, 0), Math.max(0, current + direction)));
   const startVideoTouch = (event: React.TouchEvent<HTMLElement>) => { if (!event.touches.length) return; videoTouchStart.current = { x: event.touches[0].clientX, y: event.touches[0].clientY }; };
   const card = (w: Work, i: number, stacked = false) => <button key={w.id} onClick={() => setSelected(w)} style={stacked ? { zIndex: i + 1 } : undefined} className={"text-left group bg-white border border-stone-200/80 p-5 md:p-6 flex flex-col min-h-[250px] hover:border-stone-400 hover:-translate-y-0.5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-500 " + (stacked ? "portfolio-stack-card" : "")}>
     <div className="flex justify-between gap-3 text-[11px] text-stone-400"><span>{w.type}</span><span>{String(i + 1).padStart(2, "0")}</span></div>
@@ -503,6 +504,8 @@ export function PortfolioWebsite() {
  .portfolio-visual-mobile { display:block; overflow:hidden; }
  .portfolio-visual-mobile-stage { height:300px; position:relative; overflow:hidden; margin:0 -4px 18px; touch-action:none; }
  .portfolio-visual-mobile-arc { position:absolute; inset:0; overflow:hidden; }
+ .portfolio-visual-mobile-guide { position:absolute; z-index:1; right:0; top:0; width:100px; height:100%; overflow:visible; pointer-events:none; }
+ .portfolio-visual-mobile-guide path { fill:none; stroke:rgba(120,113,108,.58); stroke-width:1.35; stroke-linecap:round; stroke-linejoin:round; }
  .portfolio-visual-mobile-ring { position:absolute; width:300px; height:300px; top:50%; left:calc(100% + 0px); transform:translate(-50%,-50%); border:1px solid rgba(120,113,108,.24); border-radius:50%; box-shadow:0 0 0 22px rgba(120,113,108,.035),0 0 0 48px rgba(120,113,108,.025); }
  .portfolio-visual-mobile-item { position:absolute; transform:translate(-50%,-50%); max-width:130px; border:1px solid transparent; border-radius:999px; padding:8px 10px; background:rgba(250,249,246,.96); color:#78716c; font-size:10px; line-height:1.25; white-space:nowrap; transition:background .25s,color .25s,border-color .25s; }
  .portfolio-visual-mobile-item.is-active { background:#252522; color:#fff; border-color:#252522; box-shadow:0 7px 20px rgba(35,31,26,.16); }
@@ -616,6 +619,7 @@ export function PortfolioWebsite() {
                 {activeVideoWork && <div className="portfolio-visual-mobile-stage" onTouchStart={startVideoTouch} onTouchEnd={finishVideoTouch} onTouchCancel={() => { videoTouchStart.current = null; }}>
                   <div className="portfolio-visual-mobile-arc">
                     <div className="portfolio-visual-mobile-ring"></div>
+                    <svg className="portfolio-visual-mobile-guide" viewBox="0 0 100 300" aria-hidden="true"><path d="M 96 12 C 8 38 8 262 96 288" /><path d="M 82 273 L 96 288 L 99 267" /></svg>
                     {videoWorks.map((work, index) => {
                       const count = videoWorks.length;
                       const offset = index - activeVideo;
