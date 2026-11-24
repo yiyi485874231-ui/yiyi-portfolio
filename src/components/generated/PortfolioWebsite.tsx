@@ -382,17 +382,25 @@ export function PortfolioWebsite() {
     return () => observer.disconnect();
   }, []);
   useEffect(() => {
-    const nodes = ["运营", "视频", "视觉", "其他", "关于我"].map(id => document.getElementById(id)).filter(Boolean) as HTMLElement[];
-    if (!nodes.length) return;
-    const observer = new IntersectionObserver(entries => {
-      const visible = entries.filter(entry => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-      if (!visible) return;
-      const section = visible.target.id;
-      setGuideSection(section);
-    }, { threshold: [0.22, 0.4, 0.6], rootMargin: "-18% 0px -28% 0px" });
-    nodes.forEach(node => observer.observe(node));
-    return () => observer.disconnect();
-  }, [welcomeActive]);
+    const nodes = ["运营", "视频", "视觉", "其他", "关于我"]
+      .map(id => document.getElementById(id))
+      .filter(Boolean) as HTMLElement[];
+    const updateGuideSection = () => {
+      const center = window.innerHeight * 0.52;
+      const current = nodes.find(node => {
+        const rect = node.getBoundingClientRect();
+        return rect.top <= center && rect.bottom > center;
+      });
+      if (current) setGuideSection(current.id);
+    };
+    updateGuideSection();
+    window.addEventListener("scroll", updateGuideSection, { passive: true });
+    window.addEventListener("resize", updateGuideSection);
+    return () => {
+      window.removeEventListener("scroll", updateGuideSection);
+      window.removeEventListener("resize", updateGuideSection);
+    };
+  }, []);
   useEffect(() => {
     if (!characterAction) return;
     const timer = window.setTimeout(() => setCharacterAction(null), 1700);
@@ -404,7 +412,7 @@ export function PortfolioWebsite() {
   };
   useEffect(() => {
     if (!welcomeActive) return;
-    const timer = window.setTimeout(() => setWelcomeActive(false), 4800);
+    const timer = window.setTimeout(() => setWelcomeActive(false), 2800);
     return () => {
       window.clearTimeout(timer);
       if ("speechSynthesis" in window) window.speechSynthesis.cancel();
@@ -495,12 +503,12 @@ export function PortfolioWebsite() {
     </div>;
   };
   return <main className="min-h-screen bg-[#faf9f6] text-stone-900 selection:bg-stone-200">
-    <style>{`.portfolio-guide { position:fixed; z-index:80; right:24px; bottom:24px; width:min(330px,calc(100vw - 28px)); display:flex; align-items:flex-end; gap:10px; pointer-events:none; }
+    <style>{`.portfolio-guide { position:fixed; z-index:80; right:24px; bottom:24px; width:min(390px,calc(100vw - 28px)); display:flex; align-items:flex-end; gap:10px; pointer-events:none; }
 .portfolio-guide-card { flex:1; min-width:0; padding:13px 15px; border:1px solid rgba(120,113,108,.2); border-radius:16px 16px 4px 16px; background:rgba(250,249,246,.96); box-shadow:0 12px 36px rgba(35,31,26,.13); color:#57534e; backdrop-filter:blur(12px); animation:guide-in .35s ease both; pointer-events:auto; }
 .portfolio-guide-kicker { color:#a8a29e; font-size:9px; letter-spacing:.16em; }
 .portfolio-guide-title { margin-top:5px; font-size:13px; font-weight:650; color:#292524; }
 .portfolio-guide-copy { margin-top:5px; font-size:11px; line-height:1.7; color:#78716c; }
-.portfolio-guide-mascot { width:72px; height:94px; flex:none; color:#57534e; filter:drop-shadow(0 5px 8px rgba(35,31,26,.12)); animation:wireframe-hover 4.8s ease-in-out infinite; cursor:pointer; pointer-events:auto; }
+.portfolio-guide-mascot { width:96px; height:126px; flex:none; color:#57534e; filter:drop-shadow(0 5px 8px rgba(35,31,26,.12)); animation:wireframe-hover 4.8s ease-in-out infinite; cursor:pointer; pointer-events:auto; }
 .portfolio-guide-mascot.portfolio-guide-mascot-on-dark { color:#f5f5f4; filter:drop-shadow(0 0 3px rgba(255,255,255,.28)) drop-shadow(0 5px 10px rgba(0,0,0,.35)); }
 .portfolio-guide-mascot.guide-action-head { animation:guide-head 700ms ease; }
 .portfolio-guide-mascot.guide-action-hand { animation:guide-wave 850ms ease; }
@@ -511,7 +519,7 @@ export function PortfolioWebsite() {
 @keyframes guide-bounce { 0%,100% { transform:translateY(0) scale(1); } 35% { transform:translateY(-12px) scale(1.04,.96); } 65% { transform:translateY(2px) scale(.97,1.04); } }
 @keyframes guide-trip { 0%,100% { transform:rotate(0) translateY(0); } 35% { transform:rotate(22deg) translateY(5px); } 65% { transform:rotate(-8deg) translateY(-3px); } }
 @keyframes guide-in { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-@media(max-width:767px) { .portfolio-guide { right:12px; bottom:calc(12px + env(safe-area-inset-bottom)); width:min(290px,calc(100vw - 24px)); gap:6px; } .portfolio-guide-card { padding:10px 12px; border-radius:13px 13px 4px 13px; } .portfolio-guide-title { font-size:12px; } .portfolio-guide-copy { font-size:10px; line-height:1.55; } .portfolio-guide-mascot { width:54px; height:74px; } }
+@media(max-width:767px) { .portfolio-guide { right:12px; bottom:calc(12px + env(safe-area-inset-bottom)); width:min(350px,calc(100vw - 24px)); gap:8px; } .portfolio-guide-card { padding:10px 12px; border-radius:13px 13px 4px 13px; } .portfolio-guide-title { font-size:12px; } .portfolio-guide-copy { font-size:10px; line-height:1.55; } .portfolio-guide-mascot { width:72px; height:98px; } }
 .portfolio-wireframe-frame { background:#e9e5dd; color:#55534f; isolation:isolate; }
 .portfolio-wireframe-backdrop { position:absolute; inset:0; background:radial-gradient(ellipse at 50% 42%,#faf8f3 0%,transparent 49%),linear-gradient(145deg,#d7d0c5,#eeebe5 55%,#c9c1b5); }
 .portfolio-wireframe-corner { position:absolute; width:62%; height:76%; top:12%; border:1px solid rgba(255,255,255,.66); pointer-events:none; }
@@ -539,12 +547,12 @@ export function PortfolioWebsite() {
 .portfolio-wireframe-frame.is-welcoming .portfolio-wireframe-model { opacity:0; }
 .portfolio-welcome-overlay { position:fixed; inset:0; z-index:9998; display:flex; align-items:center; justify-content:center; pointer-events:none; background:rgba(32,29,25,.18); backdrop-filter:blur(2px); animation:welcome-screen-in .25s ease both; }
 .portfolio-welcome-stage { position:relative; width:min(86vw,520px); height:min(78vh,620px); display:flex; align-items:center; justify-content:center; }
-.portfolio-welcome-figure { position:relative; z-index:2; width:100%; height:100%; overflow:visible; color:#f7f5f0; filter:drop-shadow(0 18px 28px rgba(0,0,0,.16)); animation:welcome-figure-pop 4.8s cubic-bezier(.2,.78,.2,1) both; }
+.portfolio-welcome-figure { position:relative; z-index:2; width:100%; height:100%; overflow:visible; color:#f7f5f0; filter:drop-shadow(0 18px 28px rgba(0,0,0,.16)); animation:welcome-figure-pop 2.8s cubic-bezier(.2,.78,.2,1) both; }
 .portfolio-wave-arm-left { transform-box:fill-box; transform-origin:100% 8%; animation:welcome-wave-left .52s ease-in-out 4 .65s; }
 .portfolio-wave-arm-right { transform-box:fill-box; transform-origin:0% 8%; animation:welcome-wave-right .52s ease-in-out 4 .65s; }
-.portfolio-welcome-door { position:absolute; z-index:1; right:-2%; top:13%; width:42%; height:72%; overflow:visible; color:#f7f5f0; opacity:0; animation:welcome-door-appear 4.8s ease both; }
+.portfolio-welcome-door { position:absolute; z-index:1; right:-2%; top:13%; width:42%; height:72%; overflow:visible; color:#f7f5f0; opacity:0; animation:welcome-door-appear 2.8s ease both; }
 .portfolio-door-frame,.portfolio-door-leaf path,.portfolio-door-glint { fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
-.portfolio-door-leaf { transform-box:view-box; transform-origin:34px 320px; animation:welcome-door-open 4.8s ease both; }
+.portfolio-door-leaf { transform-box:view-box; transform-origin:34px 320px; animation:welcome-door-open 2.8s ease both; }
 .portfolio-welcome-greeting { position:absolute; z-index:4; top:5%; right:-1%; padding:13px 22px; border-radius:20px 20px 6px 20px; background:#faf9f6; color:#514d47; font-size:clamp(18px,3vw,25px); font-weight:600; letter-spacing:.08em; box-shadow:0 12px 32px rgba(0,0,0,.15); animation:welcome-bubble-in .35s .28s both; }
 .portfolio-welcome-greeting:after { content:""; position:absolute; right:14px; bottom:-7px; width:13px; height:13px; background:#faf9f6; transform:rotate(45deg); }
 @keyframes welcome-screen-in { from { opacity:0; } to { opacity:1; } }
@@ -944,7 +952,7 @@ export function PortfolioWebsite() {
       </svg>
     </aside>}
     {welcomeActive && createPortal(
-      <div className="portfolio-welcome-overlay" role="status" aria-label="Welcome">
+      <div className="portfolio-welcome-overlay" role="status" aria-label="Welcome" onClick={() => setWelcomeActive(false)}>
         <div className="portfolio-welcome-stage">
           <svg viewBox="0 0 360 440" role="img" aria-hidden="true" className="portfolio-welcome-figure">
             <g fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
