@@ -969,6 +969,8 @@ export function PortfolioWebsite() {
       </div>
       <svg className={`portfolio-guide-mascot ${characterAction ? (characterAction.part === "head" ? "guide-action-head" : characterAction.part === "left" || characterAction.part === "right" ? "guide-action-hand" : characterAction.part === "feet" ? "guide-action-feet" : "guide-action-body") : ""}`} viewBox="0 0 360 440" aria-hidden="true" onClick={() => playCharacterAction((["head", "left", "right", "body", "feet"] as const)[Math.floor(Math.random() * 5)])}>
         <g fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M180 38 Q174 23 185 16 Q195 11 198 23"/>
+          <circle cx="198" cy="22" r="3" fill="currentColor" stroke="none" opacity=".65"/>
           <ellipse cx="180" cy="92" rx="49" ry="53"/><ellipse cx="180" cy="92" rx="25" ry="53" opacity=".58"/><ellipse cx="180" cy="92" rx="49" ry="22" opacity=".72"/>
           <path d="M165 145 Q180 153 195 145 L194 165 Q180 174 166 165 Z"/>
           <path d="M164 164 Q180 155 196 164 Q216 175 211 205 Q207 230 196 246 Q180 255 164 246 Q153 230 149 205 Q144 175 164 164 Z"/>
