@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap');
+.farm-site{--ink:#566052;--muted:#858b7c;--paper:#f8f6ef;--sage:#dce3d3;--line:#aab19e;--rose:#e9d8d0;--yellow:#eee4c7;background:var(--paper);color:var(--ink);font-family:"DM Sans","Noto Sans SC",sans-serif;overflow:hidden}
+.farm-site *{box-sizing:border-box}
+.farm-site a{color:inherit;text-decoration:none}
+.farm-nav{height:76px;padding:0 clamp(22px,6vw,92px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #dcded3;background:#f8f6ef;position:relative;z-index:4}
+.farm-brand{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:.18em;font-weight:600}
+.brand-mark{font-size:21px;color:#a8ad8d}
+.farm-nav-links{display:flex;gap:38px;font-size:10px;letter-spacing:.16em;color:#7e8576}
+.farm-nav-note{font-size:10px;letter-spacing:.15em;border-bottom:1px solid #9ba18e;padding-bottom:6px}
+.farm-nav-note span{margin-left:12px}
+.farm-hero{min-height:720px;height:min(820px,calc(100vh - 76px));position:relative;isolation:isolate;background:linear-gradient(180deg,#f8f6ef 0%,#f4f2e8 60%,#edf0e5 100%);overflow:hidden}
+.farm-title-wrap{position:absolute;z-index:2;left:13%;top:17%;max-width:480px}
+.farm-eyebrow,.farm-kicker{font-size:10px;letter-spacing:.2em;color:#8b927f;font-weight:600}
+.farm-title-wrap h1{font:500 clamp(54px,6.3vw,92px)/.98 "Playfair Display",serif;letter-spacing:-.055em;margin:24px 0 20px;color:#596451}
+.farm-title-wrap h1 em,.farm-about-copy h2 em,.farm-note-section h2 em,.farm-footer h2 em{font-weight:500;color:#a0a88e}
+.farm-intro{font-size:14px;line-height:2;color:#737c6c}
+.farm-primary-link{display:inline-flex;gap:28px;align-items:center;margin-top:22px;padding:13px 18px;border:1px solid #aab19e;border-radius:99px;font-size:12px;transition:.25s}
+.farm-primary-link:hover{background:#e5e9dc;transform:translateY(-2px)}
+.farm-sky-note{position:absolute;right:14%;top:14%;font:italic 13px/1.7 "Playfair Display",serif;letter-spacing:.08em;color:#a0a88e}
+.farm-sun{position:absolute;right:27%;top:13%;width:68px;height:68px;border:1px solid #c9c9a8;border-radius:50%;display:grid;place-items:center;color:#c5b98d;font-size:31px}
+.farm-landscape{position:absolute;inset:auto 0 0;height:62%;color:#89937f}
+.farm-art{width:100%;height:100%;display:block}
+.farm-art-mobile{display:none}
+.farm-stamp{position:absolute;right:9%;bottom:25%;width:92px;height:92px;border:1px solid #b7bda9;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;transform:rotate(12deg);font-size:7px;letter-spacing:.12em;color:#919a82}
+.farm-stamp strong{font-size:21px;color:#c89c8f;font-weight:400}
+.farm-scroll{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);font-size:8px;letter-spacing:.2em;color:#8a927e;display:flex;gap:14px;align-items:center}
+.farm-scroll span{font-size:17px}
+.farm-about{padding:130px 14%;display:grid;grid-template-columns:1fr 1fr;gap:9%;align-items:center;background:#f8f6ef}
+.farm-about-art{height:350px;position:relative;display:grid;place-items:center}
+.about-orbit{position:absolute;border:1px solid #c5cbb9;border-radius:50%;transform:rotate(-20deg)}
+.orbit-one{width:280px;height:210px}.orbit-two{width:220px;height:290px;transform:rotate(36deg)}
+.about-spark{position:absolute;top:20px;right:17%;font-size:36px;color:#c2b78f}
+.about-card{width:210px;height:245px;background:#e9e9dd;border:1px solid #c4c9b8;display:flex;flex-direction:column;justify-content:space-between;padding:22px;transform:rotate(-5deg);box-shadow:10px 12px 0 #f0e8d9}
+.about-card span,.about-card small{font-size:8px;letter-spacing:.16em;color:#929985}
+.about-card strong{font:500 35px/1.03 "Playfair Display",serif;color:#737e68}
+.farm-about-copy h2,.farm-section-head h2,.farm-note-section h2{font:500 clamp(34px,4vw,54px)/1.2 "Playfair Display","Noto Sans SC",serif;letter-spacing:-.04em;margin:20px 0;color:#596451}
+.farm-about-copy p:not(.farm-kicker){font-size:13px;line-height:2.1;color:#7b8375;max-width:470px}
+.farm-signature{font:italic 18px "Playfair Display",serif;color:#9da58c;margin-top:25px}.farm-signature span{color:#c99c90}
+.farm-works{padding:105px 10% 120px;background:#eef0e7;position:relative}
+.farm-section-head{display:flex;align-items:flex-end;justify-content:space-between;max-width:1160px;margin:0 auto 36px}
+.farm-section-head h2{margin:14px 0 8px}.farm-section-head h2 span{color:#a0a88e}
+.farm-section-desc{font-size:13px;color:#858d7d}
+.farm-doodle-carrot{font-size:40px;transform:rotate(-14deg);display:flex;flex-direction:column;align-items:center}.farm-doodle-carrot small{font:italic 11px "Playfair Display",serif;color:#9aa28b}
+.farm-filters{display:flex;gap:10px;flex-wrap:wrap;max-width:1160px;margin:0 auto 28px}
+.farm-filters button{border:1px solid #c5cbb9;border-radius:99px;padding:9px 15px;background:transparent;font-size:11px;color:#77806f;cursor:pointer;transition:.2s}
+.farm-filters button span{margin-left:14px;opacity:.5}.farm-filters button.active,.farm-filters button:hover{background:#dfe5d8;border-color:#aeb8a3;color:#596451}
+.farm-project-grid{max-width:1160px;margin:auto;display:grid;grid-template-columns:repeat(12,1fr);gap:20px}
+.farm-project{border:1px solid #d4d9cb;background:#f8f7f0;padding:22px;text-align:left;min-height:320px;display:flex;flex-direction:column;position:relative;overflow:hidden;cursor:pointer;color:#596451;transition:transform .3s,box-shadow .3s}
+.farm-project:hover{transform:translateY(-6px) rotate(-.5deg);box-shadow:0 15px 35px #7f8b7020}
+.farm-project-1{grid-column:span 5;min-height:370px}.farm-project-2{grid-column:span 7;min-height:370px;background:#f3eee7}.farm-project-3{grid-column:span 4}.farm-project-4{grid-column:span 4;background:#f3f0e7}.farm-project-5{grid-column:span 4;background:#edf0e8}
+.project-number,.project-type{font-size:8px;letter-spacing:.16em;color:#929985}
+.project-illustration{height:120px;position:relative;margin:12px 0 15px;display:block;border-bottom:1px solid #d9ddcf}
+.project-sprout{position:absolute;left:45%;top:12px;font-size:58px;color:#aeb99e;transform:rotate(-12deg)}
+.project-line{position:absolute;left:10%;right:12%;bottom:24px;border-top:1px solid #c4cbb8;transform:rotate(-4deg)}
+.project-dot{position:absolute;left:22%;bottom:18px;width:12px;height:12px;border:1px solid #c8a79a;border-radius:50%}
+.farm-project-2 .project-sprout{color:#c2a99a;left:62%;font-size:70px}
+.farm-project-3 .project-sprout{color:#c5bd91}
+.farm-project-4 .project-sprout{color:#a9b8a1}
+.farm-project-5 .project-sprout{color:#b5a9bb}
+.farm-project strong{font:500 22px "Playfair Display","Noto Sans SC",serif;margin:10px 0}
+.project-desc{font-size:11px;line-height:1.8;color:#858d7d;max-width:420px}
+.project-more{font-size:10px;margin-top:auto;padding-top:16px;color:#7e8974}.project-more b{margin-left:8px;font-size:14px;font-weight:400}
+.farm-more-note{text-align:center;margin-top:48px;font-size:8px;letter-spacing:.2em;color:#9aa28d}.farm-more-note span{font-size:17px;margin-right:12px}
+.farm-note-section{padding:110px 15%;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:10%;background:#f8f6ef}
+.note-illustration{height:260px;border:1px solid #d7dacd;border-radius:48% 52% 44% 56%;position:relative;background:#f1f0e6;display:grid;place-items:center;overflow:hidden}
+.note-illustration:before,.note-illustration:after{content:"";position:absolute;border:1px solid #cbd1c0;border-radius:50%;width:85%;height:75%;transform:rotate(24deg)}
+.note-illustration:after{width:65%;height:95%;transform:rotate(-30deg)}
+.note-cloud{font-size:62px;color:#c3c9b6;z-index:1}.note-barn{position:absolute;bottom:38px;left:42%;font:70px "Playfair Display",serif;color:#a3ad96}.note-flower{position:absolute;right:18%;bottom:35px;color:#c6a69a;font-size:42px}
+.farm-note-section h2{font-size:46px}.farm-note-section p:not(.farm-kicker){font-size:13px;line-height:2;color:#838b7d}
+.farm-footer{padding:42px 10% 25px;background:#dfe5d8;color:#596451;text-align:center}
+.footer-top,.footer-bottom{display:flex;justify-content:space-between;font-size:8px;letter-spacing:.16em;color:#87917e}
+.footer-top span:nth-child(2){font-size:22px}
+.farm-footer h2{font:500 clamp(44px,6vw,76px)/1.05 "Playfair Display",serif;margin:70px 0 18px;letter-spacing:-.05em}
+.farm-footer p{font-size:12px;color:#818b78}
+.farm-mail{display:inline-flex;gap:24px;padding:13px 22px;border:1px solid #aab49e;border-radius:99px;margin:22px 0 75px;font-size:12px}
+.footer-bottom{border-top:1px solid #c6cebd;padding-top:20px;gap:16px;flex-wrap:wrap}
+.farm-modal-backdrop{position:fixed;inset:0;z-index:20;background:#4f594b88;display:grid;place-items:center;padding:20px}
+.farm-modal{width:min(480px,100%);background:#f8f6ef;padding:42px;position:relative;border:1px solid #c8cebd;box-shadow:0 20px 80px #34402f30}
+.farm-modal-close{position:absolute;right:16px;top:12px;border:0;background:transparent;font-size:28px;color:#7d8874;cursor:pointer}
+.farm-modal h2{font:500 32px "Playfair Display","Noto Sans SC",serif;margin:16px 0}
+.farm-modal p:not(.farm-kicker){font-size:13px;line-height:1.9;color:#7b8375}
+.modal-note{padding:14px;background:#edf0e7;margin:20px 0;font-size:12px;color:#697461}
+.farm-modal small{font-size:10px;color:#999f90}
+.farm-reveal{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s ease}.farm-reveal.is-visible{opacity:1;transform:none}
+@media(max-width:760px){
+ .farm-nav{height:60px;padding:0 18px}.farm-brand{font-size:9px;letter-spacing:.13em}.brand-mark{font-size:18px}.farm-nav-links{display:none}.farm-nav-note{font-size:8px}
+ .farm-hero{height:auto;min-height:820px;max-height:none}
+ .farm-title-wrap{left:8%;right:8%;top:10%;max-width:none;text-align:center}
+ .farm-eyebrow{font-size:8px}.farm-title-wrap h1{font-size:58px;margin:17px 0 13px}.farm-intro{font-size:12px;line-height:1.9}
+ .farm-primary-link{margin-top:15px;padding:10px 16px;font-size:11px}
+ .farm-sky-note{right:8%;top:39%;font-size:9px}.farm-sun{width:45px;height:45px;right:13%;top:29%;font-size:22px}
+ .farm-landscape{height:49%;bottom:32px}.farm-art-desktop{display:none}.farm-art-mobile{display:block}
+ .farm-stamp{width:65px;height:65px;right:5%;bottom:18%;font-size:5px}.farm-stamp strong{font-size:16px}
+ .farm-scroll{bottom:10px;font-size:7px}
+ .farm-about{padding:72px 8%;grid-template-columns:1fr;gap:34px}
+ .farm-about-art{height:260px;order:2}.farm-about-copy{order:1}.about-card{width:170px;height:205px;padding:17px}.about-card strong{font-size:29px}.orbit-one{width:230px;height:170px}.orbit-two{width:175px;height:230px}
+ .farm-about-copy h2,.farm-section-head h2{font-size:36px}.farm-about-copy p:not(.farm-kicker){font-size:12px}
+ .farm-works{padding:72px 6% 80px}.farm-section-head{align-items:flex-start}.farm-section-head h2{font-size:35px}.farm-section-desc{font-size:11px}.farm-doodle-carrot{font-size:30px}.farm-doodle-carrot small{font-size:9px}
+ .farm-filters{gap:7px;margin-bottom:20px}.farm-filters button{font-size:10px;padding:8px 11px}.farm-filters button span{margin-left:6px}
+ .farm-project-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .farm-project,.farm-project-1,.farm-project-2,.farm-project-3,.farm-project-4,.farm-project-5{grid-column:span 1;min-height:260px;padding:14px}
+ .farm-project-1,.farm-project-4{transform:translateY(12px)}.farm-project-2{background:#f3eee7}
+ .project-illustration{height:82px;margin:9px 0 11px}.project-sprout{font-size:42px}.farm-project-2 .project-sprout{font-size:48px}
+ .farm-project strong{font-size:16px;line-height:1.35}.project-desc{font-size:10px;line-height:1.65}.project-number,.project-type{font-size:7px}
+ .project-more{font-size:9px;padding-top:12px}
+ .farm-more-note{font-size:7px;letter-spacing:.12em;margin-top:35px}
+ .farm-note-section{padding:75px 9%;grid-template-columns:1fr;gap:28px}.note-illustration{height:210px;order:2}.farm-note-section h2{font-size:38px;margin:14px 0}.farm-note-section p:not(.farm-kicker){font-size:12px}
+ .farm-footer{padding:30px 7% 20px}.footer-top,.footer-bottom{font-size:7px}.farm-footer h2{font-size:48px;margin:55px 0 14px}.farm-footer p{font-size:11px}.farm-mail{margin-bottom:55px}
+ .farm-modal{padding:32px 24px}.farm-modal h2{font-size:25px}
+}
+@media(max-width:380px){.farm-title-wrap h1{font-size:51px}.farm-hero{min-height:780px}.farm-project-grid{grid-template-columns:1fr}.farm-project,.farm-project-1,.farm-project-2,.farm-project-3,.farm-project-4,.farm-project-5{min-height:245px;transform:none}}
+@media(prefers-reduced-motion:reduce){.farm-site *{scroll-behavior:auto!important;animation:none!important;transition:none!important}.farm-reveal{opacity:1;transform:none}}
