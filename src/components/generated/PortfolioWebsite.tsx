@@ -342,6 +342,7 @@ function SectionHeading({
 export function PortfolioWebsite() {
   const [active, setActive] = useState("首页");
   const [welcomeActive, setWelcomeActive] = useState(false);
+  const [characterAction, setCharacterAction] = useState<{ part: "head" | "left" | "right" | "body"; variant: number } | null>(null);
   const welcomeFrameRef = useRef<HTMLDivElement>(null);
   const welcomeTriggered = useRef(false);
   const editableWorkFiles = import.meta.glob("../../../content/works/*.json", {
@@ -372,6 +373,15 @@ export function PortfolioWebsite() {
     observer.observe(node);
     return () => observer.disconnect();
   }, []);
+  useEffect(() => {
+    if (!characterAction) return;
+    const timer = window.setTimeout(() => setCharacterAction(null), 1050);
+    return () => window.clearTimeout(timer);
+  }, [characterAction]);
+  const playCharacterAction = (part: "head" | "left" | "right" | "body") => {
+    const variant = Math.floor(Math.random() * 3);
+    setCharacterAction({ part, variant });
+  };
   useEffect(() => {
     if (!welcomeActive) return;
     const timer = window.setTimeout(() => setWelcomeActive(false), 4800);
@@ -480,6 +490,24 @@ export function PortfolioWebsite() {
 .portfolio-wireframe-corner-b { left:12%; top:17%; width:54%; height:66%; border-color:rgba(90,86,79,.12); }
 .portfolio-wireframe-model { cursor:pointer; position:absolute; inset:14% 10% 6%; display:flex; align-items:center; justify-content:center; perspective:900px; transform-style:preserve-3d; animation:wireframe-hover 4.8s ease-in-out infinite; }
 .portfolio-wireframe-svg { width:min(100%,320px); height:92%; overflow:visible; filter:drop-shadow(0 8px 10px rgba(54,50,44,.08)); transform-style:preserve-3d; animation:wireframe-turn 18s linear infinite; }
+@keyframes wireframe-hover { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-9px); } }
+@keyframes wireframe-turn { from { transform:rotateY(0deg); } to { transform:rotateY(360deg); } }
+.portfolio-wireframe-svg { animation:wireframe-turn 18s linear infinite; }
+.portfolio-wireframe-model { animation:wireframe-hover 4.8s ease-in-out infinite; }
+.portfolio-wireframe-svg.is-action-head-0 .portfolio-wire-head { transform-box:fill-box; transform-origin:50% 100%; animation:character-head-left .8s ease-in-out; }
+.portfolio-wireframe-svg.is-action-head-1 .portfolio-wire-head { transform-box:fill-box; transform-origin:50% 100%; animation:character-head-right .8s ease-in-out; }
+.portfolio-wireframe-svg.is-action-head-2 .portfolio-wire-head { transform-box:fill-box; transform-origin:50% 100%; animation:character-head-bob .8s ease-in-out; }
+.portfolio-wireframe-svg.is-action-left-0 .portfolio-wire-arm-left,.portfolio-wireframe-svg.is-action-right-0 .portfolio-wire-arm-right { transform-box:fill-box; transform-origin:50% 8%; animation:character-arm-wave .8s ease-in-out; }
+.portfolio-wireframe-svg.is-action-left-1 .portfolio-wire-arm-left,.portfolio-wireframe-svg.is-action-right-1 .portfolio-wire-arm-right { transform-box:fill-box; transform-origin:50% 8%; animation:character-arm-wave-alt .8s ease-in-out; }
+.portfolio-wireframe-svg.is-action-left-2 .portfolio-wire-arm-left,.portfolio-wireframe-svg.is-action-right-2 .portfolio-wire-arm-right { transform-box:fill-box; transform-origin:50% 8%; animation:character-arm-bounce .8s ease-in-out; }
+.portfolio-wireframe-svg.is-action-body-0 .portfolio-wire-torso,.portfolio-wireframe-svg.is-action-body-1 .portfolio-wire-torso,.portfolio-wireframe-svg.is-action-body-2 .portfolio-wire-torso { transform-box:fill-box; transform-origin:50% 0%; animation:character-body-bounce .8s ease-in-out; }
+@keyframes character-head-left { 0%,100% { transform:rotate(0); } 35% { transform:rotate(-18deg); } 70% { transform:rotate(8deg); } }
+@keyframes character-head-right { 0%,100% { transform:rotate(0); } 35% { transform:rotate(18deg); } 70% { transform:rotate(-8deg); } }
+@keyframes character-head-bob { 0%,100% { transform:translateY(0) rotate(0); } 35% { transform:translateY(7px) rotate(-5deg); } 70% { transform:translateY(-3px) rotate(5deg); } }
+@keyframes character-arm-wave { 0%,100% { transform:rotate(0); } 25% { transform:rotate(-32deg); } 50% { transform:rotate(18deg); } 75% { transform:rotate(-20deg); } }
+@keyframes character-arm-wave-alt { 0%,100% { transform:rotate(0); } 30% { transform:rotate(24deg); } 60% { transform:rotate(-26deg); } }
+@keyframes character-arm-bounce { 0%,100% { transform:translateY(0) rotate(0); } 40% { transform:translateY(-9px) rotate(-18deg); } 75% { transform:translateY(2px) rotate(8deg); } }
+@keyframes character-body-bounce { 0%,100% { transform:scale(1) translateY(0); } 35% { transform:scale(1.05,.96) translateY(-5px); } 70% { transform:scale(.98,1.03) translateY(2px); } }
 .portfolio-wireframe-frame.is-welcoming .portfolio-wireframe-model { opacity:0; }
 .portfolio-welcome-overlay { position:fixed; inset:0; z-index:9998; display:flex; align-items:center; justify-content:center; pointer-events:none; background:rgba(32,29,25,.18); backdrop-filter:blur(2px); animation:welcome-screen-in .25s ease both; }
 .portfolio-welcome-stage { position:relative; width:min(86vw,520px); height:min(78vh,620px); display:flex; align-items:center; justify-content:center; }
@@ -644,7 +672,7 @@ export function PortfolioWebsite() {
             <div className="portfolio-wireframe-corner portfolio-wireframe-corner-a"></div>
             <div className="portfolio-wireframe-corner portfolio-wireframe-corner-b"></div>
             <div className="portfolio-wireframe-model" role="button" tabIndex={0} aria-label="点击小人再次播放 Welcome 欢迎动画" title="点击我，再打一次招呼" onClick={() => { if (!welcomeActive) setWelcomeActive(true); }} onKeyDown={(event) => { if ((event.key === "Enter" || event.key === " ") && !welcomeActive) { event.preventDefault(); setWelcomeActive(true); } }}>
-              <svg viewBox="0 0 360 440" role="img" aria-hidden="true" className="portfolio-wireframe-svg">
+              <svg viewBox="0 0 360 440" role="img" aria-hidden="true" className={"portfolio-wireframe-svg" + (characterAction ? " is-action-" + characterAction.part + "-" + characterAction.variant : "")}>
                 <g fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
                   <g className="portfolio-wire-head">
                     <ellipse cx="180" cy="92" rx="49" ry="53"/>
@@ -664,8 +692,8 @@ export function PortfolioWebsite() {
                   </g>
                   <g className="portfolio-wire-limbs">
                     <g className="portfolio-wire-arms">
-                    <path d="M153 177 Q137 178 129 193 Q122 207 132 217 Q140 224 148 212 L158 198"/>
-                    <path d="M207 177 Q223 178 231 193 Q238 207 228 217 Q220 224 212 212 L202 198"/>
+                    <g className="portfolio-wire-arm-left"><path d="M153 177 Q137 178 129 193 Q122 207 132 217 Q140 224 148 212 L158 198"/></g>
+                    <g className="portfolio-wire-arm-right"><path d="M207 177 Q223 178 231 193 Q238 207 228 217 Q220 224 212 212 L202 198"/></g>
                     <path d="M129 193 Q138 199 145 205 M231 193 Q222 199 215 205" opacity=".62"/>
                     </g>
                     <path d="M165 246 Q160 261 159 278 Q158 289 169 291 Q179 292 180 280 L180 254"/>
@@ -684,6 +712,12 @@ export function PortfolioWebsite() {
                   <path d="M180 8 V2 M180 316 V308" opacity=".3"/>
                   <circle cx="180" cy="2" r="2" fill="currentColor" stroke="none" opacity=".45"/>
                 </g>
+                  <g className="portfolio-character-hit-zones" fill="transparent" stroke="transparent" pointerEvents="all">
+                    <circle cx="180" cy="92" r="61" onClick={(event) => { event.stopPropagation(); playCharacterAction("head"); }} />
+                    <path d="M115 170 Q90 205 130 235" strokeWidth="25" onClick={(event) => { event.stopPropagation(); playCharacterAction("left"); }} />
+                    <path d="M245 170 Q270 205 230 235" strokeWidth="25" onClick={(event) => { event.stopPropagation(); playCharacterAction("right"); }} />
+                    <path d="M145 158 Q180 145 215 158 L220 250 Q180 270 140 250 Z" onClick={(event) => { event.stopPropagation(); playCharacterAction("body"); }} />
+                  </g>
               </svg>
             </div>
 
