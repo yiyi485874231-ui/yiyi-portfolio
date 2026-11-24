@@ -350,25 +350,8 @@ export function PortfolioWebsite() {
     "其他": { title: "其他作品", speech: "这里还有一些不同类型的作品。" },
     "关于我": { title: "感谢你的浏览", speech: "Thank you for exploring my portfolio!" }
   };
-  const preferredVoice = (lang: string) => {
-    const voices = window.speechSynthesis.getVoices();
-    const matching = voices.filter(voice => voice.lang.toLowerCase().startsWith(lang.toLowerCase()));
-    return matching.find(voice => /female|woman|女|xiaoxiao|xiaoyi|晓晓|晓伊/i.test(voice.name))
-      || matching.find(voice => /natural|neural|premium|online/i.test(voice.name))
-      || matching[0];
-  };
-  const speakGuide = (section: string) => {
-    const copy = guideCopy[section];
-    if (!copy || !("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(copy.speech);
-    const isEnglish = section === "关于我";
-    utterance.lang = isEnglish ? "en-US" : "zh-CN";
-    const voice = preferredVoice(utterance.lang);
-    if (voice) utterance.voice = voice;
-    utterance.rate = isEnglish ? 0.98 : 1.08;
-    utterance.pitch = 1.22;
-    window.speechSynthesis.speak(utterance);
+  const speakGuide = (_section: string) => {
+    // Narration is intentionally silent; the on-screen speech bubble carries the guide copy.
   };
   const [welcomeActive, setWelcomeActive] = useState(false);
   const [characterAction, setCharacterAction] = useState<{ part: "head" | "left" | "right" | "body" | "feet"; variant: number } | null>(null);
@@ -430,16 +413,6 @@ export function PortfolioWebsite() {
   useEffect(() => {
     if (!welcomeActive) return;
     const timer = window.setTimeout(() => setWelcomeActive(false), 4800);
-    if ("speechSynthesis" in window && "SpeechSynthesisUtterance" in window) {
-      window.speechSynthesis.cancel();
-      const greeting = new SpeechSynthesisUtterance("Welcome!");
-      greeting.lang = "en-US";
-      const voice = preferredVoice("en-US");
-      if (voice) greeting.voice = voice;
-      greeting.rate = 0.98;
-      greeting.pitch = 1.24;
-      window.speechSynthesis.speak(greeting);
-    }
     return () => {
       window.clearTimeout(timer);
       if ("speechSynthesis" in window) window.speechSynthesis.cancel();
