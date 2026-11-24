@@ -357,6 +357,8 @@ export function PortfolioWebsite() {
   }, []);
   const [selected, setSelected] = useState<Work | null>(null);
   const [mobileMenu, setMobileMenu] = useState(false);
+  const [activeVisual, setActiveVisual] = useState(0);
+  const visualDragStart = useRef<number | null>(null);
   const go = (id: string) => {
     setActive(id);
     setMobileMenu(false);
@@ -366,6 +368,9 @@ export function PortfolioWebsite() {
     });
   };
   const grouped = (id: string) => works.filter(w => w.category ? w.category === id : id === "运营" ? ["mt", "1688", "sanxiang", "college", "personal"].includes(w.id) : id === "视频" ? w.id.startsWith("v") : id === "视觉" ? w.id.startsWith("d") : w.id.startsWith("o"));
+  const visualWorks = grouped("视觉");
+  const activeVisualWork = visualWorks.length ? visualWorks[activeVisual % visualWorks.length] : null;
+  const moveVisual = (direction: number) => setActiveVisual(current => (current + direction + Math.max(visualWorks.length, 1)) % Math.max(visualWorks.length, 1));
   const card = (w: Work, i: number, stacked = false) => <button key={w.id} onClick={() => setSelected(w)} style={stacked ? { zIndex: i + 1 } : undefined} className={"text-left group bg-white border border-stone-200/80 p-5 md:p-6 flex flex-col min-h-[250px] hover:border-stone-400 hover:-translate-y-0.5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-500 " + (stacked ? "portfolio-stack-card" : "")}>
     <div className="flex justify-between gap-3 text-[11px] text-stone-400"><span>{w.type}</span><span>{String(i + 1).padStart(2, "0")}</span></div>
     <div className={"mt-5 mb-5 flex items-center justify-center relative overflow-hidden " + (toneClass[w.tone] || "bg-stone-100")} style={{ aspectRatio: w.coverRatio === "square" ? "1 / 1" : w.coverRatio === "portrait" ? "3 / 4" : w.coverRatio === "landscape" ? "4 / 3" : "16 / 7" }}>
@@ -424,7 +429,56 @@ export function PortfolioWebsite() {
     </div>;
   };
   return <main className="min-h-screen bg-[#faf9f6] text-stone-900 selection:bg-stone-200">
-    <style>{`@media (max-width: 767px) { .mt-mobile-stack-item { width: 100% !important; max-width: 100% !important; flex: 0 0 100% !important; } .personal-mobile-stack-item img { width: 100% !important; max-width: 100% !important; } .portfolio-operations-content .portfolio-stack-grid { display: grid; grid-template-columns: minmax(0,1fr); gap: 14px; align-items: start; } .portfolio-operations-content .portfolio-stack-grid > .portfolio-stack-card { position: sticky !important; top: 84px !important; align-self: start; min-height: 0; height: auto; width: 100%; margin: 0; background: #fff; box-shadow: 0 12px 32px rgba(35,31,26,.10); border-radius: 18px; } .portfolio-stack-card:nth-child(1) { margin-top: 0; } } .portfolio-category-card { position: relative; isolation: isolate; margin-top: 28px; margin-bottom: 28px; border: 1px solid rgba(120,113,108,.22); border-radius: 26px; background: #fff; box-shadow: 0 18px 48px rgba(35,31,26,.07); overflow: visible; } @media (min-width: 768px) { .portfolio-category-card::before { content: ""; position: absolute; inset: 8px -7px -8px 7px; z-index: -1; border: 1px solid rgba(120,113,108,.13); border-radius: inherit; background: rgba(255,255,255,.72); } } .portfolio-operations-layout { display: grid; grid-template-columns: minmax(220px,.72fr) minmax(0,1.8fr); gap: clamp(28px,4vw,64px); align-items: start; } .portfolio-operations-heading { position: sticky; top: 104px; align-self: start; } .portfolio-operations-heading > div { margin-bottom: 0; } .portfolio-operations-content { min-width: 0; } .portfolio-operations-content .portfolio-stack-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; } .portfolio-stack-card { position: relative; min-height: 0; border-radius: 16px; box-shadow: 0 5px 18px rgba(35,31,26,.045); transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease; } .portfolio-stack-card:hover { transform: translateY(-4px); box-shadow: 0 14px 28px rgba(35,31,26,.09); } @media (min-width: 1500px) { .portfolio-operations-content .portfolio-stack-grid { grid-template-columns: repeat(3,minmax(0,1fr)); } } @media (max-width: 1023px) { .portfolio-operations-layout { display: block; } .portfolio-operations-heading { position: static; } .portfolio-operations-content .portfolio-stack-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } } @media (max-width: 639px) { .portfolio-category-card { margin: 16px 12px; border-radius: 20px; } .portfolio-operations-content .portfolio-stack-grid { grid-template-columns: minmax(0,1fr); } } @media (prefers-reduced-motion: reduce) { .portfolio-stack-card { transition: none !important; } .portfolio-category-card { animation: none !important; } }`}</style>
+    <style>{`.portfolio-visual-gallery { width: 100%; }
+.portfolio-visual-stage { display: grid; grid-template-columns: minmax(360px,1fr) minmax(300px,.9fr); gap: clamp(24px,4vw,64px); align-items: center; min-height: 560px; }
+.portfolio-visual-orbit { width: min(100%, 470px); aspect-ratio: 1; position: relative; margin: 0 auto; border-radius: 50%; touch-action: pan-y; }
+.portfolio-visual-ring { position: absolute; border: 1px solid rgba(120,113,108,.22); border-radius: 50%; pointer-events: none; }
+.portfolio-visual-ring-outer { inset: 4%; }
+.portfolio-visual-ring-inner { inset: 18%; border-style: dashed; opacity: .7; }
+.portfolio-visual-orbit::before,.portfolio-visual-orbit::after { content: ""; position: absolute; inset: 10%; border: 1px solid rgba(120,113,108,.12); border-radius: 50%; transform: rotate(28deg) scaleX(.72); pointer-events: none; }
+.portfolio-visual-orbit::after { transform: rotate(-28deg) scaleX(.72); }
+.portfolio-visual-orbit-core { position: absolute; inset: 31%; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; background: radial-gradient(circle,#fff 0%,#f7f5f0 72%,rgba(247,245,240,.3) 100%); color: #a8a29e; letter-spacing: .2em; font-size: 9px; }
+.portfolio-visual-orbit-core strong { color: #292524; font-size: 46px; font-weight: 300; letter-spacing: -.06em; }
+.portfolio-visual-orbit-item { position: absolute; transform: translate(-50%,-50%); z-index: 2; max-width: 154px; border: 1px solid transparent; border-radius: 999px; padding: 9px 13px; background: rgba(250,249,246,.94); color: #78716c; font-size: 11px; line-height: 1.35; white-space: nowrap; transition: color .3s,background .3s,border-color .3s,box-shadow .3s,transform .3s; }
+.portfolio-visual-orbit-item.is-active { background: #252522; color: #fff; border-color: #252522; box-shadow: 0 8px 24px rgba(35,31,26,.18); transform: translate(-50%,-50%) scale(1.06); }
+.portfolio-visual-feature { min-width: 0; animation: portfolioVisualReveal .55s ease both; }
+.portfolio-visual-feature-meta { display:flex; justify-content:space-between; gap:12px; color:#a8a29e; font-size:10px; letter-spacing:.12em; margin-bottom:14px; }
+.portfolio-visual-cover { width:100%; text-align:left; display:block; }
+.portfolio-visual-cover-image { position:relative; width:100%; aspect-ratio: 4 / 3; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+.portfolio-visual-cover-image img { width:100%; height:100%; object-fit:contain; transition:transform .7s cubic-bezier(.2,.7,.2,1); }
+.portfolio-visual-cover:hover .portfolio-visual-cover-image img { transform:scale(1.035); }
+.portfolio-visual-cover-image > span { font-size:72px; font-weight:300; color:rgba(87,83,78,.4); }
+.portfolio-visual-cover-image i { position:absolute; inset:14px; border:1px solid rgba(255,255,255,.65); pointer-events:none; }
+.portfolio-visual-cover-copy { padding:18px 2px 0; }
+.portfolio-visual-cover-copy > span { color:#a8a29e; font-size:9px; letter-spacing:.18em; }
+.portfolio-visual-cover-copy h3 { margin-top:8px; font-size:22px; font-weight:600; }
+.portfolio-visual-cover-copy p { margin-top:8px; color:#78716c; font-size:13px; line-height:1.8; }
+.portfolio-visual-controls { display:flex; align-items:center; justify-content:space-between; margin-top:22px; color:#a8a29e; font-size:9px; letter-spacing:.16em; }
+.portfolio-visual-controls button { width:38px; height:38px; border:1px solid rgba(120,113,108,.3); border-radius:50%; color:#57534e; font-size:18px; transition:background .2s,color .2s; }
+.portfolio-visual-controls button:hover { background:#252522; color:#fff; }
+.portfolio-visual-mobile { display:none; }
+@keyframes portfolioVisualReveal { from { opacity:0; transform:translateY(12px) scale(.985); } to { opacity:1; transform:translateY(0) scale(1); } }
+@media (max-width: 767px) {
+ .portfolio-visual-stage { display:none; }
+ .portfolio-visual-mobile { display:block; overflow:hidden; }
+ .portfolio-visual-mobile-stage { height:330px; position:relative; overflow:hidden; margin:0 -4px 24px; touch-action:pan-y; }
+ .portfolio-visual-mobile-arc { position:absolute; inset:0; overflow:hidden; }
+ .portfolio-visual-mobile-ring { position:absolute; width:300px; height:300px; top:50%; left:calc(100% + 0px); transform:translate(-50%,-50%); border:1px solid rgba(120,113,108,.24); border-radius:50%; box-shadow:0 0 0 22px rgba(120,113,108,.035),0 0 0 48px rgba(120,113,108,.025); }
+ .portfolio-visual-mobile-item { position:absolute; transform:translate(-50%,-50%); max-width:130px; border:1px solid transparent; border-radius:999px; padding:8px 10px; background:rgba(250,249,246,.96); color:#78716c; font-size:10px; line-height:1.25; white-space:nowrap; transition:background .25s,color .25s,border-color .25s; }
+ .portfolio-visual-mobile-item.is-active { background:#252522; color:#fff; border-color:#252522; box-shadow:0 7px 20px rgba(35,31,26,.16); }
+ .portfolio-visual-mobile-center { position:absolute; left:0; top:50%; transform:translateY(-50%); width:calc(100% - 100px); display:flex; flex-direction:column; gap:9px; padding:16px 0; border-top:1px solid rgba(120,113,108,.2); border-bottom:1px solid rgba(120,113,108,.2); pointer-events:none; }
+ .portfolio-visual-mobile-center span,.portfolio-visual-mobile-center small { color:#a8a29e; font-size:9px; letter-spacing:.16em; }
+ .portfolio-visual-mobile-center strong { font-size:19px; line-height:1.35; font-weight:600; color:#292524; }
+ .portfolio-visual-mobile-cover { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr); gap:16px; width:100%; text-align:left; align-items:center; animation:portfolioVisualReveal .45s ease both; }
+ .portfolio-visual-mobile-image { position:relative; width:100%; aspect-ratio:1; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+ .portfolio-visual-mobile-image img { width:100%; height:100%; object-fit:contain; }
+ .portfolio-visual-mobile-image > span { font-size:48px; color:rgba(87,83,78,.4); font-weight:300; }
+ .portfolio-visual-mobile-controls { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:22px; color:#a8a29e; font-size:9px; }
+ .portfolio-visual-mobile-controls button { font-size:11px; color:#57534e; padding:8px 0; }
+}
+@media (max-width: 380px) { .portfolio-visual-mobile-cover { grid-template-columns:1fr; } .portfolio-visual-mobile-image { aspect-ratio:16/9; } }
+@media (prefers-reduced-motion: reduce) { .portfolio-visual-feature,.portfolio-visual-mobile-cover { animation:none; } .portfolio-visual-cover-image img { transition:none; } }
+@media (max-width: 767px) { .mt-mobile-stack-item { width: 100% !important; max-width: 100% !important; flex: 0 0 100% !important; } .personal-mobile-stack-item img { width: 100% !important; max-width: 100% !important; } .portfolio-operations-content .portfolio-stack-grid { display: grid; grid-template-columns: minmax(0,1fr); gap: 14px; align-items: start; } .portfolio-operations-content .portfolio-stack-grid > .portfolio-stack-card { position: sticky !important; top: 84px !important; align-self: start; min-height: 0; height: auto; width: 100%; margin: 0; background: #fff; box-shadow: 0 12px 32px rgba(35,31,26,.10); border-radius: 18px; } .portfolio-stack-card:nth-child(1) { margin-top: 0; } } .portfolio-category-card { position: relative; isolation: isolate; margin-top: 28px; margin-bottom: 28px; border: 1px solid rgba(120,113,108,.22); border-radius: 26px; background: #fff; box-shadow: 0 18px 48px rgba(35,31,26,.07); overflow: visible; } @media (min-width: 768px) { .portfolio-category-card::before { content: ""; position: absolute; inset: 8px -7px -8px 7px; z-index: -1; border: 1px solid rgba(120,113,108,.13); border-radius: inherit; background: rgba(255,255,255,.72); } } .portfolio-operations-layout { display: grid; grid-template-columns: minmax(220px,.72fr) minmax(0,1.8fr); gap: clamp(28px,4vw,64px); align-items: start; } .portfolio-operations-heading { position: sticky; top: 104px; align-self: start; } .portfolio-operations-heading > div { margin-bottom: 0; } .portfolio-operations-content { min-width: 0; } .portfolio-operations-content .portfolio-stack-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; } .portfolio-stack-card { position: relative; min-height: 0; border-radius: 16px; box-shadow: 0 5px 18px rgba(35,31,26,.045); transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease; } .portfolio-stack-card:hover { transform: translateY(-4px); box-shadow: 0 14px 28px rgba(35,31,26,.09); } @media (min-width: 1500px) { .portfolio-operations-content .portfolio-stack-grid { grid-template-columns: repeat(3,minmax(0,1fr)); } } @media (max-width: 1023px) { .portfolio-operations-layout { display: block; } .portfolio-operations-heading { position: static; } .portfolio-operations-content .portfolio-stack-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } } @media (max-width: 639px) { .portfolio-category-card { margin: 16px 12px; border-radius: 20px; } .portfolio-operations-content .portfolio-stack-grid { grid-template-columns: minmax(0,1fr); } } @media (prefers-reduced-motion: reduce) { .portfolio-stack-card { transition: none !important; } .portfolio-category-card { animation: none !important; } }`}</style>
     <header className="sticky top-0 z-30 border-b border-stone-200/80 bg-[#faf9f6]/95 backdrop-blur">
       <div className="mx-auto max-w-7xl px-5 md:px-10 h-[68px] flex items-center justify-between gap-4">
         <button onClick={() => go("首页")} className="font-semibold tracking-[.14em] text-xs md:text-sm whitespace-nowrap">TANG YI DAN<span className="text-stone-400">.</span></button>
@@ -488,10 +542,62 @@ export function PortfolioWebsite() {
             <SectionHeading index={"0" + (i + 1)} title={c.label} en={c.en} intro={c.intro} />
           </div>
           <div className={c.id === "运营" ? "portfolio-operations-content" : ""}>
-            <div className={c.id === "运营" ? "portfolio-stack-grid" : "grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5"}>{grouped(c.id).map((w, j) => card(w, j, c.id === "运营"))}</div>
+            {c.id === "视觉" ? <div className="portfolio-visual-gallery">
+              {activeVisualWork && <div className="portfolio-visual-stage" onWheel={event => { if (Math.abs(event.deltaY) > 8) moveVisual(event.deltaY > 0 ? 1 : -1); }} onPointerDown={event => { visualDragStart.current = event.clientX; }} onPointerUp={event => { if (visualDragStart.current !== null && Math.abs(event.clientX - visualDragStart.current) > 35) moveVisual(event.clientX < visualDragStart.current ? 1 : -1); visualDragStart.current = null; }} onPointerCancel={() => { visualDragStart.current = null; }}>
+                <div className="portfolio-visual-orbit" aria-label="视觉设计作品圆弧导航">
+                  <div className="portfolio-visual-ring portfolio-visual-ring-outer"></div>
+                  <div className="portfolio-visual-ring portfolio-visual-ring-inner"></div>
+                  <div className="portfolio-visual-orbit-core"><span>SELECTED</span><strong>{String(activeVisual + 1).padStart(2, "0")}</strong><span>VISUAL WORKS</span></div>
+                  {visualWorks.map((work, index) => {
+                    const count = visualWorks.length;
+                    const angle = -90 + ((index - activeVisual + count) % count) * (360 / count);
+                    const radians = angle * Math.PI / 180;
+                    const x = Math.cos(radians) * 174;
+                    const y = Math.sin(radians) * 174;
+                    const isCurrent = index === activeVisual;
+                    return <button key={work.id} type="button" onClick={() => setActiveVisual(index)} className={"portfolio-visual-orbit-item" + (isCurrent ? " is-active" : "")} style={{ left: `calc(50% + ${x}px)`, top: `calc(50% + ${y}px)` }} aria-pressed={isCurrent}>
+                      <span>{work.title}</span>
+                    </button>;
+                  })}
+                </div>
+                <div className="portfolio-visual-feature" key={activeVisualWork.id}>
+                  <div className="portfolio-visual-feature-meta"><span>{activeVisualWork.type}</span><span>{String(activeVisual + 1).padStart(2, "0")} / {String(visualWorks.length).padStart(2, "0")}</span></div>
+                  <button type="button" onClick={() => setSelected(activeVisualWork)} className="portfolio-visual-cover group">
+                    <div className={"portfolio-visual-cover-image " + (toneClass[activeVisualWork.tone] || "bg-stone-100")}>
+                      {activeVisualWork.coverImage ? <img src={activeVisualWork.coverImage} alt={activeVisualWork.title} /> : <span>{String(activeVisual + 1).padStart(2, "0")}</span>}
+                      <i></i>
+                    </div>
+                    <div className="portfolio-visual-cover-copy"><span>OPEN PROJECT ↗</span><h3>{activeVisualWork.title}</h3><p>{activeVisualWork.desc}</p></div>
+                  </button>
+                  <div className="portfolio-visual-controls"><button type="button" onClick={() => moveVisual(-1)} aria-label="上一个作品">←</button><span>SCROLL / DRAG TO EXPLORE</span><button type="button" onClick={() => moveVisual(1)} aria-label="下一个作品">→</button></div>
+                </div>
+              </div>}
+              <div className="portfolio-visual-mobile">
+                {activeVisualWork && <div className="portfolio-visual-mobile-stage" onTouchStart={event => { visualDragStart.current = event.touches[0]?.clientY ?? null; }} onTouchEnd={event => { const end = event.changedTouches[0]?.clientY; if (visualDragStart.current !== null && end !== undefined && Math.abs(end - visualDragStart.current) > 28) moveVisual(end < visualDragStart.current ? 1 : -1); visualDragStart.current = null; }}>
+                  <div className="portfolio-visual-mobile-arc">
+                    <div className="portfolio-visual-mobile-ring"></div>
+                    {visualWorks.map((work, index) => {
+                      const count = visualWorks.length;
+                      const offset = index - activeVisual;
+                      const angle = 180 + offset * Math.min(34, 170 / Math.max(count - 1, 1));
+                      const radians = angle * Math.PI / 180;
+                      const x = Math.cos(radians) * 150;
+                      const y = Math.sin(radians) * 150;
+                      const isCurrent = index === activeVisual;
+                      return <button key={work.id} type="button" onClick={() => setActiveVisual(index)} className={"portfolio-visual-mobile-item" + (isCurrent ? " is-active" : "")} style={{ left: `calc(100% + ${x}px)`, top: `calc(50% + ${y}px)` }} aria-pressed={isCurrent}><span>{work.title}</span></button>;
+                    })}
+                  </div>
+                  <div className="portfolio-visual-mobile-center"><span>NOW SELECTED</span><strong>{activeVisualWork.title}</strong><small>{String(activeVisual + 1).padStart(2, "0")} / {String(visualWorks.length).padStart(2, "0")}</small></div>
+                </div>}
+                {activeVisualWork && <button type="button" onClick={() => setSelected(activeVisualWork)} className="portfolio-visual-mobile-cover group">
+                  <div className={"portfolio-visual-mobile-image " + (toneClass[activeVisualWork.tone] || "bg-stone-100")}>{activeVisualWork.coverImage ? <img src={activeVisualWork.coverImage} alt={activeVisualWork.title} /> : <span>{String(activeVisual + 1).padStart(2, "0")}</span>}</div>
+                  <div className="pt-4"><span className="text-[10px] tracking-[.18em] text-stone-400">{activeVisualWork.type}</span><h3 className="mt-2 text-lg font-semibold">{activeVisualWork.title}</h3><p className="mt-2 text-sm leading-6 text-stone-500">{activeVisualWork.desc}</p><span className="mt-4 inline-block text-xs text-stone-500">查看作品详情 ↗</span></div>
+                </button>}
+                <div className="portfolio-visual-mobile-controls"><button type="button" onClick={() => moveVisual(-1)}>← 上一个</button><span>滑动弧线切换作品</span><button type="button" onClick={() => moveVisual(1)}>下一个 →</button></div>
+              </div>
+            </div> : <div className={c.id === "运营" ? "portfolio-stack-grid" : "grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5"}>{grouped(c.id).map((w, j) => card(w, j, c.id === "运营"))}</div>}
             {c.id === "运营" && <div className="mt-8 text-xs text-stone-500 border-t border-stone-200 pt-5">说明：项目数据按现有作品集资料呈现；团队项目成果与个人职责已分开说明。</div>}
             {c.id === "视频" && <div className="mt-8 text-xs text-stone-500">视频封面与播放素材待替换为原始文件；点击卡片可先查看作品说明。</div>}
-            {c.id === "视觉" && <div className="mt-8 text-xs text-stone-500">视觉作品支持按项目上传不同尺寸的原图，不强制统一图片比例。</div>}
           </div>
         </div>
       </div>
