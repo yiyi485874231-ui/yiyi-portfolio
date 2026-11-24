@@ -13,5 +13,9 @@
     "展示推文封面、正文长图或可访问链接。"
   ],
   "tone": "sand",
+  "coverImage": "/uploads/covers/1-3.png",
+  "coverFit": "cover",
+  "coverRatio": "wide",
+  "externalUrl": "https://mp.weixin.qq.com/s/OXrzjp3TAMk9U42ScNBG0A",
   "sortOrder": 200
 }
