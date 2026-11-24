@@ -446,12 +446,12 @@ export function PortfolioWebsite() {
 .portfolio-wireframe-corner { position:absolute; width:62%; height:76%; top:12%; border:1px solid rgba(255,255,255,.66); pointer-events:none; }
 .portfolio-wireframe-corner-a { right:12%; }
 .portfolio-wireframe-corner-b { left:12%; top:17%; width:54%; height:66%; border-color:rgba(90,86,79,.12); }
-.portfolio-wireframe-model { position:absolute; inset:8% 10% 12%; display:flex; align-items:center; justify-content:center; perspective:900px; transform-style:preserve-3d; animation:wireframe-hover 4.8s ease-in-out infinite; }
+.portfolio-wireframe-model { position:absolute; inset:14% 10% 6%; display:flex; align-items:center; justify-content:center; perspective:900px; transform-style:preserve-3d; animation:wireframe-hover 4.8s ease-in-out infinite; }
 .portfolio-wireframe-svg { width:min(100%,320px); height:92%; overflow:visible; filter:drop-shadow(0 8px 10px rgba(54,50,44,.08)); transform-style:preserve-3d; animation:wireframe-turn 18s linear infinite; }
 .portfolio-wireframe-label { position:absolute; left:12%; right:12%; bottom:9%; display:flex; justify-content:space-between; gap:10px; color:rgba(65,62,57,.62); font-size:8px; letter-spacing:.2em; }
 @keyframes wireframe-turn { 0% { transform:rotateY(0deg) rotateZ(-3deg); } 50% { transform:rotateY(180deg) rotateZ(3deg); } 100% { transform:rotateY(360deg) rotateZ(-3deg); } }
 @keyframes wireframe-hover { 0%,100% { translate:0 0; } 50% { translate:0 -9px; } }
-@media (max-width:767px) { .portfolio-wireframe-model { inset:9% 7% 13%; } .portfolio-wireframe-label { font-size:7px; letter-spacing:.14em; } }
+@media (max-width:767px) { .portfolio-wireframe-model { inset:15% 7% 7%; } }
 @media (prefers-reduced-motion:reduce) { .portfolio-wireframe-model,.portfolio-wireframe-svg { animation:none !important; } }
 @media (max-width:767px) { .portfolio-museum-canvas-image { width:calc(50% - 8px) !important; max-width:calc(50% - 8px) !important; flex:0 0 calc(50% - 8px) !important; margin:0 !important; padding:6px !important; } .portfolio-museum-canvas-image img { display:block; width:100% !important; max-width:100% !important; height:auto !important; object-fit:contain !important; } }
 @media (max-width:767px) { .portfolio-museum-gallery { grid-template-columns:minmax(0,1fr) !important; } .portfolio-museum-gallery-item { aspect-ratio:auto !important; } .portfolio-museum-gallery-item img { display:block; width:100% !important; height:auto !important; object-fit:contain !important; } }
@@ -637,7 +637,7 @@ export function PortfolioWebsite() {
                 </g>
               </svg>
             </div>
-            <div className="portfolio-wireframe-label"><span>FORM STUDY / 001</span><span>YIYI · 2026</span></div>
+            <div className="absolute right-[12%] bottom-[12%] text-6xl md:text-7xl font-light text-white/80 tracking-[-.08em]">T.Y.D</div>
           </div>
         </div>
       </div>
