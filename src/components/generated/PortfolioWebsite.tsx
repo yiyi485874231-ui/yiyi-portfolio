@@ -1,5 +1,6 @@
 import './portfolio-fonts.css';
 import React, { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
 import pdfWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 
@@ -358,10 +359,11 @@ export function PortfolioWebsite() {
   const [selected, setSelected] = useState<Work | null>(null);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [activeVideo, setActiveVideo] = useState(0);
-  const videoDragStart = useRef<{x:number;y:number} | null>(null);
-  const videoWheelDelta = useRef(0);
-  const finishVideoGesture = (event: React.PointerEvent<HTMLElement>) => { if (!videoDragStart.current) return; const dx = event.clientX - videoDragStart.current.x; const dy = event.clientY - videoDragStart.current.y; const delta = Math.abs(dx) > Math.abs(dy) ? dx : dy; if (Math.abs(delta) >= 58) moveVideo(delta < 0 ? 1 : -1); videoDragStart.current = null; };
-  const handleVideoWheel = (event: React.WheelEvent<HTMLElement>) => { event.preventDefault(); const delta = Math.abs(event.deltaY) >= Math.abs(event.deltaX) ? event.deltaY : event.deltaX; videoWheelDelta.current += delta; if (Math.abs(videoWheelDelta.current) >= 55) { moveVideo(videoWheelDelta.current > 0 ? 1 : -1); videoWheelDelta.current = 0; } };
+  const videoTouchStart = useRef<{x:number;y:number} | null>(null);
+  const videoWheelLocked = useRef(false);
+  const videoWheelTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const finishVideoTouch = (event: React.TouchEvent<HTMLElement>) => { if (!videoTouchStart.current || !event.changedTouches.length) return; const touch = event.changedTouches[0]; const dx = touch.clientX - videoTouchStart.current.x; const dy = touch.clientY - videoTouchStart.current.y; const delta = Math.abs(dx) > Math.abs(dy) ? dx : dy; if (Math.abs(delta) >= 42) moveVideo(delta < 0 ? 1 : -1); videoTouchStart.current = null; };
+  const handleVideoWheel = (event: React.WheelEvent<HTMLElement>) => { event.preventDefault(); const delta = Math.abs(event.deltaY) >= Math.abs(event.deltaX) ? event.deltaY : event.deltaX; if (videoWheelLocked.current || Math.abs(delta) < 12) return; videoWheelLocked.current = true; moveVideo(delta > 0 ? 1 : -1); if (videoWheelTimer.current) clearTimeout(videoWheelTimer.current); videoWheelTimer.current = setTimeout(() => { videoWheelLocked.current = false; }, 280); };
   const go = (id: string) => {
     setActive(id);
     setMobileMenu(false);
@@ -374,7 +376,7 @@ export function PortfolioWebsite() {
   const videoWorks = grouped("视频");
   const activeVideoWork = videoWorks.length ? videoWorks[activeVideo % videoWorks.length] : null;
   const moveVideo = (direction: number) => setActiveVideo(current => (current + direction + Math.max(videoWorks.length, 1)) % Math.max(videoWorks.length, 1));
-  const startVideoDrag = (event: React.PointerEvent<HTMLElement>) => { if (event.pointerType === "mouse") return; videoDragStart.current = { x: event.clientX, y: event.clientY }; };
+  const startVideoTouch = (event: React.TouchEvent<HTMLElement>) => { if (!event.touches.length) return; videoTouchStart.current = { x: event.touches[0].clientX, y: event.touches[0].clientY }; };
   const card = (w: Work, i: number, stacked = false) => <button key={w.id} onClick={() => setSelected(w)} style={stacked ? { zIndex: i + 1 } : undefined} className={"text-left group bg-white border border-stone-200/80 p-5 md:p-6 flex flex-col min-h-[250px] hover:border-stone-400 hover:-translate-y-0.5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-500 " + (stacked ? "portfolio-stack-card" : "")}>
     <div className="flex justify-between gap-3 text-[11px] text-stone-400"><span>{w.type}</span><span>{String(i + 1).padStart(2, "0")}</span></div>
     <div className={"mt-5 mb-5 flex items-center justify-center relative overflow-hidden " + (toneClass[w.tone] || "bg-stone-100")} style={{ aspectRatio: w.coverRatio === "square" ? "1 / 1" : w.coverRatio === "portrait" ? "3 / 4" : w.coverRatio === "landscape" ? "4 / 3" : "16 / 7" }}>
@@ -550,8 +552,8 @@ export function PortfolioWebsite() {
           </div>
           <div className={c.id === "运营" ? "portfolio-operations-content" : ""}>
             {c.id === "视频" ? <div className="portfolio-visual-gallery">
-              {activeVideoWork && <div className="portfolio-visual-stage">
-                <div className="portfolio-visual-orbit" aria-label="视频与 AI 创作圆弧导航" onWheel={handleVideoWheel}>
+              {activeVideoWork && <div className="portfolio-visual-stage" onWheel={handleVideoWheel}>
+                <div className="portfolio-visual-orbit" aria-label="视频与 AI 创作圆弧导航">
                   <div className="portfolio-visual-ring portfolio-visual-ring-outer"></div>
                   <div className="portfolio-visual-ring portfolio-visual-ring-inner"></div>
                   <div className="portfolio-visual-orbit-core"><span>SELECTED</span><strong>{String(activeVideo + 1).padStart(2, "0")}</strong><span>VIDEO WORKS</span></div>
@@ -580,7 +582,7 @@ export function PortfolioWebsite() {
                 </div>
               </div>}
               <div className="portfolio-visual-mobile">
-                {activeVideoWork && <div className="portfolio-visual-mobile-stage" onPointerDown={startVideoDrag} onPointerUp={finishVideoGesture} onPointerCancel={() => { videoDragStart.current = null; }}>
+                {activeVideoWork && <div className="portfolio-visual-mobile-stage" onTouchStart={startVideoTouch} onTouchEnd={finishVideoTouch} onTouchCancel={() => { videoTouchStart.current = null; }}>
                   <div className="portfolio-visual-mobile-arc">
                     <div className="portfolio-visual-mobile-ring"></div>
                     {videoWorks.map((work, index) => {
@@ -623,7 +625,7 @@ export function PortfolioWebsite() {
       <footer className="border-t border-white/15 mx-auto max-w-7xl px-5 md:px-10 py-7 flex flex-wrap justify-between gap-3 text-xs text-stone-500"><span>© 2026 TANG YI DAN · PORTFOLIO</span><span>THANK YOU FOR YOUR TIME.</span></footer>
     </section>
 
-    {selected && <div className="fixed inset-0 z-50 bg-stone-950/55 p-3 md:p-8 flex items-center justify-center" role="dialog" aria-modal="true" aria-label={selected.title} onClick={e => {
+    {selected && createPortal(<div className="fixed inset-0 z-[9999] bg-stone-950/55 p-3 md:p-8 flex items-center justify-center" role="dialog" aria-modal="true" aria-label={selected.title} onClick={e => {
       if (e.target === e.currentTarget) setSelected(null);
     }}>
       <div className="bg-[#faf9f6] w-full max-w-3xl max-h-[92vh] overflow-y-auto shadow-2xl">
@@ -691,6 +693,6 @@ export function PortfolioWebsite() {
           <p className="mt-8 pt-5 border-t border-stone-200 text-xs leading-6 text-stone-400">当前为作品详情结构预览，正式素材（图片、视频、文档或外部链接）将在下一步通过内容后台逐项补充。</p>
         </div>
       </div>
-    </div>}
+    </div>, document.body)}
   </main>;
 }
