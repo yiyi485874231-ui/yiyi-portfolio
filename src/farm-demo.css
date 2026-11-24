@@ -571,3 +571,6 @@
  .farm-meadow-floor{height:170px}
  .meadow-cow{width:100px;right:7%}.hay-basket{width:61px;height:55px}
 }
+
+/* Only the lower rail anchors the two timber legs; avoid duplicate posts */
+.farm-board-wrap:before,.farm-board-wrap:after{display:none}
