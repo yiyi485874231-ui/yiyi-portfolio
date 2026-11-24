@@ -200,6 +200,7 @@ export function FarmDemo() {
 
     <section className="farm-works" id="works">
       <div className="farm-section-head farm-reveal"><div><p className="farm-kicker">THE FARM NOTICE BOARD · 01</p><h2>内容策划与<span>运营</span></h2><p className="farm-section-desc">把每一次观察、表达与尝试，认真钉在这里</p></div><div className="farm-doodle-carrot">🥕<small>fresh ideas</small></div></div>
+      <div className="farm-meadow-scene">
       <div className="farm-board-wrap">
         <div className="board-topline"><span>PINNED WITH CARE</span><span>FIELD NOTES / 2026</span></div>
         <div className="farm-project-grid">
@@ -209,8 +210,8 @@ export function FarmDemo() {
             <span className="project-illustration" aria-hidden="true">{project.cover ? <img src={project.cover} alt="" loading="lazy"/> : <span className="project-sprout">✳</span>}</span>
             <span className="project-type">{project.type}</span><strong>{project.title}</strong><span className="project-desc">{project.desc}</span><span className="project-note">{project.note}</span><span className="project-more">打开这张作品纸 <b>↗</b></span>
           </button>)}
-          <span className="board-dried-flower flower-one">✿</span><span className="board-dried-flower flower-two">❀</span>
-          <span className="board-handnote">ideas grow<br/>here ♡</span>
+          <span className="board-dried-flower flower-one" aria-hidden="true">✿</span><span className="board-dried-flower flower-two" aria-hidden="true">❀</span>
+          <span className="board-handnote" aria-hidden="true">ideas grow<br/>here ♡</span>
           <span className="board-scrap scrap-one" aria-hidden="true">GROW<br/>SLOWLY</span>
           <span className="board-scrap scrap-two" aria-hidden="true">little things<br/>matter ✳</span>
           <span className="board-scrap scrap-three" aria-hidden="true">KEEP<br/>MAKING</span>
@@ -218,10 +219,46 @@ export function FarmDemo() {
         </div>
         <div className="board-bottomline"><span>✳ LITTLE IDEAS, GROWN WITH CARE</span><span>— YIYI</span></div>
       </div>
-      <div className="farm-interaction">
-        <div className="interaction-copy"><span className="farm-kicker">A LITTLE FARM GAME</span><strong>给小奶牛一点草吧</strong><small>点一下草堆，看看它会怎么回应</small></div>
-        <button className="hay-button" onClick={() => { const cow=document.querySelector('.little-cow'); cow?.classList.toggle('cow-fed'); if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); window.speechSynthesis.speak(new SpeechSynthesisUtterance('哞～谢谢你！')); } }}>🌿 喂它吃草</button>
-        <div className="little-cow" aria-label="正在散步的小奶牛"><span className="cow-body">🐄</span><span className="cow-caption">moo!</span></div>
+      <div className="farm-meadow-floor" aria-label="农场草地">
+        <svg className="meadow-grass-doodle" viewBox="0 0 1200 150" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0 104 Q130 80 245 104 T480 98 T720 105 T960 94 T1200 103 L1200 150 L0 150Z" fill="#aab596" opacity=".42"/>
+          <g fill="none" stroke="#718367" strokeWidth="2" strokeLinecap="round">
+            <path d="M28 120q-3-19 5-29m-5 29q-12-13-17-9m17 9q7-15 16-14M95 126q-2-24 7-34m-7 34q-11-15-19-12m19 12q8-17 18-15M210 118q-3-18 5-26m-5 26q-10-12-17-8m17 8q8-14 16-12M390 126q-2-21 8-30m-8 30q-10-13-18-10m18 10q8-14 17-13M650 120q-3-19 6-28m-6 28q-12-14-19-9m19 9q8-15 16-13M910 124q-3-20 7-31m-7 31q-10-13-18-10m18 10q8-14 17-12M1110 119q-2-20 7-29m-7 29q-11-14-18-10m18 10q8-15 17-13"/>
+          </g>
+          <g fill="#c5a78e"><circle cx="70" cy="98" r="3"/><circle cx="74" cy="94" r="2"/><circle cx="520" cy="108" r="3"/><circle cx="525" cy="103" r="2"/><circle cx="1020" cy="100" r="3"/></g>
+        </svg>
+        <button className="hay-basket" aria-label="给小奶牛喂草" onClick={() => {const cow=document.querySelector('.meadow-cow');cow?.classList.toggle('cow-fed');}}>
+          <svg viewBox="0 0 130 105" role="img" aria-hidden="true">
+            <path d="M23 42 Q17 50 22 87 Q66 101 108 86 L112 42 Q67 54 23 42Z" fill="#b68f68" stroke="#80674f" strokeWidth="3" strokeLinejoin="round"/>
+            <path d="M23 47 Q65 61 111 46 M28 58 Q68 72 108 58 M31 72 Q69 83 105 72" fill="none" stroke="#8f7054" strokeWidth="2" opacity=".8"/>
+            <path d="M35 42 Q28 17 43 10 Q47 28 50 41 M54 43 Q51 13 68 4 Q69 27 66 43 M72 43 Q80 14 95 13 Q90 32 82 46 M90 46 Q101 26 113 30 Q106 43 99 49" fill="#8c9a70" stroke="#647a5b" strokeWidth="2" strokeLinecap="round"/>
+            <path d="M43 24l8 18m20-29-2 30m28-20-14 23" stroke="#c7d0aa" strokeWidth="2" strokeLinecap="round"/>
+          </svg>
+        </button>
+        <div className="meadow-cow" aria-label="在草地上散步的小奶牛">
+          <svg viewBox="0 0 210 145" role="img" aria-hidden="true">
+            <g stroke="#554e43" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M48 57Q54 29 91 31Q126 25 148 48Q166 62 158 92Q144 111 83 108Q48 105 40 83Z" fill="#f5f0df"/>
+              <path d="M48 57Q28 44 20 59L25 78Q35 87 49 79Z" fill="#faf4e4"/>
+              <path d="M25 57Q8 43 4 55Q8 73 27 73Z" fill="#bd8175"/>
+              <path d="M146 48Q165 35 177 50L181 79Q169 95 154 85Z" fill="#f5f0df"/>
+              <path d="M162 47Q178 32 188 44L178 61Z" fill="#c98c82"/>
+              <path d="M58 104L56 130L69 130L77 106M121 106L126 130L139 130L140 102" fill="#f4eddb"/>
+              <path d="M54 130h15m57 0h16" fill="none"/>
+              <path d="M41 68Q49 57 60 64Q68 78 55 88Q43 89 41 68Z" fill="#6e6b5a" stroke="none"/>
+              <path d="M93 37Q109 32 116 45Q112 58 97 56Q86 48 93 37Z" fill="#6e6b5a" stroke="none"/>
+              <path d="M131 80Q146 70 153 83Q147 96 132 94Z" fill="#6e6b5a" stroke="none"/>
+              <path d="M29 75Q40 69 51 76Q56 90 41 96Q26 92 29 75Z" fill="#fffaf0"/>
+              <path d="M30 80Q40 76 49 82Q50 91 39 92Q29 90 30 80Z" fill="#d99e91"/>
+              <circle cx="38" cy="67" r="2.5" fill="#554e43" stroke="none"/><circle cx="52" cy="67" r="2.5" fill="#554e43" stroke="none"/>
+              <path d="M38 91q6 4 12 0" fill="none"/>
+              <path d="M158 58q18-8 18-23q0-7 6-9" fill="none"/>
+            </g>
+          </svg>
+          <span className="cow-sound" aria-hidden="true">♡</span>
+        </div>
+        <div className="meadow-flower meadow-flower-a" aria-hidden="true">✿</div><div className="meadow-flower meadow-flower-b" aria-hidden="true">✾</div>
+      </div>
       </div>
     </section>
 
