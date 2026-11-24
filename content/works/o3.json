@@ -13,6 +13,7 @@
     "展示采访对象、采访主题、代表性内容与成稿节选。"
   ],
   "tone": "lavender",
-  "sortOrder": 190,
-  "pdfUrl": "/余老师采访稿 (3).pdf"
+  "coverFit": "cover",
+  "coverRatio": "wide",
+  "sortOrder": 190
 }
