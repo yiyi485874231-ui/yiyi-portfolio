@@ -110,3 +110,97 @@
 }
 @media(max-width:380px){.farm-title-wrap h1{font-size:51px}.farm-hero{min-height:780px}.farm-project-grid{grid-template-columns:1fr}.farm-project,.farm-project-1,.farm-project-2,.farm-project-3,.farm-project-4,.farm-project-5{min-height:245px;transform:none}}
 @media(prefers-reduced-motion:reduce){.farm-site *{scroll-behavior:auto!important;animation:none!important;transition:none!important}.farm-reveal{opacity:1;transform:none}}
+
+
+/* SECOND EDITION — richer hand-inked details, profile and scrapbook notice board */
+.farm-site{--wood:#b79d7c;--wood-dark:#947c60;--paper-note:#fffdf6}
+.farm-about{background:#f7f5ec}
+.about-identity{display:flex;align-items:baseline;gap:13px;margin:22px 0 18px;padding:13px 15px;border-left:2px solid #a9b394;background:#eeefe5;max-width:410px}
+.about-identity span{font-size:11px;color:#929985}.about-identity strong{font-size:16px;font-weight:600;color:#606b58}.about-identity i{margin-left:auto;font-size:7px;letter-spacing:.14em;color:#a2a58f;font-style:normal}
+.about-contact{display:flex;flex-wrap:wrap;gap:12px 22px;margin-top:22px}
+.about-contact a{font-size:11px;color:#697461;border-bottom:1px dashed #b9bda9;padding-bottom:7px}
+.about-contact small{font-size:8px;letter-spacing:.16em;color:#a0a68f;margin-right:9px}
+.about-skills{display:flex;gap:7px;flex-wrap:wrap;margin-top:18px}
+.about-skills span{font-size:9px;color:#7b8572;background:#e8ebdf;border:1px solid #d3d9ca;border-radius:20px;padding:7px 11px}
+.about-flower-doodle{position:absolute;bottom:18px;left:13%;font-size:32px;color:#c7a69b;transform:rotate(-18deg)}
+.farm-works{background:#edf0e6;padding-top:105px}
+.farm-board-wrap{max-width:1160px;margin:0 auto;padding:25px 34px 22px;background:
+ repeating-linear-gradient(2deg,transparent 0 39px,#8f775b12 40px,#8f775b12 41px),
+ repeating-linear-gradient(91deg,#bba383 0 3px,#b49a79 3px 7px,#c3ad8e 7px 10px);
+ border:9px solid #9e8769;outline:1px solid #d3c1a4;box-shadow:inset 0 0 0 2px #d3c1a4,0 16px 35px #66715c20;position:relative}
+.board-topline,.board-bottomline{display:flex;justify-content:space-between;gap:12px;font-size:8px;letter-spacing:.18em;color:#f8f1e2;padding:0 5px 18px}
+.board-bottomline{padding:18px 5px 0}
+.farm-project-grid{max-width:none;position:relative;grid-template-columns:repeat(12,minmax(0,1fr));gap:17px 14px;padding:10px 16px 15px}
+.farm-project{overflow:visible;background:var(--paper-note);border:1px solid #e1d9c9;box-shadow:3px 5px 0 #78674c26,0 7px 15px #6f61421c;min-height:335px;padding:20px 21px 18px;z-index:1}
+.farm-project:after{content:"";position:absolute;inset:5px;border:1px solid #eee8da;pointer-events:none}
+.farm-project:hover{z-index:5;transform:translateY(-8px) rotate(0deg);box-shadow:5px 12px 22px #554b3933}
+.farm-project-1{grid-column:span 5;transform:rotate(-1.6deg);min-height:390px}
+.farm-project-2{grid-column:span 7;transform:rotate(1.1deg);min-height:390px;background:#f7f1e7}
+.farm-project-3{grid-column:span 4;transform:rotate(.9deg);min-height:340px}
+.farm-project-4{grid-column:span 4;transform:rotate(-1.2deg);min-height:340px;background:#f5f2e8}
+.farm-project-5{grid-column:span 4;transform:rotate(1.5deg);min-height:340px;background:#f1f2e8}
+.paper-pin{position:absolute;z-index:4;top:10px;left:50%;width:13px;height:13px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff4dc 0 10%,#b96f5e 22%,#8f5147 70%);box-shadow:1px 2px 3px #55412e66;transform:translateX(-50%)}
+.paper-tape{position:absolute;z-index:3;top:-8px;right:28px;width:62px;height:19px;background:#d9c9a6bd;transform:rotate(8deg);clip-path:polygon(4% 0,100% 5%,95% 100%,0 92%)}
+.farm-project-2 .paper-tape,.farm-project-4 .paper-tape{left:28px;right:auto;transform:rotate(-9deg);background:#c7d0b7c9}
+.project-illustration{height:128px;margin:12px 0 14px;border-bottom:1px dashed #d5cdbd;overflow:hidden;background:#f1efe5}
+.project-illustration img{width:100%;height:100%;object-fit:contain;display:block;mix-blend-mode:multiply}
+.farm-project-1 .project-illustration,.farm-project-2 .project-illustration{height:160px}
+.farm-project strong{font:500 21px/1.35 "Playfair Display","Noto Sans SC",serif;color:#5e6757}
+.project-note{font-size:10px;line-height:1.7;color:#9a806e;margin-top:8px}
+.project-more{position:relative;z-index:2}
+.board-dried-flower{position:absolute;z-index:3;color:#d8c2a1;pointer-events:none;text-shadow:1px 2px 0 #8b7654}
+.flower-one{right:-3px;top:44%;font-size:46px;transform:rotate(18deg)}
+.flower-two{left:-4px;bottom:5%;font-size:34px;transform:rotate(-13deg);color:#c5a89d}
+.board-handnote{position:absolute;right:-8px;bottom:-2px;z-index:4;font:italic 15px/1.25 "Playfair Display",serif;color:#f7e8c9;transform:rotate(-8deg);text-align:center}
+.farm-interaction{max-width:1160px;margin:45px auto 0;min-height:115px;display:flex;align-items:center;gap:24px;padding:17px 25px;background:#f7f5ec;border:1px dashed #c5cbb8;position:relative;overflow:hidden}
+.interaction-copy{display:flex;flex-direction:column;gap:6px;min-width:220px}
+.interaction-copy strong{font:500 19px "Playfair Display","Noto Sans SC",serif;color:#66705d}
+.interaction-copy small{font-size:10px;color:#939985}
+.hay-button{border:1px solid #b7bda9;background:#e8ecdf;border-radius:30px;padding:10px 15px;font-size:11px;color:#69745f;cursor:pointer;z-index:2}
+.hay-button:hover{background:#dce5d3}
+.little-cow{margin-left:auto;font-size:38px;position:relative;animation:cow-walk 9s ease-in-out infinite alternate;transform-origin:center bottom}
+.cow-body{display:block;filter:saturate(.75)}
+.cow-caption{position:absolute;top:-17px;right:-12px;font:italic 11px "Playfair Display",serif;color:#9a9d7c;opacity:0;transition:.2s}
+.cow-fed .cow-caption{opacity:1}
+.cow-fed .cow-body{animation:cow-hop .45s ease 2}
+@keyframes cow-walk{from{transform:translateX(-10px)}to{transform:translateX(18px)}}
+@keyframes cow-hop{50%{transform:translateY(-10px) rotate(-5deg)}}
+.farm-extra-works{padding:92px 10% 105px;background:#f8f6ef}
+.extra-category{max-width:1160px;margin:35px auto 0;padding:22px 25px;background:#f0f0e6;border:1px solid #d9ddcf;position:relative}
+.extra-category-1{background:#f3ece5;transform:rotate(.2deg)}
+.extra-category-2{background:#edf0e7;transform:rotate(-.15deg)}
+.extra-category-title{display:flex;align-items:center;gap:14px;border-bottom:1px dashed #c9cebf;padding-bottom:13px;margin-bottom:16px}
+.extra-category-title span{font-size:10px;color:#a2a88f}.extra-category-title h3{font:500 23px "Playfair Display","Noto Sans SC",serif;margin:0;color:#626d59}.extra-category-title i{margin-left:auto;color:#b8ad88;font-size:20px;font-style:normal}
+.extra-projects{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.extra-project{position:relative;display:flex;flex-direction:column;text-align:left;padding:12px;background:#fffdf7;border:1px solid #e1ddcf;box-shadow:2px 4px 0 #80745b18;cursor:pointer;transition:.2s;min-width:0}
+.extra-project:nth-child(3n+1){transform:rotate(-.7deg)}.extra-project:nth-child(3n+2){transform:rotate(.8deg)}
+.extra-project:hover{transform:translateY(-5px) rotate(0);box-shadow:0 9px 20px #77715b24}
+.extra-project img{width:100%;height:105px;object-fit:contain;background:#f0eee5;margin-bottom:10px;mix-blend-mode:multiply}
+.extra-project small{font-size:8px;letter-spacing:.12em;color:#9ba18d}
+.extra-project strong{font-size:13px;margin:7px 0;color:#606b58}
+.extra-project>span:not(.extra-pin){font-size:10px;line-height:1.6;color:#8a907f}
+.extra-project b{font-size:9px;font-weight:500;color:#89927d;margin-top:12px}
+.extra-pin{position:absolute;top:7px;left:50%;width:9px;height:9px;background:#b77c6b;border-radius:50%;z-index:2;box-shadow:1px 1px 2px #5555}
+@media(max-width:760px){
+ .farm-about{padding:70px 8%;gap:25px}.farm-about-art{height:220px}
+ .about-identity{margin:17px 0 14px;flex-wrap:wrap}.about-identity i{margin-left:0}
+ .about-contact{gap:12px 16px}.about-contact a{font-size:10px}
+ .farm-works{padding:70px 5% 72px}
+ .farm-board-wrap{padding:15px 10px 13px;border-width:6px;box-shadow:inset 0 0 0 1px #d3c1a4,0 10px 22px #66715c20}
+ .board-topline,.board-bottomline{font-size:6px;letter-spacing:.12em;padding:0 3px 12px}
+ .farm-project-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 8px;padding:8px 5px 10px}
+ .farm-project,.farm-project-1,.farm-project-2,.farm-project-3,.farm-project-4,.farm-project-5{grid-column:span 1;min-height:275px;padding:13px 11px 12px}
+ .farm-project-1{grid-column:span 2;min-height:300px;transform:rotate(-.7deg)}
+ .farm-project-2{grid-column:span 2;min-height:300px;transform:rotate(.6deg)}
+ .farm-project-3{transform:rotate(.7deg)}.farm-project-4{transform:rotate(-.8deg)}.farm-project-5{transform:rotate(.8deg)}
+ .project-illustration,.farm-project-1 .project-illustration,.farm-project-2 .project-illustration{height:95px;margin:9px 0 10px}
+ .farm-project strong{font-size:15px;line-height:1.3}.project-desc{font-size:9px}.project-note{font-size:9px}.project-number,.project-type{font-size:6px}
+ .paper-tape{width:45px;height:15px;right:15px}.board-dried-flower{font-size:25px}.flower-one{right:-2px;top:46%}.flower-two{left:-2px;bottom:4%}.board-handnote{font-size:10px;right:0}
+ .farm-interaction{margin:28px 0 0;padding:14px 13px;gap:9px;min-height:100px;flex-wrap:wrap}
+ .interaction-copy{min-width:0;flex:1 1 58%;gap:4px}.interaction-copy strong{font-size:15px}.interaction-copy small{font-size:9px}
+ .hay-button{font-size:9px;padding:8px 10px}.little-cow{font-size:29px;margin-left:auto}
+ .farm-extra-works{padding:68px 6% 75px}.extra-category{padding:15px 12px;margin-top:25px}
+ .extra-category-title h3{font-size:19px}.extra-projects{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .extra-project{padding:8px}.extra-project img{height:82px}.extra-project strong{font-size:11px}.extra-project>span:not(.extra-pin){font-size:9px}
+}
+@media(max-width:380px){.farm-project-grid{grid-template-columns:1fr}.farm-project,.farm-project-1,.farm-project-2,.farm-project-3,.farm-project-4,.farm-project-5{grid-column:span 1;min-height:250px;transform:none}.farm-project-1,.farm-project-2{grid-column:span 1}.extra-projects{grid-template-columns:1fr}}
