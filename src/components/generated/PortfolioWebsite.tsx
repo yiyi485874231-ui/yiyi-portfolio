@@ -190,15 +190,6 @@ const fallbackWorks: Work[] = [{
   detail: ["展示标志方案、设计稿及必要的应用效果。"],
   tone: "sage"
 }, {
-  id: "d3",
-  title: "IP 表情包设计",
-  type: "IP 设计 / 表情包",
-  desc: "围绕角色形象进行的 IP 与表情延展。",
-  role: "角色视觉与表情设计实践。",
-  tags: ["IP 设计", "角色设计"],
-  detail: ["展示角色形象、表情变化与应用场景。"],
-  tone: "lavender"
-}, {
   id: "d4",
   title: "信息可视化设计",
   type: "信息设计 / 可视化",
