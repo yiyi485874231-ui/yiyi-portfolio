@@ -228,5 +228,11 @@ export function FarmDemo() {
         <div className="extra-projects">{projects.filter(p=>p.category===category).map((project,j)=><button key={project.no} className="extra-project" onClick={()=>setOpenProject(project)}><span className="extra-pin"></span>{project.cover && <img src={project.cover} alt="" loading="lazy"/>}<small>{project.type}</small><strong>{project.title}</strong><span>{project.desc}</span><b>查看作品 ↗</b></button>)}</div>
       </div>)}
     </section>
-
-
+    <section className="farm-note-section farm-reveal">
+      <div className="note-illustration"><div className="note-cloud">☁</div><div className="note-barn">⌂</div><div className="note-flower">✿</div></div>
+      <div><p className="farm-kicker">A LITTLE REMINDER</p><h2>好奇心，是最好的<br/><em>种子。</em></h2><p>保持好奇，持续创造。<br/>下一份作品，正在生长中。</p></div>
+    </section>
+    <footer className="farm-footer" id="contact"><div className="footer-top"><span>THANK YOU FOR WANDERING AROUND</span><span>✳</span></div><h2>Let's grow<br/><em>something lovely.</em></h2><p>感谢你来到我的小农场，希望这里有你喜欢的东西</p><a href="mailto:485874231@qq.com" className="farm-mail">Say hello <span>↗</span></a><div className="footer-bottom"><span>YIYI'S LITTLE FARM © 2026</span><span>MADE WITH CURIOSITY & CARE</span><a href="#top">BACK TO TOP ↑</a></div></footer>
+    {openProject && <div className="farm-modal-backdrop" role="presentation" onClick={() => setOpenProject(null)}><section className="farm-modal" role="dialog" aria-modal="true" aria-label={openProject.title} onClick={e => e.stopPropagation()}><button className="farm-modal-close" onClick={() => setOpenProject(null)} aria-label="关闭">×</button><p className="farm-kicker">{openProject.type}</p><h2>{openProject.title}</h2><p>{openProject.desc}</p><div className="modal-note">{openProject.note}</div><small>这里是作品集首页概念展示，原有作品详情和素材仍保留在正式作品集中。</small></section></div>}
+  </main>;
+}
