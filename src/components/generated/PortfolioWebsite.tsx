@@ -444,6 +444,16 @@ export function PortfolioWebsite() {
           <div className="inline-flex items-center gap-2 text-[11px] tracking-[.2em] text-stone-500 mb-7"><span className="w-7 h-px bg-stone-400"></span> PERSONAL PORTFOLIO · 2026</div>
           <h1 className="text-5xl sm:text-6xl md:text-7xl leading-[1.08] tracking-[-.055em] font-semibold">唐艺丹<span className="text-stone-400">.</span></h1>
           <p className="mt-5 text-lg md:text-xl tracking-wide text-stone-700">网络与新媒体专业</p>
+          <div className="mt-6 flex flex-col sm:flex-row sm:flex-wrap gap-x-8 gap-y-3 text-sm text-stone-500">
+            <a href="tel:13982418101" className="inline-flex items-center gap-3 hover:text-stone-900 transition-colors">
+              <span className="text-[10px] tracking-[.18em] text-stone-400">TEL</span>
+              <span>13982418101</span>
+            </a>
+            <a href="mailto:485874231@qq.com" className="inline-flex items-center gap-3 hover:text-stone-900 transition-colors">
+              <span className="text-[10px] tracking-[.18em] text-stone-400">EMAIL</span>
+              <span>485874231@qq.com</span>
+            </a>
+          </div>
           <p className="mt-7 max-w-xl text-sm md:text-base leading-8 text-stone-500">关注内容策划、新媒体运营、视频与 AI 创作及视觉设计。希望把观察、想法与创意，转化为真实、具体的内容和作品。</p>
           <div className="mt-8 flex flex-wrap gap-2">
             {["内容策划", "新媒体运营", "视频与 AI 创作", "视觉设计"].map(x => <span key={x} className="rounded-full border border-stone-300 px-3.5 py-2 text-xs text-stone-600">{x}</span>)}
