@@ -13,5 +13,24 @@
     "展示标志方案、设计稿及必要的应用效果。"
   ],
   "tone": "sage",
+  "coverImage": "/uploads/covers/1.jpg",
+  "coverFit": "cover",
+  "coverRatio": "wide",
+  "canvasBlocks": [
+    {
+      "type": "canvas",
+      "placement": "after_project_info",
+      "background": "#F5F0E6",
+      "width": "full",
+      "moduleAlign": "center",
+      "spacing": "standard",
+      "size": "standard",
+      "radius": 16,
+      "image": "/uploads/gallery/2-4.jpg",
+      "imageWidth": 79,
+      "imageRatio": "original",
+      "imageAlign": "center"
+    }
+  ],
   "sortOrder": 130
 }
