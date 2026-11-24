@@ -505,8 +505,8 @@ export function PortfolioWebsite() {
   return <main className="min-h-screen bg-[#faf9f6] text-stone-900 selection:bg-stone-200">
     <style>{`.portfolio-guide { position:fixed; z-index:80; right:24px; bottom:24px; width:min(390px,calc(100vw - 28px)); display:flex; align-items:flex-end; gap:10px; pointer-events:none; }
 .portfolio-guide-card { flex:1; min-width:0; padding:13px 15px; border:1px solid rgba(120,113,108,.2); border-radius:16px 16px 4px 16px; background:rgba(250,249,246,.96); box-shadow:0 12px 36px rgba(35,31,26,.13); color:#57534e; backdrop-filter:blur(12px); animation:guide-in .35s ease both; pointer-events:auto; }
-.portfolio-guide-card { position:relative; transform:translate(42px,-108px); }
-.portfolio-guide-card::after { content:""; position:absolute; right:14px; bottom:-7px; width:14px; height:14px; background:rgba(250,249,246,.96); border-right:1px solid rgba(120,113,108,.2); border-bottom:1px solid rgba(120,113,108,.2); transform:rotate(45deg); }
+.portfolio-guide-card { position:relative; transform:translate(0,-92px); }
+.portfolio-guide-card::after { content:""; position:absolute; right:-7px; bottom:18px; width:14px; height:14px; background:rgba(250,249,246,.96); border-right:1px solid rgba(120,113,108,.2); border-bottom:1px solid rgba(120,113,108,.2); transform:rotate(-45deg); }
 .portfolio-guide-kicker { color:#a8a29e; font-size:9px; letter-spacing:.16em; }
 .portfolio-guide-title { margin-top:5px; font-size:13px; font-weight:650; color:#292524; }
 .portfolio-guide-copy { margin-top:5px; font-size:11px; line-height:1.7; color:#78716c; }
