@@ -384,7 +384,7 @@ export function PortfolioWebsite() {
     const isSanxiangInfoImage = selected?.id === "sanxiang" && placement === "after_project_info";
     const isCollegeInfoImage = selected?.id === "college" && placement === "after_project_info";
     const isPortfolioInfoImage = isSanxiangInfoImage || isCollegeInfoImage || (selected?.id === "d5" && placement === "after_project_info");
-    return <div className={"flex flex-wrap items-start gap-4" + (selected?.id === "mt" && placement === "after_project_info" ? " mt-mobile-stack" : "")}>
+    return <div className={"flex flex-wrap items-start gap-4" + ((selected?.id === "mt" || selected?.id === "personal") && placement === "after_project_info" ? " mt-mobile-stack" : "")}>
       {blocks.map((block, index) => {
         const hasText = Boolean(block.title || block.body);
         const isImageOnly = Boolean(block.image && !hasText);
@@ -413,7 +413,7 @@ export function PortfolioWebsite() {
         if (block.type === "text") return <div key={index} style={blockStyle} className={widthClass + " bg-white border border-stone-200"}><h3 className="font-semibold text-base">{block.title}</h3><p className="mt-3 text-sm leading-7 text-stone-600 whitespace-pre-line">{block.body}</p></div>;
         const horizontal = (block.type === "color_panel" || block.type === "canvas") && block.layout === "horizontal" && hasText;
         const imageFirst = block.imagePosition !== "end";
-        return <div key={index} style={blockStyle} className={widthClass + (selected?.id === "mt" && placement === "after_project_info" && index < 2 ? " mt-mobile-stack-item" : "") + " " + (horizontal ? "flex flex-col md:flex-row" : "flex flex-col") + (isImageOnly ? "" : " gap-5") + " items-center overflow-hidden"}>
+        return <div key={index} style={blockStyle} className={widthClass + ((selected?.id === "mt" && index < 2 || selected?.id === "personal") && placement === "after_project_info" ? " mt-mobile-stack-item personal-mobile-stack-item" : "") + " " + (horizontal ? "flex flex-col md:flex-row" : "flex flex-col") + (isImageOnly ? "" : " gap-5") + " items-center overflow-hidden"}>
           {block.image && <img src={block.image} alt={selected.title + " 模块图片"} className={horizontal ? "max-w-full h-auto object-contain" : "h-auto object-contain"} style={{ width: hasIndependentImageWidth ? Math.min(100, Math.max(10, block.imageWidth!)) + "%" : (horizontal ? "50%" : "100%"), aspectRatio: block.imageRatio === "square" ? "1 / 1" : block.imageRatio === "portrait" ? "3 / 4" : block.imageRatio === "landscape" ? "4 / 3" : undefined, objectFit: "contain", alignSelf: block.imageAlign === "left" ? "flex-start" : block.imageAlign === "right" ? "flex-end" : "center", order: horizontal && !imageFirst ? 2 : 1 }} />}
           {hasText && <div className="flex-1 min-w-0 w-full" style={{ order: horizontal && !imageFirst ? 1 : 2 }}>
             {block.title && <h3 className="text-lg font-semibold">{block.title}</h3>}
@@ -424,7 +424,7 @@ export function PortfolioWebsite() {
     </div>;
   };
   return <main className="min-h-screen bg-[#faf9f6] text-stone-900 selection:bg-stone-200">
-    <style>{`@media (max-width: 767px) { .mt-mobile-stack-item { width: 100% !important; max-width: 100% !important; flex: 0 0 100% !important; } }`}</style>
+    <style>{`@media (max-width: 767px) { .mt-mobile-stack-item { width: 100% !important; max-width: 100% !important; flex: 0 0 100% !important; } .personal-mobile-stack-item img { width: 100% !important; max-width: 100% !important; } }`}</style>
     <header className="sticky top-0 z-30 border-b border-stone-200/80 bg-[#faf9f6]/95 backdrop-blur">
       <div className="mx-auto max-w-7xl px-5 md:px-10 h-[68px] flex items-center justify-between gap-4">
         <button onClick={() => go("首页")} className="font-semibold tracking-[.14em] text-xs md:text-sm whitespace-nowrap">TANG YI DAN<span className="text-stone-400">.</span></button>
