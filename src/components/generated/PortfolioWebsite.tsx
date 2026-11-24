@@ -1,5 +1,54 @@
 import './portfolio-fonts.css';
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
+import pdfWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+
+GlobalWorkerOptions.workerSrc = pdfWorker;
+
+function PdfPreview({ url, title }: { url: string; title: string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState(true);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const loadingTask = getDocument(url);
+    setLoading(true);
+    setFailed(false);
+    loadingTask.promise.then(async (pdf) => {
+      if (cancelled || !containerRef.current) return;
+      const container = containerRef.current;
+      container.innerHTML = "";
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+      for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+        if (cancelled) return;
+        const page = await pdf.getPage(pageNumber);
+        const baseViewport = page.getViewport({ scale: 1 });
+        const scale = Math.min((container.clientWidth - 24) / baseViewport.width, 1.5);
+        const viewport = page.getViewport({ scale: Math.max(scale, 0.5) });
+        const canvas = document.createElement("canvas");
+        canvas.className = "block w-full h-auto mb-4 shadow-sm";
+        canvas.width = Math.floor(viewport.width * pixelRatio);
+        canvas.height = Math.floor(viewport.height * pixelRatio);
+        canvas.style.width = "100%";
+        canvas.style.height = "auto";
+        container.appendChild(canvas);
+        const context = canvas.getContext("2d");
+        if (context) {
+          await page.render({ canvasContext: context, viewport, transform: pixelRatio === 1 ? undefined : [pixelRatio, 0, 0, pixelRatio, 0, 0] }).promise;
+        }
+      }
+      if (!cancelled) setLoading(false);
+    }).catch(() => { if (!cancelled) { setFailed(true); setLoading(false); } });
+    return () => { cancelled = true; loadingTask.destroy(); };
+  }, [url]);
+
+  return <div className="w-full rounded-lg border border-stone-200 bg-stone-100 p-3 sm:p-5">
+    {loading && !failed && <p className="py-8 text-center text-sm text-stone-500">正在加载文档…</p>}
+    {failed && <p className="py-8 text-center text-sm text-stone-500">文档暂时无法加载，请使用上方链接打开原 PDF</p>}
+    <div ref={containerRef} aria-label={title} />
+  </div>;
+}
 type CanvasBlock = {
   type: "canvas" | "color_panel" | "image" | "text";
   placement?: "after_cover" | "before_gallery" | "after_gallery" | "before_project_info" | "after_project_info" | "bottom";
@@ -466,7 +515,7 @@ export function PortfolioWebsite() {
           {selected.galleryPosition !== "after" && selected.gallery && selected.gallery.length > 0 && <div className="mt-5 grid gap-3" style={{ gridTemplateColumns: `repeat(${Math.min(3, Math.max(1, Number(selected.galleryColumns) || 2))}, minmax(0, 1fr))` }}>{selected.gallery.map((src, index) => <div key={index} className="bg-white overflow-hidden" style={{ aspectRatio: selected.galleryRatio === "square" ? "1 / 1" : selected.galleryRatio === "portrait" ? "3 / 4" : selected.galleryRatio === "landscape" ? "4 / 3" : undefined }}><img src={src} alt={selected.title + " " + (index + 1)} className={selected.galleryRatio === "original" || !selected.galleryRatio ? "w-full h-auto" : "w-full h-full"} style={{ objectFit: selected.galleryRatio === "original" || !selected.galleryRatio ? "contain" : selected.galleryFit === "cover" ? "cover" : "contain" }} /></div>)}</div>}
           {selected.galleryPosition !== "after" && renderCanvasBlocks("after_gallery")}
           {selected.videoFile && <video className="mt-5 w-full max-h-[560px] bg-black" src={selected.videoFile} controls playsInline />}
-          {selected.pdfUrl && <section className="mt-7"><div className="mb-3 flex items-center justify-between gap-3"><h3 className="text-sm font-semibold">运营 SOP 文档预览</h3><a href={selected.pdfUrl} target="_blank" rel="noreferrer" className="text-xs text-stone-500 underline underline-offset-4">打开原 PDF ↗</a></div><div className="w-full overflow-hidden border border-stone-200 bg-white" style={{ height: "min(78vh, 820px)", minHeight: "560px" }}><iframe src={"https://docs.google.com/gview?embedded=1&url=" + encodeURIComponent("https://yiyi-portfolio.onrender.com" + selected.pdfUrl)} title={selected.title + " PDF 在线阅读"} className="block w-full h-full border-0" loading="lazy" /></div><p className="mt-2 text-xs text-stone-400">手机端可在此区域上下滑动阅读；如加载较慢，可点击上方链接打开原 PDF</p></section>}
+          {selected.pdfUrl && <section className="mt-7"><div className="mb-3 flex items-center justify-between gap-3"><h3 className="text-sm font-semibold">运营 SOP 文档预览</h3><a href={selected.pdfUrl} target="_blank" rel="noreferrer" className="text-xs text-stone-500 underline underline-offset-4">打开原 PDF ↗</a></div><PdfPreview url={selected.pdfUrl} title={selected.title + " PDF 在线阅读"} /><p className="mt-2 text-xs text-stone-400">可直接上下滑动阅读全部页面，无需下载文件</p></section>}
           {selected.videoUrl ? <div className="mt-5 w-full overflow-hidden rounded-lg bg-black" style={{ aspectRatio: "16 / 9" }}><iframe src={selected.videoUrl + (selected.videoUrl.includes("?") ? "&" : "?") + "embed=1&layout=full"} title={selected.title + " 视频播放器"} className="block w-full h-full border-0" allow="autoplay *; fullscreen *; encrypted-media *; picture-in-picture *" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" /></div> : selected.externalUrl && <div className="mt-5 flex flex-wrap gap-3"><a href={selected.externalUrl} target="_blank" rel="noreferrer" className="text-sm underline underline-offset-4">打开作品链接 ↗</a></div>}
           {renderCanvasBlocks("before_project_info")}
           {selected.id === "1688" ? <>
