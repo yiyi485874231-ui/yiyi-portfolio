@@ -424,7 +424,7 @@ export function PortfolioWebsite() {
     </div>;
   };
   return <main className="min-h-screen bg-[#faf9f6] text-stone-900 selection:bg-stone-200">
-    <style>{`@media (max-width: 767px) { .mt-mobile-stack-item { width: 100% !important; max-width: 100% !important; flex: 0 0 100% !important; } .personal-mobile-stack-item img { width: 100% !important; max-width: 100% !important; } .portfolio-stack-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; } .portfolio-stack-card { position: sticky; top: 84px; min-height: calc(100svh - 108px); background: #fff; box-shadow: 0 12px 32px rgba(35, 31, 26, .08); } .portfolio-stack-card:nth-child(1) { margin-top: 0; } } @media (min-width: 768px) { .portfolio-stack-card { position: relative; } } @media (prefers-reduced-motion: reduce) { .portfolio-stack-card { scroll-behavior: auto; transition: none !important; } }`}</style>
+    <style>{`@media (max-width: 767px) { .mt-mobile-stack-item { width: 100% !important; max-width: 100% !important; flex: 0 0 100% !important; } .personal-mobile-stack-item img { width: 100% !important; max-width: 100% !important; } } .portfolio-category-card { position: relative; isolation: isolate; margin-top: 28px; margin-bottom: 28px; border: 1px solid rgba(120,113,108,.22); border-radius: 26px; background: #fff; box-shadow: 0 18px 48px rgba(35,31,26,.07); overflow: visible; } .portfolio-operations-layout { display: grid; grid-template-columns: minmax(220px,.72fr) minmax(0,1.8fr); gap: clamp(28px,4vw,64px); align-items: start; } .portfolio-operations-heading { position: sticky; top: 104px; align-self: start; } .portfolio-operations-heading > div { margin-bottom: 0; } .portfolio-operations-content { min-width: 0; } .portfolio-operations-content .portfolio-stack-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; } .portfolio-stack-card { position: relative; min-height: 0; border-radius: 16px; box-shadow: 0 5px 18px rgba(35,31,26,.045); transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease; } .portfolio-stack-card:hover { transform: translateY(-4px); box-shadow: 0 14px 28px rgba(35,31,26,.09); } @media (min-width: 1500px) { .portfolio-operations-content .portfolio-stack-grid { grid-template-columns: repeat(3,minmax(0,1fr)); } } @media (max-width: 1023px) { .portfolio-operations-layout { display: block; } .portfolio-operations-heading { position: static; } .portfolio-operations-content .portfolio-stack-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } } @media (max-width: 639px) { .portfolio-category-card { margin: 16px 12px; border-radius: 20px; } .portfolio-operations-content .portfolio-stack-grid { grid-template-columns: minmax(0,1fr); } } @media (prefers-reduced-motion: reduce) { .portfolio-stack-card { transition: none !important; } .portfolio-category-card { animation: none !important; } }`}</style>
     <header className="sticky top-0 z-30 border-b border-stone-200/80 bg-[#faf9f6]/95 backdrop-blur">
       <div className="mx-auto max-w-7xl px-5 md:px-10 h-[68px] flex items-center justify-between gap-4">
         <button onClick={() => go("首页")} className="font-semibold tracking-[.14em] text-xs md:text-sm whitespace-nowrap">TANG YI DAN<span className="text-stone-400">.</span></button>
@@ -481,13 +481,19 @@ export function PortfolioWebsite() {
       </div>
     </section>
 
-    {categories.map((c, i) => <section id={c.id} key={c.id} className={"scroll-mt-20 " + (c.id === "视频" || c.id === "其他" ? "bg-[#eeece7]" : "")}>
-      <div className="mx-auto max-w-7xl px-5 md:px-10 py-16 md:py-24">
-        <SectionHeading index={"0" + (i + 1)} title={c.label} en={c.en} intro={c.intro} />
-        <div className={c.id === "运营" ? "portfolio-stack-grid grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5" : "grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5"}>{grouped(c.id).map((w, j) => card(w, j, c.id === "运营"))}</div>
-        {c.id === "运营" && <div className="mt-8 text-xs text-stone-500 border-t border-stone-200 pt-5">说明：项目数据按现有作品集资料呈现；团队项目成果与个人职责已分开说明。</div>}
-        {c.id === "视频" && <div className="mt-8 text-xs text-stone-500">视频封面与播放素材待替换为原始文件；点击卡片可先查看作品说明。</div>}
-        {c.id === "视觉" && <div className="mt-8 text-xs text-stone-500">视觉作品支持按项目上传不同尺寸的原图，不强制统一图片比例。</div>}
+    {categories.map((c, i) => <section id={c.id} key={c.id} className="scroll-mt-20 py-2 md:py-5">
+      <div className={"portfolio-category-card mx-auto max-w-7xl px-5 md:px-10 py-12 md:py-16 " + (c.id === "运营" ? "portfolio-operations-card" : "")}>
+        <div className={c.id === "运营" ? "portfolio-operations-layout" : ""}>
+          <div className={c.id === "运营" ? "portfolio-operations-heading" : ""}>
+            <SectionHeading index={"0" + (i + 1)} title={c.label} en={c.en} intro={c.intro} />
+          </div>
+          <div className={c.id === "运营" ? "portfolio-operations-content" : ""}>
+            <div className={c.id === "运营" ? "portfolio-stack-grid" : "grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5"}>{grouped(c.id).map((w, j) => card(w, j, c.id === "运营"))}</div>
+            {c.id === "运营" && <div className="mt-8 text-xs text-stone-500 border-t border-stone-200 pt-5">说明：项目数据按现有作品集资料呈现；团队项目成果与个人职责已分开说明。</div>}
+            {c.id === "视频" && <div className="mt-8 text-xs text-stone-500">视频封面与播放素材待替换为原始文件；点击卡片可先查看作品说明。</div>}
+            {c.id === "视觉" && <div className="mt-8 text-xs text-stone-500">视觉作品支持按项目上传不同尺寸的原图，不强制统一图片比例。</div>}
+          </div>
+        </div>
       </div>
     </section>)}
 
