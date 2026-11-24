@@ -1,6 +1,5 @@
-import './index.css';
-import { PortfolioWebsite } from './components/generated/PortfolioWebsite';
+import { FarmDemo } from './FarmDemo';
 
 export default function App() {
-  return <PortfolioWebsite />;
+  return <FarmDemo />;
 }
