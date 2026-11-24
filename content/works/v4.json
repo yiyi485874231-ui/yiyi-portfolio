@@ -3,7 +3,7 @@
   "title": "锦年 MV",
   "category": "视频",
   "type": "AI音乐视频 / 剪辑",
-  "desc": "AI音乐视频作品。",
+  "desc": "AI音乐MV视频作品",
   "role": "视频剪辑与AI创作实践。",
   "tags": [
     "MV",
@@ -17,6 +17,6 @@
   "coverImage": "/uploads/covers/jingnian1-1.jpg",
   "coverFit": "cover",
   "coverRatio": "wide",
-  "sortOrder": 90,
-  "videoUrl": "https://www.codapan.com/s/ravt7HGKBrMS"
+  "videoUrl": "https://www.codapan.com/s/ravt7HGKBrMS",
+  "sortOrder": 90
 }
