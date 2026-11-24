@@ -67,7 +67,7 @@ function FarmLandscape({ mobile = false }: { mobile?: boolean }) {
         <path d="M22 285 q-7 -8 -12 0 M27 288 q7 -9 13 -1 M355 285 q-7 -8 -12 0 M360 288 q7 -9 13 -1" />
         <path d="M165 465 q4 -12 8 0 q5 -15 10 0 M245 455 q4 -13 8 0 q5 -15 10 0" />
       </g>
-    <FarmInkDetails mobile /></svg>>
+    <FarmInkDetails mobile /></svg>
   ) : (
     <svg className="farm-art farm-art-desktop" viewBox="0 0 1440 650" role="img" aria-label="温柔手绘农场全景">
       <g fill="none" stroke="currentColor" strokeWidth="1.55" strokeLinecap="round" strokeLinejoin="round">
@@ -120,7 +120,7 @@ function FarmLandscape({ mobile = false }: { mobile?: boolean }) {
         <path d="M520 520 q7 -18 14 0 q8 -23 16 0 M600 530 q7 -18 14 0 q8 -23 16 0 M1010 525 q7 -18 14 0 q8 -23 16 0" />
         <path d="M290 575 q5 -15 10 0 M305 575 q5 -18 10 0 M900 580 q5 -15 10 0 M915 580 q5 -18 10 0" />
       </g>
-    <FarmInkDetails /></svg>>
+    <FarmInkDetails /></svg>
   );
 }
 
