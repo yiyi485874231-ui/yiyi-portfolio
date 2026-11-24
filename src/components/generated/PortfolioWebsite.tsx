@@ -341,6 +341,24 @@ function SectionHeading({
 }
 export function PortfolioWebsite() {
   const [active, setActive] = useState("首页");
+  const [guideSection, setGuideSection] = useState<string | null>(null);
+  const spokenSections = useRef<Set<string>>(new Set());
+  const guideCopy: Record<string, { title: string; speech: string }> = {
+    "运营": { title: "内容运营与策划", speech: "这里是内容运营与策划板块，展示了我在内容选题、文案创作、账号运营和数据复盘方面的实践。" },
+    "视频": { title: "视频与 AI 创作", speech: "接下来是视频与 AI 创作板块，收录了短视频、主题影像以及人工智能辅助创作的作品。" },
+    "视觉": { title: "视觉设计作品", speech: "这里是视觉设计作品，包含海报、标识和信息可视化等不同类型的视觉实践。" },
+    "其他": { title: "其他作品", speech: "最后是其他作品，展示交互项目、运营工具、采访写作和摄影摄像等跨媒介尝试。" }
+  };
+  const speakGuide = (section: string) => {
+    const copy = guideCopy[section];
+    if (!copy || !("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(copy.speech);
+    utterance.lang = "zh-CN";
+    utterance.rate = 0.96;
+    utterance.pitch = 1.02;
+    window.speechSynthesis.speak(utterance);
+  };
   const [welcomeActive, setWelcomeActive] = useState(false);
   const [characterAction, setCharacterAction] = useState<{ part: "head" | "left" | "right" | "body" | "feet"; variant: number } | null>(null);
   const welcomeFrameRef = useRef<HTMLDivElement>(null);
@@ -371,6 +389,22 @@ export function PortfolioWebsite() {
       }
     }, { threshold: 0.45 });
     observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+  useEffect(() => {
+    const nodes = ["运营", "视频", "视觉", "其他"].map(id => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    if (!nodes.length) return;
+    const observer = new IntersectionObserver(entries => {
+      const visible = entries.filter(entry => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (!visible) return;
+      const section = visible.target.id;
+      setGuideSection(section);
+      if (!spokenSections.current.has(section)) {
+        spokenSections.current.add(section);
+        window.setTimeout(() => speakGuide(section), 650);
+      }
+    }, { threshold: [0.22, 0.4, 0.6], rootMargin: "-18% 0px -28% 0px" });
+    nodes.forEach(node => observer.observe(node));
     return () => observer.disconnect();
   }, []);
   useEffect(() => {
@@ -483,7 +517,16 @@ export function PortfolioWebsite() {
     </div>;
   };
   return <main className="min-h-screen bg-[#faf9f6] text-stone-900 selection:bg-stone-200">
-    <style>{`.portfolio-wireframe-frame { background:#e9e5dd; color:#55534f; isolation:isolate; }
+    <style>{`.portfolio-guide { position:fixed; z-index:80; right:24px; bottom:24px; width:min(330px,calc(100vw - 28px)); display:flex; align-items:flex-end; gap:10px; pointer-events:none; }
+.portfolio-guide-card { flex:1; min-width:0; padding:13px 15px; border:1px solid rgba(120,113,108,.2); border-radius:16px 16px 4px 16px; background:rgba(250,249,246,.96); box-shadow:0 12px 36px rgba(35,31,26,.13); color:#57534e; backdrop-filter:blur(12px); animation:guide-in .35s ease both; pointer-events:auto; }
+.portfolio-guide-kicker { color:#a8a29e; font-size:9px; letter-spacing:.16em; }
+.portfolio-guide-title { margin-top:5px; font-size:13px; font-weight:650; color:#292524; }
+.portfolio-guide-copy { margin-top:5px; font-size:11px; line-height:1.7; color:#78716c; }
+.portfolio-guide-replay { margin-top:8px; font-size:10px; color:#57534e; text-decoration:underline; text-underline-offset:3px; }
+.portfolio-guide-mascot { width:58px; height:76px; flex:none; color:#57534e; filter:drop-shadow(0 5px 8px rgba(35,31,26,.12)); animation:wireframe-hover 4.8s ease-in-out infinite; pointer-events:none; }
+@keyframes guide-in { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+@media(max-width:767px) { .portfolio-guide { right:12px; bottom:calc(12px + env(safe-area-inset-bottom)); width:min(290px,calc(100vw - 24px)); gap:6px; } .portfolio-guide-card { padding:10px 12px; border-radius:13px 13px 4px 13px; } .portfolio-guide-title { font-size:12px; } .portfolio-guide-copy { font-size:10px; line-height:1.55; } .portfolio-guide-mascot { width:43px; height:62px; } }
+.portfolio-wireframe-frame { background:#e9e5dd; color:#55534f; isolation:isolate; }
 .portfolio-wireframe-backdrop { position:absolute; inset:0; background:radial-gradient(ellipse at 50% 42%,#faf8f3 0%,transparent 49%),linear-gradient(145deg,#d7d0c5,#eeebe5 55%,#c9c1b5); }
 .portfolio-wireframe-corner { position:absolute; width:62%; height:76%; top:12%; border:1px solid rgba(255,255,255,.66); pointer-events:none; }
 .portfolio-wireframe-corner-a { right:12%; }
@@ -896,6 +939,23 @@ export function PortfolioWebsite() {
         </div>
       </div>
     </div>, document.body)}
+    {guideSection && guideCopy[guideSection] && <aside className="portfolio-guide" aria-live="polite">
+      <div className="portfolio-guide-card">
+        <div className="portfolio-guide-kicker">PORTFOLIO GUIDE / 随行讲解</div>
+        <div className="portfolio-guide-title">{guideCopy[guideSection].title}</div>
+        <p className="portfolio-guide-copy">{guideCopy[guideSection].speech}</p>
+        <button type="button" className="portfolio-guide-replay" onClick={() => speakGuide(guideSection)}>再听一次 ↗</button>
+      </div>
+      <svg className="portfolio-guide-mascot" viewBox="0 0 360 440" aria-hidden="true">
+        <g fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round">
+          <ellipse cx="180" cy="92" rx="49" ry="53"/><ellipse cx="180" cy="92" rx="25" ry="53" opacity=".58"/><ellipse cx="180" cy="92" rx="49" ry="22" opacity=".72"/>
+          <path d="M165 145 Q180 153 195 145 L194 165 Q180 174 166 165 Z"/>
+          <path d="M164 164 Q180 155 196 164 Q216 175 211 205 Q207 230 196 246 Q180 255 164 246 Q153 230 149 205 Q144 175 164 164 Z"/>
+          <path d="M153 177 Q137 178 129 193 Q122 207 132 217 Q140 224 148 212 M207 177 Q223 178 231 193 Q238 207 228 217 Q220 224 212 212"/>
+          <path d="M165 246 Q160 261 159 278 Q158 289 169 291 Q179 292 180 280 L180 254 M195 246 Q200 261 201 278 Q202 289 191 291 Q181 292 180 280 L180 254"/>
+        </g>
+      </svg>
+    </aside>}
     {welcomeActive && createPortal(
       <div className="portfolio-welcome-overlay" role="status" aria-label="Welcome">
         <div className="portfolio-welcome-stage">
