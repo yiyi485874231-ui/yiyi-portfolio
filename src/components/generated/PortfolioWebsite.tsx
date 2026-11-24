@@ -421,7 +421,7 @@ export function PortfolioWebsite() {
       </div>
     </section>
 
-    {categories.map((c, i) => <section id={c.id} key={c.id} className={"scroll-mt-20 " + (c.id === "视频" ? "bg-[#eeece7]" : c.id === "视觉" ? "bg-[#f1e9e4]" : c.id === "其他" ? "bg-[#e9ecef]" : "")}>
+    {categories.map((c, i) => <section id={c.id} key={c.id} className={"scroll-mt-20 " + (c.id === "视频" || c.id === "其他" ? "bg-[#eeece7]" : "")}>
       <div className="mx-auto max-w-7xl px-5 md:px-10 py-16 md:py-24">
         <SectionHeading index={"0" + (i + 1)} title={c.label} en={c.en} intro={c.intro} />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">{grouped(c.id).map((w, j) => card(w, j))}</div>
