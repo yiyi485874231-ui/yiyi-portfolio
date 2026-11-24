@@ -374,7 +374,7 @@ export function PortfolioWebsite() {
   }, []);
   useEffect(() => {
     if (!welcomeActive) return;
-    const timer = window.setTimeout(() => setWelcomeActive(false), 3200);
+    const timer = window.setTimeout(() => setWelcomeActive(false), 4800);
     if ("speechSynthesis" in window && "SpeechSynthesisUtterance" in window) {
       window.speechSynthesis.cancel();
       const greeting = new SpeechSynthesisUtterance("Welcome!");
@@ -483,12 +483,22 @@ export function PortfolioWebsite() {
 .portfolio-wireframe-frame.is-welcoming .portfolio-wireframe-model { opacity:0; }
 .portfolio-welcome-overlay { position:fixed; inset:0; z-index:9998; display:flex; align-items:center; justify-content:center; pointer-events:none; background:rgba(32,29,25,.18); backdrop-filter:blur(2px); animation:welcome-screen-in .25s ease both; }
 .portfolio-welcome-stage { position:relative; width:min(86vw,520px); height:min(78vh,620px); display:flex; align-items:center; justify-content:center; }
-.portfolio-welcome-figure { width:100%; height:100%; overflow:visible; color:#f7f5f0; filter:drop-shadow(0 18px 28px rgba(0,0,0,.16)); animation:welcome-figure-pop 3.2s cubic-bezier(.2,.78,.2,1) both; }
-.portfolio-welcome-greeting { position:absolute; top:5%; right:0; padding:13px 22px; border-radius:20px 20px 6px 20px; background:#faf9f6; color:#514d47; font-size:clamp(18px,3vw,25px); font-weight:600; letter-spacing:.08em; box-shadow:0 12px 32px rgba(0,0,0,.15); animation:welcome-bubble-in .35s .28s both; }
+.portfolio-welcome-figure { position:relative; z-index:2; width:100%; height:100%; overflow:visible; color:#f7f5f0; filter:drop-shadow(0 18px 28px rgba(0,0,0,.16)); animation:welcome-figure-pop 4.8s cubic-bezier(.2,.78,.2,1) both; }
+.portfolio-wave-arm-left { transform-box:fill-box; transform-origin:100% 8%; animation:welcome-wave-left .52s ease-in-out 4 .65s; }
+.portfolio-wave-arm-right { transform-box:fill-box; transform-origin:0% 8%; animation:welcome-wave-right .52s ease-in-out 4 .65s; }
+.portfolio-welcome-door { position:absolute; z-index:1; right:-3%; top:13%; width:42%; height:72%; overflow:visible; color:#f7f5f0; opacity:0; animation:welcome-door-appear 4.8s ease both; }
+.portfolio-door-frame,.portfolio-door-leaf path,.portfolio-door-glint { fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.portfolio-door-leaf { transform-box:view-box; transform-origin:34px 320px; animation:welcome-door-open 4.8s ease both; }
+.portfolio-welcome-greeting { position:absolute; z-index:4; top:5%; right:-1%; padding:13px 22px; border-radius:20px 20px 6px 20px; background:#faf9f6; color:#514d47; font-size:clamp(18px,3vw,25px); font-weight:600; letter-spacing:.08em; box-shadow:0 12px 32px rgba(0,0,0,.15); animation:welcome-bubble-in .35s .28s both; }
 .portfolio-welcome-greeting:after { content:""; position:absolute; right:14px; bottom:-7px; width:13px; height:13px; background:#faf9f6; transform:rotate(45deg); }
 @keyframes welcome-screen-in { from { opacity:0; } to { opacity:1; } }
-@keyframes welcome-figure-pop { 0% { opacity:0; transform:translateY(90px) scale(.24) rotate(-8deg); } 22% { opacity:1; transform:translateY(-14px) scale(1.08) rotate(3deg); } 34%,78% { opacity:1; transform:translateY(0) scale(1) rotate(0); } 90% { opacity:1; transform:translateY(8px) scale(.98); } 100% { opacity:0; transform:translateY(45px) scale(.3); } }
-@media (max-width:767px) { .portfolio-welcome-stage { width:92vw; height:min(68vh,500px); } .portfolio-welcome-greeting { top:4%; right:2%; padding:10px 16px; font-size:18px; } }
+@keyframes welcome-figure-pop { 0% { opacity:0; transform:translateY(90px) scale(.24) rotate(-8deg); } 16% { opacity:1; transform:translateY(-14px) scale(1.08) rotate(3deg); } 25%,56% { opacity:1; transform:translate(0,0) scale(1) rotate(0); } 72% { opacity:1; transform:translate(24px,12px) scale(.92) rotate(2deg); } 86% { opacity:.95; transform:translate(38px,8px) scale(.68) rotate(4deg); } 100% { opacity:0; transform:translate(46px,0) scale(.12) rotate(8deg); } }
+@keyframes welcome-wave-left { 0%,100% { transform:rotate(0); } 25%,75% { transform:rotate(-28deg); } 50% { transform:rotate(20deg); } }
+@keyframes welcome-wave-right { 0%,100% { transform:rotate(0); } 25%,75% { transform:rotate(28deg); } 50% { transform:rotate(-20deg); } }
+@keyframes welcome-door-appear { 0%,54% { opacity:0; transform:translateX(12px) scale(.94); } 63%,88% { opacity:1; transform:translateX(0) scale(1); } 100% { opacity:0; transform:translateX(12px) scale(.96); } }
+@keyframes welcome-door-open { 0%,65% { transform:perspective(500px) rotateY(0); opacity:1; } 82%,94% { transform:perspective(500px) rotateY(-68deg); opacity:1; } 100% { transform:perspective(500px) rotateY(-90deg); opacity:0; } }
+@keyframes welcome-bubble-in { from { opacity:0; transform:translateY(10px) scale(.92); } to { opacity:1; transform:translateY(0) scale(1); } }
+@media (max-width:767px) { .portfolio-welcome-stage { width:92vw; height:min(68vh,500px); } .portfolio-welcome-greeting { top:4%; right:2%; padding:10px 16px; font-size:18px; } .portfolio-welcome-door { right:-5%; top:18%; width:40%; height:65%; } }
 @media (prefers-reduced-motion:reduce) { .portfolio-wireframe-model,.portfolio-wireframe-svg { animation:none !important; } }
 @media (max-width:767px) { .portfolio-museum-canvas-image { width:calc(50% - 8px) !important; max-width:calc(50% - 8px) !important; flex:0 0 calc(50% - 8px) !important; margin:0 !important; padding:6px !important; } .portfolio-museum-canvas-image img { display:block; width:100% !important; max-width:100% !important; height:auto !important; object-fit:contain !important; } }
 @media (max-width:767px) { .portfolio-museum-gallery { grid-template-columns:minmax(0,1fr) !important; } .portfolio-museum-gallery-item { aspect-ratio:auto !important; } .portfolio-museum-gallery-item img { display:block; width:100% !important; height:auto !important; object-fit:contain !important; } }
@@ -864,10 +874,15 @@ export function PortfolioWebsite() {
               </g>
               <path d="M165 145 Q180 153 195 145 L194 165 Q180 174 166 165 Z"/>
               <g><path d="M164 164 Q180 155 196 164 Q216 175 211 205 Q207 230 196 246 Q180 255 164 246 Q153 230 149 205 Q144 175 164 164 Z"/><path d="M180 163 Q169 188 180 250 Q191 188 180 163Z" opacity=".72"/><path d="M151 184 Q180 201 209 184 M150 207 Q180 224 210 207 M158 231 Q180 243 202 231 M161 169 Q180 184 199 169 M155 222 Q180 235 205 222" opacity=".62"/></g>
-              <g className="portfolio-wire-arms"><path d="M153 177 Q137 178 129 193 Q122 207 132 217 Q140 224 148 212 L158 198"/><path d="M207 177 Q223 178 231 193 Q238 207 228 217 Q220 224 212 212 L202 198"/><path d="M129 193 Q138 199 145 205 M231 193 Q222 199 215 205" opacity=".62"/></g>
+              <g className="portfolio-wire-arms"><g className="portfolio-wave-arm-left"><path d="M153 177 Q137 178 129 193 Q122 207 132 217 Q140 224 148 212 L158 198"/><path d="M129 193 Q138 199 145 205" opacity=".62"/></g><g className="portfolio-wave-arm-right"><path d="M207 177 Q223 178 231 193 Q238 207 228 217 Q220 224 212 212 L202 198"/><path d="M231 193 Q222 199 215 205" opacity=".62"/></g></g>
               <path d="M165 246 Q160 261 159 278 Q158 289 169 291 Q179 292 180 280 L180 254 M195 246 Q200 261 201 278 Q202 289 191 291 Q181 292 180 280 L180 254 M159 278 Q170 285 180 280 M201 278 Q190 285 180 280 M160 289 Q151 297 157 302 Q168 306 176 299 M200 289 Q209 297 203 302 Q192 306 184 299"/>
               <g opacity=".42"><ellipse cx="180" cy="164" rx="18" ry="7"/><ellipse cx="180" cy="246" rx="17" ry="7"/><ellipse cx="139" cy="196" rx="8" ry="6"/><ellipse cx="221" cy="196" rx="8" ry="6"/><ellipse cx="160" cy="278" rx="7" ry="5"/><ellipse cx="200" cy="278" rx="7" ry="5"/></g>
             </g>
+          </svg>
+          <svg className="portfolio-welcome-door" viewBox="0 0 220 330" aria-hidden="true">
+            <path className="portfolio-door-frame" d="M22 320 V18 Q22 8 34 8 H186 Q198 8 198 18 V320 M8 320 H212"/>
+            <g className="portfolio-door-leaf"><path d="M34 320 V28 H186 V320 Z"/><path d="M48 304 V44 H172 V304 Z" opacity=".5"/><circle cx="166" cy="178" r="3" fill="currentColor" stroke="none"/></g>
+            <path className="portfolio-door-glint" d="M22 18 Q110 -4 198 18" opacity=".6"/>
           </svg>
           <div className="portfolio-welcome-greeting">Welcome!</div>
         </div>
