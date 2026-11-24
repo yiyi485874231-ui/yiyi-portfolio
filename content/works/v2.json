@@ -3,7 +3,7 @@
   "title": "此刻年少",
   "category": "视频",
   "type": "主题短片 / 视频制作",
-  "desc": "以青春与校园记忆为主题的视频作品。",
+  "desc": "以青春与校园记忆为主题的视频作品",
   "role": "视频创作实践。",
   "tags": [
     "主题影像",
@@ -32,6 +32,6 @@
       "imageAlign": "center"
     }
   ],
-  "sortOrder": 70,
-  "externalUrl": "https://v.douyin.com/n2gNbUnktA0/"
+  "externalUrl": "https://v.douyin.com/n2gNbUnktA0/",
+  "sortOrder": 70
 }
