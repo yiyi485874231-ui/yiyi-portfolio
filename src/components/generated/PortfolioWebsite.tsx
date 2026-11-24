@@ -342,16 +342,12 @@ function SectionHeading({
 export function PortfolioWebsite() {
   const [active, setActive] = useState("首页");
   const [guideSection, setGuideSection] = useState<string | null>(null);
-  const spokenSections = useRef<Set<string>>(new Set());
   const guideCopy: Record<string, { title: string; speech: string }> = {
     "运营": { title: "内容运营与策划", speech: "这里是我的内容运营与策划作品。" },
     "视频": { title: "视频与 AI 创作", speech: "这里收录了我的视频和 AI 创作。" },
     "视觉": { title: "视觉设计作品", speech: "这里是我的视觉设计作品。" },
     "其他": { title: "其他作品", speech: "这里还有一些不同类型的作品。" },
     "关于我": { title: "感谢你的浏览", speech: "Thank you for exploring my portfolio!" }
-  };
-  const speakGuide = (_section: string) => {
-    // Narration is intentionally silent; the on-screen speech bubble carries the guide copy.
   };
   const [welcomeActive, setWelcomeActive] = useState(false);
   const [characterAction, setCharacterAction] = useState<{ part: "head" | "left" | "right" | "body" | "feet"; variant: number } | null>(null);
@@ -393,10 +389,6 @@ export function PortfolioWebsite() {
       if (!visible) return;
       const section = visible.target.id;
       setGuideSection(section);
-      if (!spokenSections.current.has(section) && welcomeTriggered.current && !welcomeActive) {
-        spokenSections.current.add(section);
-        window.setTimeout(() => speakGuide(section), 650);
-      }
     }, { threshold: [0.22, 0.4, 0.6], rootMargin: "-18% 0px -28% 0px" });
     nodes.forEach(node => observer.observe(node));
     return () => observer.disconnect();
@@ -508,8 +500,8 @@ export function PortfolioWebsite() {
 .portfolio-guide-kicker { color:#a8a29e; font-size:9px; letter-spacing:.16em; }
 .portfolio-guide-title { margin-top:5px; font-size:13px; font-weight:650; color:#292524; }
 .portfolio-guide-copy { margin-top:5px; font-size:11px; line-height:1.7; color:#78716c; }
-.portfolio-guide-replay { margin-top:8px; font-size:10px; color:#57534e; text-decoration:underline; text-underline-offset:3px; }
 .portfolio-guide-mascot { width:72px; height:94px; flex:none; color:#57534e; filter:drop-shadow(0 5px 8px rgba(35,31,26,.12)); animation:wireframe-hover 4.8s ease-in-out infinite; cursor:pointer; pointer-events:auto; }
+.portfolio-guide-mascot.portfolio-guide-mascot-on-dark { color:#f5f5f4; filter:drop-shadow(0 0 3px rgba(255,255,255,.28)) drop-shadow(0 5px 10px rgba(0,0,0,.35)); }
 .portfolio-guide-mascot.guide-action-head { animation:guide-head 700ms ease; }
 .portfolio-guide-mascot.guide-action-hand { animation:guide-wave 850ms ease; }
 .portfolio-guide-mascot.guide-action-body { animation:guide-bounce 850ms ease; }
@@ -938,9 +930,8 @@ export function PortfolioWebsite() {
         <div className="portfolio-guide-kicker">PORTFOLIO GUIDE / 随行讲解</div>
         <div className="portfolio-guide-title">{guideCopy[guideSection].title}</div>
         <p className="portfolio-guide-copy">{guideCopy[guideSection].speech}</p>
-        <button type="button" className="portfolio-guide-replay" onClick={() => speakGuide(guideSection)}>再听一次 ↗</button>
       </div>
-      <svg className={`portfolio-guide-mascot ${characterAction ? (characterAction.part === "head" ? "guide-action-head" : characterAction.part === "left" || characterAction.part === "right" ? "guide-action-hand" : characterAction.part === "feet" ? "guide-action-feet" : "guide-action-body") : ""}`} viewBox="0 0 360 440" aria-hidden="true" onClick={() => playCharacterAction((["head", "left", "right", "body", "feet"] as const)[Math.floor(Math.random() * 5)])}>
+      <svg className={`portfolio-guide-mascot ${guideSection === "关于我" ? "portfolio-guide-mascot-on-dark" : ""} ${characterAction ? (characterAction.part === "head" ? "guide-action-head" : characterAction.part === "left" || characterAction.part === "right" ? "guide-action-hand" : characterAction.part === "feet" ? "guide-action-feet" : "guide-action-body") : ""}`} viewBox="0 0 360 440" aria-hidden="true" onClick={() => playCharacterAction((["head", "left", "right", "body", "feet"] as const)[Math.floor(Math.random() * 5)])}>
         <g fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M180 38 Q174 23 185 16 Q195 11 198 23"/>
           <circle cx="198" cy="22" r="3" fill="currentColor" stroke="none" opacity=".65"/>
