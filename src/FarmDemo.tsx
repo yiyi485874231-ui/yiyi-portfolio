@@ -186,7 +186,7 @@ export function FarmDemo() {
       </div>
       <div className="farm-about-copy">
         <p className="farm-kicker">A NOTE FROM THE FARMER</p>
-        <h2>你好，我是<br/><em>唐艺丹</em></h2>
+        <h2>你好，我是<br/><span className="about-name">唐艺丹</span></h2>
         <div className="about-identity"><span>专业</span><strong>网络与新媒体</strong><i>PERSONAL PROFILE</i></div>
         <p>关注内容策划、新媒体运营、视频与 AI 创作及视觉设计。喜欢观察生活、发现有趣的表达方式，也乐于尝试新的工具和可能性，希望把想法转化为真实、具体的内容与作品。</p>
         <div className="about-contact">
@@ -211,6 +211,10 @@ export function FarmDemo() {
           </button>)}
           <span className="board-dried-flower flower-one">✿</span><span className="board-dried-flower flower-two">❀</span>
           <span className="board-handnote">ideas grow<br/>here ♡</span>
+          <span className="board-scrap scrap-one" aria-hidden="true">GROW<br/>SLOWLY</span>
+          <span className="board-scrap scrap-two" aria-hidden="true">little things<br/>matter ✳</span>
+          <span className="board-scrap scrap-three" aria-hidden="true">KEEP<br/>MAKING</span>
+          <span className="board-thread" aria-hidden="true"></span>
         </div>
         <div className="board-bottomline"><span>✳ LITTLE IDEAS, GROWN WITH CARE</span><span>— YIYI</span></div>
       </div>
