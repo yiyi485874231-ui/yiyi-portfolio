@@ -3,7 +3,7 @@
   "title": "招生季抖音",
   "category": "视频",
   "type": "短视频 / 策划与制作",
-  "desc": "围绕招生季主题制作的短视频作品。",
+  "desc": "围绕招生季主题制作的短视频作品",
   "role": "参与视频策划、拍摄与剪辑（具体分工以作品素材为准）。",
   "result": "播放量 1.4 万",
   "tags": [
@@ -34,6 +34,6 @@
       "imageAlign": "center"
     }
   ],
-  "sortOrder": 60,
-  "externalUrl": "https://www.douyin.com/video/7644877867356647090"
+  "externalUrl": "https://www.douyin.com/video/7644877867356647090",
+  "sortOrder": 60
 }
