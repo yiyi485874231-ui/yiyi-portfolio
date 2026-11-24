@@ -359,6 +359,8 @@ export function PortfolioWebsite() {
   const [selected, setSelected] = useState<Work | null>(null);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [activeVideo, setActiveVideo] = useState(0);
+  const [activeOther, setActiveOther] = useState(0);
+  const otherTouchStart = useRef<{x:number;y:number} | null>(null);
   const videoTouchStart = useRef<{x:number;y:number} | null>(null);
   const videoWheelLocked = useRef(false);
   const videoWheelTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -374,6 +376,9 @@ export function PortfolioWebsite() {
   };
   const grouped = (id: string) => works.filter(w => w.category ? w.category === id : id === "运营" ? ["mt", "1688", "sanxiang", "college", "personal"].includes(w.id) : id === "视频" ? w.id.startsWith("v") : id === "视觉" ? w.id.startsWith("d") : w.id.startsWith("o"));
   const videoWorks = grouped("视频");
+  const otherWorks = grouped("其他");
+  const moveOther = (direction: number) => setActiveOther(current => (current + direction + Math.max(otherWorks.length, 1)) % Math.max(otherWorks.length, 1));
+  const finishOtherTouch = (event: React.TouchEvent<HTMLElement>) => { if (!otherTouchStart.current || !event.changedTouches.length) return; const touch = event.changedTouches[0]; const dx = touch.clientX - otherTouchStart.current.x; const dy = touch.clientY - otherTouchStart.current.y; if (Math.abs(dx) >= 38 && Math.abs(dx) > Math.abs(dy) * 1.15) moveOther(dx < 0 ? 1 : -1); otherTouchStart.current = null; };
   const activeVideoWork = videoWorks.length ? videoWorks[activeVideo % videoWorks.length] : null;
   const moveVideo = (direction: number) => setActiveVideo(current => (current + direction + Math.max(videoWorks.length, 1)) % Math.max(videoWorks.length, 1));
   const moveVideoMobile = (direction: number) => setActiveVideo(current => Math.min(Math.max(videoWorks.length - 1, 0), Math.max(0, current + direction)));
@@ -436,7 +441,43 @@ export function PortfolioWebsite() {
     </div>;
   };
   return <main className="min-h-screen bg-[#faf9f6] text-stone-900 selection:bg-stone-200">
-    <style>{`.portfolio-visual-gallery { width: 100%; }
+    <style>{`.portfolio-holo-gallery { width:100%; position:relative; }
+.portfolio-holo-stage { position:relative; height:490px; overflow:hidden; isolation:isolate; perspective:1200px; background:radial-gradient(ellipse at 50% 48%,rgba(226,220,208,.42),rgba(250,249,246,0) 64%); border:1px solid rgba(120,113,108,.12); border-radius:22px; }
+.portfolio-holo-gridlines { position:absolute; inset:0; opacity:.28; background-image:linear-gradient(rgba(120,113,108,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(120,113,108,.10) 1px,transparent 1px); background-size:44px 44px; mask-image:radial-gradient(ellipse at center,#000 0%,transparent 76%); pointer-events:none; }
+.portfolio-holo-orbit { position:absolute; left:50%; top:54%; width:74%; height:34%; transform:translate(-50%,-50%) rotateX(68deg); border:1px solid rgba(120,113,108,.25); border-radius:50%; box-shadow:0 0 0 22px rgba(120,113,108,.025),0 0 0 48px rgba(120,113,108,.02); pointer-events:none; }
+.portfolio-holo-card { position:absolute; left:50%; top:46%; width:min(48%,470px); padding:15px; text-align:left; border:1px solid rgba(120,113,108,.22); border-radius:17px; background:rgba(255,255,255,.96); box-shadow:0 18px 52px rgba(35,31,26,.13); transform-origin:center center; transition:transform .55s cubic-bezier(.2,.75,.2,1),opacity .45s ease,box-shadow .45s ease,border-color .45s ease; backdrop-filter:blur(12px); }
+.portfolio-holo-card.is-active { border-color:rgba(87,83,78,.5); box-shadow:0 28px 70px rgba(35,31,26,.2),0 0 34px rgba(255,255,255,.85); }
+.portfolio-holo-card-top { display:flex; justify-content:space-between; gap:10px; margin-bottom:11px; color:#a8a29e; font-size:9px; letter-spacing:.16em; }
+.portfolio-holo-card-image { position:relative; display:flex; align-items:center; justify-content:center; width:100%; aspect-ratio:16 / 9; overflow:hidden; }
+.portfolio-holo-card-image img { width:100%; height:100%; object-fit:contain; }
+.portfolio-holo-card-image > span { font-size:58px; font-weight:300; color:rgba(87,83,78,.42); }
+.portfolio-holo-card-image i { position:absolute; inset:10px; border:1px solid rgba(255,255,255,.62); pointer-events:none; }
+.portfolio-holo-card-copy { padding:13px 2px 2px; }
+.portfolio-holo-card-copy > span { color:#a8a29e; font-size:9px; letter-spacing:.12em; }
+.portfolio-holo-card-copy h3 { margin-top:6px; color:#292524; font-size:17px; font-weight:600; }
+.portfolio-holo-card-copy p { margin-top:5px; color:#78716c; font-size:11px; line-height:1.6; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.portfolio-holo-caption { position:absolute; z-index:12; left:22px; right:22px; bottom:18px; display:flex; justify-content:space-between; align-items:center; color:#a8a29e; font-size:9px; letter-spacing:.16em; pointer-events:none; }
+.portfolio-holo-caption strong { color:#57534e; font-size:12px; font-weight:500; letter-spacing:.1em; }
+.portfolio-holo-caption i { color:#c4bdb3; font-style:normal; padding:0 5px; }
+.portfolio-holo-controls { display:flex; justify-content:center; align-items:center; gap:28px; margin-top:18px; color:#a8a29e; font-size:10px; letter-spacing:.08em; }
+.portfolio-holo-controls button { width:42px; height:42px; border:1px solid rgba(120,113,108,.3); border-radius:50%; color:#57534e; font-size:20px; transition:background .2s,color .2s; }
+.portfolio-holo-controls button:hover { background:#252522; color:#fff; }
+.portfolio-holo-mobile-hint { display:none; }
+@media (max-width:767px) {
+ .portfolio-holo-stage { height:410px; margin:0 -4px; border-radius:17px; touch-action:pan-y; }
+ .portfolio-holo-card { width:76%; padding:12px; top:45%; border-radius:14px; }
+ .portfolio-holo-card-image { aspect-ratio:4 / 3; }
+ .portfolio-holo-card-image > span { font-size:44px; }
+ .portfolio-holo-card-copy h3 { font-size:15px; }
+ .portfolio-holo-card-copy p { font-size:10px; }
+ .portfolio-holo-caption { left:14px; right:14px; bottom:13px; font-size:8px; }
+ .portfolio-holo-controls { gap:18px; margin-top:14px; }
+ .portfolio-holo-controls button { width:38px; height:38px; }
+ .portfolio-holo-controls span { font-size:9px; }
+ .portfolio-holo-mobile-hint { display:block; margin-top:10px; text-align:center; color:#a8a29e; font-size:10px; letter-spacing:.08em; }
+}
+@media (prefers-reduced-motion:reduce) { .portfolio-holo-card,.portfolio-holo-controls button { transition:none !important; } }
+.portfolio-visual-gallery { width: 100%; }
 .portfolio-visual-stage { display: grid; grid-template-columns: minmax(360px,1fr) minmax(300px,.9fr); gap: clamp(24px,4vw,64px); align-items: center; min-height: 560px; }
 .portfolio-visual-orbit { width: min(100%, 470px); aspect-ratio: 1; position: relative; margin: 0 auto; border-radius: 50%; touch-action: none; cursor: grab; user-select: none; }
 .portfolio-visual-orbit:active { cursor: grabbing; }
@@ -613,7 +654,19 @@ export function PortfolioWebsite() {
                 </button>}
                 <div className="portfolio-visual-mobile-controls"><button type="button" onClick={() => moveVideo(-1)}>← 上一个</button><span>拨动弧线切换作品</span><button type="button" onClick={() => moveVideo(1)}>下一个 →</button></div>
               </div>
-            </div> : c.id === "视觉" ? <div className="portfolio-stack-grid">{grouped(c.id).map((w, j) => card(w, j, true))}</div> : <div className={c.id === "运营" ? "portfolio-stack-grid" : "grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5"}>{grouped(c.id).map((w, j) => card(w, j, c.id === "运营"))}</div>}
+            </div> : c.id === "视觉" ? <div className="portfolio-stack-grid">{grouped(c.id).map((w, j) => card(w, j, true))}</div> : c.id === "其他" ? <div className="portfolio-holo-gallery">
+              <div className="portfolio-holo-stage" onTouchStart={event => { if (event.touches.length) otherTouchStart.current = { x: event.touches[0].clientX, y: event.touches[0].clientY }; }} onTouchEnd={finishOtherTouch} onTouchCancel={() => { otherTouchStart.current = null; }}>
+                <div className="portfolio-holo-gridlines"></div><div className="portfolio-holo-orbit"></div>
+                {otherWorks.map((work, index) => { const count = otherWorks.length; let offset = (index - activeOther + count) % count; if (offset > count / 2) offset -= count; const distance = Math.abs(offset); const scale = distance === 0 ? 1 : distance === 1 ? .78 : .58; const opacity = distance === 0 ? 1 : distance === 1 ? .78 : distance === 2 ? .42 : .12; const isActive = index === activeOther; return <button key={work.id} type="button" className={"portfolio-holo-card" + (isActive ? " is-active" : "")} style={{ transform: `translate(-50%,-50%) translateX(${offset * 66}%) scale(${scale})`, opacity, zIndex: 10 - distance, pointerEvents: distance > 2 ? "none" : "auto" }} onClick={() => isActive ? setSelected(work) : setActiveOther(index)} aria-label={isActive ? `打开${work.title}` : `切换到${work.title}`} aria-pressed={isActive}>
+                  <div className="portfolio-holo-card-top"><span>WORK / {String(index + 1).padStart(2, "0")}</span><span>{isActive ? "SELECTED" : "EXPLORE"}</span></div>
+                  <div className={"portfolio-holo-card-image " + (toneClass[work.tone] || "bg-stone-100")}>{work.coverImage ? <img src={work.coverImage} alt={work.title} /> : <span>{String(index + 1).padStart(2, "0")}</span>}<i></i></div>
+                  <div className="portfolio-holo-card-copy"><span>{work.type}</span><h3>{work.title}</h3><p>{work.desc}</p></div>
+                </button>; })}
+                <div className="portfolio-holo-caption"><span>HOLOGRAPHIC WORKSPACE</span><strong>{String(activeOther + 1).padStart(2, "0")} <i>/</i> {String(otherWorks.length).padStart(2, "0")}</strong></div>
+              </div>
+              <div className="portfolio-holo-controls"><button type="button" onClick={() => moveOther(-1)} aria-label="上一个作品">←</button><span>选择两侧作品，或左右切换探索</span><button type="button" onClick={() => moveOther(1)} aria-label="下一个作品">→</button></div>
+              <div className="portfolio-holo-mobile-hint">左右滑动，探索六件作品</div>
+            </div> : <div className={c.id === "运营" ? "portfolio-stack-grid" : "grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5"}>{grouped(c.id).map((w, j) => card(w, j, c.id === "运营"))}</div>}
             {c.id === "运营" && <div className="mt-8 text-xs text-stone-500 border-t border-stone-200 pt-5">说明：项目数据按现有作品集资料呈现；团队项目成果与个人职责已分开说明。</div>}
             {c.id === "视频" && <div className="mt-8 text-xs text-stone-500">视频封面与播放素材待替换为原始文件；点击卡片可先查看作品说明。</div>}
           </div>
