@@ -341,6 +341,9 @@ function SectionHeading({
 }
 export function PortfolioWebsite() {
   const [active, setActive] = useState("首页");
+  const [welcomeActive, setWelcomeActive] = useState(false);
+  const welcomeFrameRef = useRef<HTMLDivElement>(null);
+  const welcomeTriggered = useRef(false);
   const editableWorkFiles = import.meta.glob("../../../content/works/*.json", {
     eager: true,
     import: "default"
@@ -356,6 +359,35 @@ export function PortfolioWebsite() {
       (a, b) => (a.sortOrder ?? 9999) - (b.sortOrder ?? 9999)
     ));
   }, []);
+  useEffect(() => {
+    const node = welcomeFrameRef.current;
+    if (!node) return;
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some(entry => entry.isIntersecting) && !welcomeTriggered.current) {
+        welcomeTriggered.current = true;
+        window.setTimeout(() => setWelcomeActive(true), 500);
+        observer.disconnect();
+      }
+    }, { threshold: 0.45 });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+  useEffect(() => {
+    if (!welcomeActive) return;
+    const timer = window.setTimeout(() => setWelcomeActive(false), 2600);
+    if ("speechSynthesis" in window && "SpeechSynthesisUtterance" in window) {
+      window.speechSynthesis.cancel();
+      const greeting = new SpeechSynthesisUtterance("Welcome!");
+      greeting.lang = "en-US";
+      greeting.rate = 0.92;
+      greeting.pitch = 1.12;
+      window.speechSynthesis.speak(greeting);
+    }
+    return () => {
+      window.clearTimeout(timer);
+      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    };
+  }, [welcomeActive]);
   const [selected, setSelected] = useState<Work | null>(null);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [activeVideo, setActiveVideo] = useState(0);
@@ -448,6 +480,16 @@ export function PortfolioWebsite() {
 .portfolio-wireframe-corner-b { left:12%; top:17%; width:54%; height:66%; border-color:rgba(90,86,79,.12); }
 .portfolio-wireframe-model { position:absolute; inset:14% 10% 6%; display:flex; align-items:center; justify-content:center; perspective:900px; transform-style:preserve-3d; animation:wireframe-hover 4.8s ease-in-out infinite; }
 .portfolio-wireframe-svg { width:min(100%,320px); height:92%; overflow:visible; filter:drop-shadow(0 8px 10px rgba(54,50,44,.08)); transform-style:preserve-3d; animation:wireframe-turn 18s linear infinite; }
+.portfolio-wireframe-frame.is-welcoming { overflow:visible; z-index:30; }
+.portfolio-wireframe-frame.is-welcoming .portfolio-wireframe-model { z-index:7; animation:wireframe-hover 4.8s ease-in-out infinite,wireframe-popout 2.6s cubic-bezier(.2,.8,.2,1) both; }
+.portfolio-wireframe-frame.is-welcoming .portfolio-wire-arms { transform-box:fill-box; transform-origin:50% 18%; animation:wireframe-wave .42s ease-in-out 4; }
+.portfolio-welcome-bubble { position:absolute; z-index:9; top:8%; right:7%; padding:11px 17px; border:1px solid rgba(91,86,78,.18); border-radius:18px 18px 5px 18px; background:rgba(255,255,255,.94); color:#514d47; font-size:14px; font-weight:600; letter-spacing:.08em; box-shadow:0 10px 28px rgba(48,43,36,.12); animation:welcome-bubble-in .32s cubic-bezier(.2,.8,.2,1) both; }
+.portfolio-welcome-tail { position:absolute; right:10px; bottom:-6px; width:10px; height:10px; background:#fff; border-right:1px solid rgba(91,86,78,.18); border-bottom:1px solid rgba(91,86,78,.18); transform:rotate(45deg); }
+@keyframes wireframe-popout { 0% { transform:translate3d(0,0,0) scale(1); } 17% { transform:translate3d(0,-48px,110px) scale(1.16); } 34%,68% { transform:translate3d(0,-30px,85px) scale(1.12); } 88% { transform:translate3d(0,-5px,20px) scale(1.02); } 100% { transform:translate3d(0,0,0) scale(1); } }
+@keyframes wireframe-wave { 0%,100% { transform:rotate(0deg); } 25% { transform:rotate(-9deg); } 50% { transform:rotate(8deg); } 75% { transform:rotate(-7deg); } }
+@keyframes welcome-bubble-in { from { opacity:0; transform:translateY(10px) scale(.92); } to { opacity:1; transform:translateY(0) scale(1); } }
+@media (max-width:767px) { .portfolio-welcome-bubble { top:7%; right:3%; padding:8px 12px; font-size:12px; } .portfolio-wireframe-frame.is-welcoming .portfolio-wireframe-model { animation:wireframe-hover 4.8s ease-in-out infinite,wireframe-popout-mobile 2.6s cubic-bezier(.2,.8,.2,1) both; } }
+@keyframes wireframe-popout-mobile { 0% { transform:translate3d(0,0,0) scale(1); } 17% { transform:translate3d(0,-30px,70px) scale(1.12); } 34%,68% { transform:translate3d(0,-20px,55px) scale(1.09); } 88% { transform:translate3d(0,-3px,15px) scale(1.02); } 100% { transform:translate3d(0,0,0) scale(1); } }
 .portfolio-wireframe-label { position:absolute; left:12%; right:12%; bottom:9%; display:flex; justify-content:space-between; gap:10px; color:rgba(65,62,57,.62); font-size:8px; letter-spacing:.2em; }
 @keyframes wireframe-turn { 0% { transform:rotateY(0deg) rotateZ(-3deg); } 50% { transform:rotateY(180deg) rotateZ(3deg); } 100% { transform:rotateY(360deg) rotateZ(-3deg); } }
 @keyframes wireframe-hover { 0%,100% { translate:0 0; } 50% { translate:0 -9px; } }
@@ -592,7 +634,7 @@ export function PortfolioWebsite() {
           </div>
         </div>
         <div className="relative">
-          <div className="portfolio-wireframe-frame aspect-[4/4] md:aspect-[4/5] max-h-[500px] relative overflow-hidden">
+          <div ref={welcomeFrameRef} className={"portfolio-wireframe-frame aspect-[4/4] md:aspect-[4/5] max-h-[500px] relative overflow-hidden" + (welcomeActive ? " is-welcoming" : "")}>
             <div className="portfolio-wireframe-backdrop"></div>
             <div className="portfolio-wireframe-corner portfolio-wireframe-corner-a"></div>
             <div className="portfolio-wireframe-corner portfolio-wireframe-corner-b"></div>
@@ -616,9 +658,11 @@ export function PortfolioWebsite() {
                     <path d="M161 169 Q180 184 199 169 M155 222 Q180 235 205 222" opacity=".48"/>
                   </g>
                   <g className="portfolio-wire-limbs">
+                    <g className="portfolio-wire-arms">
                     <path d="M153 177 Q137 178 129 193 Q122 207 132 217 Q140 224 148 212 L158 198"/>
                     <path d="M207 177 Q223 178 231 193 Q238 207 228 217 Q220 224 212 212 L202 198"/>
                     <path d="M129 193 Q138 199 145 205 M231 193 Q222 199 215 205" opacity=".62"/>
+                    </g>
                     <path d="M165 246 Q160 261 159 278 Q158 289 169 291 Q179 292 180 280 L180 254"/>
                     <path d="M195 246 Q200 261 201 278 Q202 289 191 291 Q181 292 180 280 L180 254"/>
                     <path d="M159 278 Q170 285 180 280 M201 278 Q190 285 180 280" opacity=".6"/>
@@ -637,6 +681,7 @@ export function PortfolioWebsite() {
                 </g>
               </svg>
             </div>
+            {welcomeActive && <div className="portfolio-welcome-bubble" role="status">Welcome!<span className="portfolio-welcome-tail"></span></div>}
             <div className="absolute left-[12%] bottom-[12%] text-[9px] md:text-[10px] tracking-[.3em] text-stone-600">SELECTED WORKS / 2026</div>
             <div className="absolute right-[12%] bottom-[12%] text-6xl md:text-7xl font-light text-white/80 tracking-[-.08em]">T.Y.D</div>
           </div>
