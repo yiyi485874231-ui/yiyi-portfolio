@@ -657,3 +657,103 @@
  .meadow-cow{right:22%!important;width:104px!important}
  .hay-basket{left:20%!important;width:61px!important}
 }
+
+
+/* Cohesive hand-painted scene: replace the synthetic plank treatment */
+.farm-meadow-scene{
+  position:relative;
+  isolation:isolate;
+  background:
+    radial-gradient(ellipse at 9% 76%,#b8c99f 0 8%,transparent 27%),
+    radial-gradient(ellipse at 91% 83%,#c2d0a9 0 11%,transparent 31%),
+    linear-gradient(180deg,#e8eadb 0%,#dce5ce 70%,#cbd9b7 100%)!important;
+}
+.farm-board-wrap{
+  position:relative;
+  border:0!important;
+  outline:0!important;
+  border-radius:0!important;
+  background:
+    radial-gradient(ellipse at 12% 17%,#e4c99e88 0 2px,transparent 3px),
+    radial-gradient(ellipse at 77% 73%,#70503855 0 1.5px,transparent 2.5px),
+    repeating-linear-gradient(2deg,transparent 0 66px,#6e50301b 67px,#f4dfbd22 69px,transparent 72px 103px),
+    linear-gradient(96deg,#a77e55 0%,#bd9669 22%,#a9825a 49%,#c19b70 72%,#a47a51 100%)!important;
+  box-shadow:
+    inset 0 0 0 2px #8b6848,
+    inset 0 0 0 5px #d1ae7f,
+    inset 0 0 22px #62472c35,
+    0 13px 22px #55442f25!important;
+  clip-path:polygon(1% 1%,17% 0,34% 1%,52% 0,71% 1%,99% 0,100% 16%,99% 35%,100% 53%,99% 72%,100% 99%,82% 98%,63% 100%,43% 98%,23% 100%,0 98%,1% 79%,0 58%,1% 38%,0 18%)!important;
+}
+.farm-board-wrap:before{
+  content:""!important;display:block!important;position:absolute!important;inset:7px!important;z-index:0!important;pointer-events:none!important;
+  border:1px solid #e0c39a!important;opacity:.55!important;
+  clip-path:polygon(1% 0,99% 1%,100% 99%,0 100%)!important;
+}
+.farm-board-wrap:after{content:none!important}
+.board-topline,.farm-project-grid,.board-bottomline{position:relative;z-index:1}
+.board-bottomline:before,.board-bottomline:after{
+  content:""!important;display:block!important;position:absolute!important;
+  top:18px!important;bottom:auto!important;width:22px!important;height:225px!important;
+  border:0!important;border-radius:2px 3px 1px 2px!important;
+  background:
+    radial-gradient(ellipse at 32% 15%,#e4c99b55 0 2px,transparent 3px),
+    repeating-linear-gradient(5deg,transparent 0 52px,#694b3020 53px,#e7c99b20 55px,transparent 58px 82px),
+    linear-gradient(90deg,#8e6847,#bd9468 44%,#a47a50 80%,#886242)!important;
+  box-shadow:inset 2px 0 #d4b38a66,inset -2px 0 #6e4d3266,2px 5px 8px #59452e25!important;
+  clip-path:polygon(7% 0,93% 1%,100% 99%,0 100%)!important;
+}
+.board-bottomline:before{left:17%!important}
+.board-bottomline:after{right:17%!important}
+.farm-project-grid{isolation:isolate}
+.farm-project{position:relative!important;z-index:1!important}
+.farm-project-1{z-index:3!important;transform:rotate(-2.8deg)!important}
+.farm-project-2{z-index:5!important;transform:rotate(2.2deg)!important}
+.farm-project-3{z-index:2!important;transform:rotate(1.1deg)!important}
+.farm-project-4{z-index:6!important;transform:rotate(-1.6deg)!important}
+.farm-project-5{z-index:4!important;transform:rotate(3deg)!important}
+.farm-project-3,.farm-project-5{margin-top:18px!important}
+.farm-project-2,.farm-project-4{margin-top:-8px!important}
+.farm-project-1{margin-top:5px!important}
+.paper-tape{
+  display:block!important;position:absolute!important;z-index:8!important;
+  width:76px!important;height:22px!important;top:-8px!important;left:calc(50% - 38px)!important;right:auto!important;
+  opacity:.94!important;
+  background:
+    linear-gradient(90deg,#e7d9b9d9,#d7c6a2e8 45%,#eee1c5d9)!important;
+  border:1px solid #a58d6a55!important;
+  border-radius:1px!important;
+  clip-path:polygon(0 8%,9% 0,19% 6%,29% 1%,40% 5%,51% 0,62% 6%,73% 1%,84% 5%,100% 0,97% 93%,88% 100%,77% 95%,66% 100%,54% 95%,42% 100%,30% 95%,18% 100%,7% 94%)!important;
+  box-shadow:0 2px 3px #4d402d28!important;
+}
+.farm-project-2 .paper-tape{left:22%!important;top:-7px!important;transform:rotate(-9deg)!important;background:#d4ddc2e8!important}
+.farm-project-3 .paper-tape{left:auto!important;right:16%!important;top:-8px!important;transform:rotate(7deg)!important;background:#e6d4b9e8!important}
+.farm-project-4 .paper-tape{left:17%!important;top:-7px!important;transform:rotate(5deg)!important;background:#d4d9c2e8!important}
+.farm-project-5 .paper-tape{left:auto!important;right:20%!important;top:-8px!important;transform:rotate(-6deg)!important;background:#e1d3bded!important}
+.meadow-cow{
+  z-index:7!important;
+  top:15%!important;
+  right:26%!important;
+  filter:drop-shadow(2px 5px 2px #53604424)!important;
+}
+.farm-meadow-floor{
+  min-height:210px!important;
+  background:
+    radial-gradient(ellipse at 15% 45%,#d8e2c2 0 10%,transparent 34%),
+    radial-gradient(ellipse at 79% 70%,#b9ce9f 0 14%,transparent 40%),
+    linear-gradient(180deg,#d4e0c0 0%,#c3d4ab 55%,#b4c999 100%)!important;
+}
+.meadow-grass-doodle{opacity:.85!important}
+.hay-basket{z-index:8!important;filter:drop-shadow(2px 4px 2px #53604425)!important}
+@media(max-width:760px){
+ .farm-board-wrap{padding:23px 12px 20px!important}
+ .board-bottomline:before,.board-bottomline:after{height:160px!important;width:16px!important}
+ .farm-project-1{transform:rotate(-1.8deg)!important}
+ .farm-project-2{transform:rotate(1.5deg)!important}
+ .farm-project-3{transform:rotate(1deg)!important}
+ .farm-project-4{transform:rotate(-1.3deg)!important}
+ .farm-project-5{transform:rotate(2deg)!important}
+ .farm-project-3,.farm-project-5{margin-top:8px!important}
+ .farm-project-2,.farm-project-4{margin-top:-3px!important}
+ .meadow-cow{top:17%!important;right:23%!important}
+}
