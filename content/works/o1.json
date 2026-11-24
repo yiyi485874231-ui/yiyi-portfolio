@@ -3,17 +3,22 @@
   "title": "H5｜围楼里·咏叹调",
   "category": "其他",
   "type": "交互设计 / H5",
-  "desc": "以 H5 形式呈现的交互内容作品。",
+  "desc": "以可互动的国风 H5 为载体，沉浸式解锁客家围屋的建筑肌理与民俗故事，让千年民居文化跃然指尖。",
   "role": "交互内容与页面设计实践。",
   "tags": [
     "H5",
     "交互设计",
-    "内容策划"
+    "内容策划",
+    "AI图像生成"
   ],
   "detail": [
     "展示 H5 的页面流程、关键界面与交互体验。",
     "如有可访问链接，可在后台补充外链。"
   ],
   "tone": "peach",
+  "coverImage": "/uploads/covers/7-1.jpg",
+  "coverFit": "contain",
+  "coverRatio": "wide",
+  "externalUrl": "https://t.u.h5mc.com/c/fito/dqkg/index.html",
   "sortOrder": 170
 }
