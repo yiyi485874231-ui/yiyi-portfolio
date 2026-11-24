@@ -397,7 +397,7 @@ export function PortfolioWebsite() {
       {blocks.map((block, index) => {
         const hasText = Boolean(block.title || block.body);
         const isImageOnly = Boolean(block.image && !hasText);
-        const hasIndependentImageWidth = block.type === "canvas" && Boolean(block.image && block.imageWidth && block.imageWidth > 0) && !isPortfolioInfoImage;
+        const hasIndependentImageWidth = block.type === "canvas" && Boolean(block.image && block.imageWidth && block.imageWidth > 0) && !isPortfolioInfoImage && selected.id !== "o4";
         const widthClass = "w-full";
         const moduleWidth = block.width === "third" ? "calc(33.333333% - 0.666667rem)" : block.width === "half" ? "calc(50% - 0.5rem)" : "100%";
         const moduleSpacing = block.spacing === "compact" ? 8 : block.spacing === "spacious" ? 40 : 24;
@@ -422,15 +422,7 @@ export function PortfolioWebsite() {
         if (block.type === "text") return <div key={index} style={blockStyle} className={widthClass + " bg-white border border-stone-200"}><h3 className="font-semibold text-base">{block.title}</h3><p className="mt-3 text-sm leading-7 text-stone-600 whitespace-pre-line">{block.body}</p></div>;
         const horizontal = (block.type === "color_panel" || block.type === "canvas") && block.layout === "horizontal" && hasText;
         const imageFirst = block.imagePosition !== "end";
-        return <div key={index} ref={(el) => {
-          if (!el) return;
-          const rect = el.getBoundingClientRect();
-          const parentWidth = el.parentElement?.getBoundingClientRect().width ?? 0;
-          const computed = window.getComputedStyle(el);
-          const label = el.querySelector("[data-canvas-debug-label]");
-          if (label) label.textContent = "诊断｜配置宽度：" + (block.width || "full") + "｜实际宽度：" + Math.round(rect.width) + "px / 容器：" + Math.round(parentWidth) + "px｜padding：" + computed.padding + "｜上间距：" + computed.marginTop;
-        }} style={{...blockStyle, position: "relative", outline: "1px dashed #C65D3B"}} className={widthClass + " " + (horizontal ? "flex flex-col md:flex-row" : "flex flex-col") + (isImageOnly ? "" : " gap-5") + " items-center overflow-hidden"}>
-          <div data-canvas-debug-label style={{position:"absolute",top:4,left:4,zIndex:20,maxWidth:"calc(100% - 8px)",padding:"3px 5px",borderRadius:4,background:"#fff",color:"#7C2D12",fontSize:10,lineHeight:1.4,fontWeight:600,pointerEvents:"none"}}>正在读取模块实际尺寸…</div>
+        return <div key={index} style={blockStyle} className={widthClass + " " + (horizontal ? "flex flex-col md:flex-row" : "flex flex-col") + (isImageOnly ? "" : " gap-5") + " items-center overflow-hidden"}>
           {block.image && <img src={block.image} alt={selected.title + " 模块图片"} className={horizontal ? "max-w-full h-auto object-contain" : "h-auto object-contain"} style={{ width: hasIndependentImageWidth ? Math.min(100, Math.max(10, block.imageWidth!)) + "%" : (horizontal ? "50%" : "100%"), aspectRatio: block.imageRatio === "square" ? "1 / 1" : block.imageRatio === "portrait" ? "3 / 4" : block.imageRatio === "landscape" ? "4 / 3" : undefined, objectFit: "contain", alignSelf: block.imageAlign === "left" ? "flex-start" : block.imageAlign === "right" ? "flex-end" : "center", order: horizontal && !imageFirst ? 2 : 1 }} />}
           {hasText && <div className="flex-1 min-w-0 w-full" style={{ order: horizontal && !imageFirst ? 1 : 2 }}>
             {block.title && <h3 className="text-lg font-semibold">{block.title}</h3>}
