@@ -447,8 +447,29 @@ content:
         options:
           categories: [video]
           path: public/uploads/videos
+      - name: externalLinks
+        label: 外部作品链接（可添加多条）
+        type: block
+        list:
+          max: 20
+          collapsible:
+            collapsed: true
+            summary: "{title}"
+        blockKey: type
+        blocks:
+          - name: link
+            label: 外部链接
+            fields:
+              - name: title
+                label: 文章标题
+                type: string
+                required: true
+              - name: url
+                label: 文章链接
+                type: string
+                required: true
       - name: externalUrl
-        label: 外部作品链接
+        label: 旧版外部作品链接（兼容已有内容）
         type: string
       - name: sortOrder
         label: 排序数字
