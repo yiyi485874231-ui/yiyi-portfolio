@@ -436,38 +436,7 @@ export function PortfolioWebsite() {
     </div>;
   };
   return <main className="min-h-screen bg-[#faf9f6] text-stone-900 selection:bg-stone-200">
-    <style>{`.portfolio-design-gallery { width:100%; min-width:0; }
-.portfolio-design-gallery-top,.portfolio-design-footer { display:flex; justify-content:space-between; gap:16px; color:#a8a29e; font-size:9px; letter-spacing:.16em; }
-.portfolio-design-gallery-top { padding:0 2px 16px; border-bottom:1px solid rgba(120,113,108,.2); }
-.portfolio-design-rail { display:flex; align-items:flex-start; gap:20px; overflow-x:auto; overflow-y:hidden; padding:22px 2px 28px; scroll-snap-type:x mandatory; scrollbar-width:thin; scrollbar-color:rgba(120,113,108,.35) transparent; }
-.portfolio-design-item { flex:0 0 clamp(230px,34%,390px); min-width:0; text-align:left; scroll-snap-align:start; }
-.portfolio-design-item-0 { flex-basis:clamp(300px,48%,520px); }
-.portfolio-design-item-1 { margin-top:42px; }
-.portfolio-design-item-2 { margin-top:12px; }
-.portfolio-design-item-3 { margin-top:58px; }
-.portfolio-design-image { position:relative; display:flex; align-items:center; justify-content:center; width:100%; aspect-ratio:4/5; overflow:hidden; }
-.portfolio-design-item-0 .portfolio-design-image { aspect-ratio:5/4; }
-.portfolio-design-item-2 .portfolio-design-image { aspect-ratio:1/1; }
-.portfolio-design-image img { width:100%; height:100%; object-fit:contain; transition:transform .65s cubic-bezier(.2,.7,.2,1); }
-.portfolio-design-item:hover .portfolio-design-image img { transform:scale(1.035); }
-.portfolio-design-image > span { color:rgba(87,83,78,.38); font-size:64px; font-weight:300; }
-.portfolio-design-image i { position:absolute; inset:12px; border:1px solid rgba(255,255,255,.62); pointer-events:none; }
-.portfolio-design-caption { display:flex; flex-direction:column; gap:8px; padding:15px 2px 0; }
-.portfolio-design-caption span { color:#a8a29e; font-size:9px; letter-spacing:.12em; }
-.portfolio-design-caption strong { color:#292524; font-size:16px; font-weight:600; }
-.portfolio-design-caption small { color:#78716c; font-size:12px; line-height:1.7; }
-.portfolio-design-footer { padding-top:14px; border-top:1px solid rgba(120,113,108,.2); }
-@media(max-width:767px) {
- .portfolio-design-gallery-top { font-size:8px; letter-spacing:.1em; }
- .portfolio-design-rail { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px 12px; overflow:visible; padding:18px 0 22px; }
- .portfolio-design-item,.portfolio-design-item-0 { width:100%; min-width:0; margin-top:0; }
- .portfolio-design-item-0 .portfolio-design-image,.portfolio-design-item-1 .portfolio-design-image,.portfolio-design-item-2 .portfolio-design-image,.portfolio-design-item-3 .portfolio-design-image { aspect-ratio:3/4; }
- .portfolio-design-caption { gap:6px; padding-top:10px; }
- .portfolio-design-caption strong { font-size:13px; }
- .portfolio-design-caption small { font-size:11px; line-height:1.6; }
- .portfolio-design-footer { font-size:8px; }
-}
-.portfolio-visual-gallery { width: 100%; }
+    <style>{`.portfolio-visual-gallery { width: 100%; }
 .portfolio-visual-stage { display: grid; grid-template-columns: minmax(360px,1fr) minmax(300px,.9fr); gap: clamp(24px,4vw,64px); align-items: center; min-height: 560px; }
 .portfolio-visual-orbit { width: min(100%, 470px); aspect-ratio: 1; position: relative; margin: 0 auto; border-radius: 50%; touch-action: none; cursor: grab; user-select: none; }
 .portfolio-visual-orbit:active { cursor: grabbing; }
@@ -504,8 +473,6 @@ export function PortfolioWebsite() {
  .portfolio-visual-mobile { display:block; overflow:hidden; }
  .portfolio-visual-mobile-stage { height:300px; position:relative; overflow:hidden; margin:0 -4px 18px; touch-action:none; }
  .portfolio-visual-mobile-arc { position:absolute; inset:0; overflow:hidden; }
- .portfolio-visual-mobile-guide { position:absolute; z-index:1; right:0; top:0; width:100px; height:100%; overflow:visible; pointer-events:none; }
- .portfolio-visual-mobile-guide path { fill:none; stroke:rgba(120,113,108,.58); stroke-width:1.35; stroke-linecap:round; stroke-linejoin:round; }
  .portfolio-visual-mobile-ring { position:absolute; width:300px; height:300px; top:50%; left:calc(100% + 0px); transform:translate(-50%,-50%); border:1px solid rgba(120,113,108,.24); border-radius:50%; box-shadow:0 0 0 22px rgba(120,113,108,.035),0 0 0 48px rgba(120,113,108,.025); }
  .portfolio-visual-mobile-item { position:absolute; transform:translate(-50%,-50%); max-width:130px; border:1px solid transparent; border-radius:999px; padding:8px 10px; background:rgba(250,249,246,.96); color:#78716c; font-size:10px; line-height:1.25; white-space:nowrap; transition:background .25s,color .25s,border-color .25s; }
  .portfolio-visual-mobile-item.is-active { background:#252522; color:#fff; border-color:#252522; box-shadow:0 7px 20px rgba(35,31,26,.16); }
@@ -619,7 +586,6 @@ export function PortfolioWebsite() {
                 {activeVideoWork && <div className="portfolio-visual-mobile-stage" onTouchStart={startVideoTouch} onTouchEnd={finishVideoTouch} onTouchCancel={() => { videoTouchStart.current = null; }}>
                   <div className="portfolio-visual-mobile-arc">
                     <div className="portfolio-visual-mobile-ring"></div>
-                    <svg className="portfolio-visual-mobile-guide" viewBox="0 0 100 300" aria-hidden="true"><path d="M 96 12 C 8 38 8 262 96 288" /><path d="M 82 273 L 96 288 L 99 267" /></svg>
                     {videoWorks.map((work, index) => {
                       const count = videoWorks.length;
                       const offset = index - activeVideo;
@@ -639,19 +605,7 @@ export function PortfolioWebsite() {
                 </button>}
                 <div className="portfolio-visual-mobile-controls"><button type="button" onClick={() => moveVideo(-1)}>← 上一个</button><span>拨动弧线切换作品</span><button type="button" onClick={() => moveVideo(1)}>下一个 →</button></div>
               </div>
-            </div> : c.id === "视觉" ? <div className="portfolio-design-gallery">
-                <div className="portfolio-design-gallery-top"><span>SELECTED DESIGN WORKS</span><span>横向浏览 · 点击查看详情　↗</span></div>
-                <div className="portfolio-design-rail">
-                  {grouped(c.id).map((w, j) => <button key={w.id} type="button" onClick={() => setSelected(w)} className={"portfolio-design-item portfolio-design-item-" + (j % 4)}>
-                    <div className={"portfolio-design-image " + (toneClass[w.tone] || "bg-stone-100")}>
-                      {w.coverImage ? <img src={w.coverImage} alt={w.title} /> : <span>{String(j + 1).padStart(2, "0")}</span>}
-                      <i></i>
-                    </div>
-                    <div className="portfolio-design-caption"><span>{String(j + 1).padStart(2, "0")}　/　{w.type}</span><strong>{w.title}</strong><small>{w.desc}</small></div>
-                  </button>)}
-                </div>
-                <div className="portfolio-design-footer"><span>VISUAL ARCHIVE</span><span>← DRAG / SHIFT TO EXPLORE →</span></div>
-              </div> : <div className={c.id === "运营" ? "portfolio-stack-grid" : "grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5"}>{grouped(c.id).map((w, j) => card(w, j, c.id === "运营"))}</div>}
+            </div> : c.id === "视觉" ? <div className="portfolio-operations-content"><div className="portfolio-stack-grid">{grouped(c.id).map((w, j) => card(w, j, true))}</div></div> : <div className={c.id === "运营" ? "portfolio-stack-grid" : "grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5"}>{grouped(c.id).map((w, j) => card(w, j, c.id === "运营"))}</div>}
             {c.id === "运营" && <div className="mt-8 text-xs text-stone-500 border-t border-stone-200 pt-5">说明：项目数据按现有作品集资料呈现；团队项目成果与个人职责已分开说明。</div>}
             {c.id === "视频" && <div className="mt-8 text-xs text-stone-500">视频封面与播放素材待替换为原始文件；点击卡片可先查看作品说明。</div>}
           </div>
