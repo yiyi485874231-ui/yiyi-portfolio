@@ -667,11 +667,11 @@ export function PortfolioWebsite() {
           </div>
         </div>
         <div className="relative">
-          <div ref={welcomeFrameRef} className={"portfolio-wireframe-frame aspect-[4/4] md:aspect-[4/5] max-h-[500px] relative overflow-hidden" + (welcomeActive ? " is-welcoming" : "")}>
+          <div ref={welcomeFrameRef} className={"portfolio-wireframe-frame aspect-[4/4] md:aspect-[4/5] max-h-[500px] relative overflow-hidden" + (welcomeActive ? " is-welcoming" : "")} onClick={() => { if (!welcomeActive) setWelcomeActive(true); }}>
             <div className="portfolio-wireframe-backdrop"></div>
             <div className="portfolio-wireframe-corner portfolio-wireframe-corner-a"></div>
             <div className="portfolio-wireframe-corner portfolio-wireframe-corner-b"></div>
-            <div className="portfolio-wireframe-model" role="button" tabIndex={0} aria-label="点击小人再次播放 Welcome 欢迎动画" title="点击我，再打一次招呼" onClick={() => { if (!welcomeActive) setWelcomeActive(true); }} onKeyDown={(event) => { if ((event.key === "Enter" || event.key === " ") && !welcomeActive) { event.preventDefault(); setWelcomeActive(true); } }}>
+            <div className="portfolio-wireframe-model" aria-label="可互动的抽象线框小人" title="试着点点我的头、手或身体">
               <svg viewBox="0 0 360 440" role="img" aria-hidden="true" className={"portfolio-wireframe-svg" + (characterAction ? " is-action-" + characterAction.part + "-" + characterAction.variant : "")}>
                 <g fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
                   <g className="portfolio-wire-head">
