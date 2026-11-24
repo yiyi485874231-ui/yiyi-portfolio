@@ -20,7 +20,7 @@
   "canvasBlocks": [
     {
       "type": "canvas",
-      "placement": "after_cover",
+      "placement": "after_project_info",
       "background": "#F5F0E6",
       "width": "full",
       "moduleAlign": "center",
@@ -34,7 +34,7 @@
     },
     {
       "type": "canvas",
-      "placement": "after_cover",
+      "placement": "after_project_info",
       "background": "#F5F0E6",
       "width": "full",
       "moduleAlign": "center",
