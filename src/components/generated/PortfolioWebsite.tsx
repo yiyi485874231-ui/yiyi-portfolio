@@ -546,12 +546,12 @@ export function PortfolioWebsite() {
     </section>
 
     {categories.map((c, i) => <section id={c.id} key={c.id} className="scroll-mt-20 py-2 md:py-5">
-      <div className={"portfolio-category-card mx-auto max-w-7xl px-5 md:px-10 py-12 md:py-16 " + (c.id === "运营" ? "portfolio-operations-card" : "")}>
-        <div className={c.id === "运营" ? "portfolio-operations-layout" : ""}>
-          <div className={c.id === "运营" ? "portfolio-operations-heading" : ""}>
+      <div className={"portfolio-category-card mx-auto max-w-7xl px-5 md:px-10 py-12 md:py-16 " + (["运营", "视觉"].includes(c.id) ? "portfolio-operations-card" : "")}>
+        <div className={["运营", "视觉"].includes(c.id) ? "portfolio-operations-layout" : ""}>
+          <div className={["运营", "视觉"].includes(c.id) ? "portfolio-operations-heading" : ""}>
             <SectionHeading index={"0" + (i + 1)} title={c.label} en={c.en} intro={c.intro} />
           </div>
-          <div className={c.id === "运营" ? "portfolio-operations-content" : ""}>
+          <div className={["运营", "视觉"].includes(c.id) ? "portfolio-operations-content" : ""}>
             {c.id === "视频" ? <div className="portfolio-visual-gallery">
               {activeVideoWork && <div className="portfolio-visual-stage" onWheel={handleVideoWheel}>
                 <div className="portfolio-visual-orbit" aria-label="视频与 AI 创作圆弧导航">
@@ -605,7 +605,7 @@ export function PortfolioWebsite() {
                 </button>}
                 <div className="portfolio-visual-mobile-controls"><button type="button" onClick={() => moveVideo(-1)}>← 上一个</button><span>拨动弧线切换作品</span><button type="button" onClick={() => moveVideo(1)}>下一个 →</button></div>
               </div>
-            </div> : c.id === "视觉" ? <div className="portfolio-operations-content"><div className="portfolio-stack-grid">{grouped(c.id).map((w, j) => card(w, j, true))}</div></div> : <div className={c.id === "运营" ? "portfolio-stack-grid" : "grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5"}>{grouped(c.id).map((w, j) => card(w, j, c.id === "运营"))}</div>}
+            </div> : c.id === "视觉" ? <div className="portfolio-stack-grid">{grouped(c.id).map((w, j) => card(w, j, true))}</div> : <div className={c.id === "运营" ? "portfolio-stack-grid" : "grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5"}>{grouped(c.id).map((w, j) => card(w, j, c.id === "运营"))}</div>}
             {c.id === "运营" && <div className="mt-8 text-xs text-stone-500 border-t border-stone-200 pt-5">说明：项目数据按现有作品集资料呈现；团队项目成果与个人职责已分开说明。</div>}
             {c.id === "视频" && <div className="mt-8 text-xs text-stone-500">视频封面与播放素材待替换为原始文件；点击卡片可先查看作品说明。</div>}
           </div>
