@@ -19,18 +19,19 @@ function PdfPreview({ url, title }: { url: string; title: string }) {
       if (cancelled || !containerRef.current) return;
       const container = containerRef.current;
       container.innerHTML = "";
-      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 3);
       for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
         if (cancelled) return;
         const page = await pdf.getPage(pageNumber);
         const baseViewport = page.getViewport({ scale: 1 });
-        const scale = Math.min((container.clientWidth - 24) / baseViewport.width, 1.5);
-        const viewport = page.getViewport({ scale: Math.max(scale, 0.5) });
+        const scale = Math.max((container.clientWidth - 24) / baseViewport.width, 0.5);
+        const viewport = page.getViewport({ scale });
         const canvas = document.createElement("canvas");
         canvas.className = "block w-full h-auto mb-4 shadow-sm";
         canvas.width = Math.floor(viewport.width * pixelRatio);
         canvas.height = Math.floor(viewport.height * pixelRatio);
-        canvas.style.width = "100%";
+        canvas.style.width = `${viewport.width}px`;
+        canvas.style.maxWidth = "100%";
         canvas.style.height = "auto";
         container.appendChild(canvas);
         const context = canvas.getContext("2d");
