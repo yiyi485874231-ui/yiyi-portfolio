@@ -478,7 +478,7 @@ export function PortfolioWebsite() {
 .portfolio-wireframe-corner { position:absolute; width:62%; height:76%; top:12%; border:1px solid rgba(255,255,255,.66); pointer-events:none; }
 .portfolio-wireframe-corner-a { right:12%; }
 .portfolio-wireframe-corner-b { left:12%; top:17%; width:54%; height:66%; border-color:rgba(90,86,79,.12); }
-.portfolio-wireframe-model { position:absolute; inset:14% 10% 6%; display:flex; align-items:center; justify-content:center; perspective:900px; transform-style:preserve-3d; animation:wireframe-hover 4.8s ease-in-out infinite; }
+.portfolio-wireframe-model { cursor:pointer; position:absolute; inset:14% 10% 6%; display:flex; align-items:center; justify-content:center; perspective:900px; transform-style:preserve-3d; animation:wireframe-hover 4.8s ease-in-out infinite; }
 .portfolio-wireframe-svg { width:min(100%,320px); height:92%; overflow:visible; filter:drop-shadow(0 8px 10px rgba(54,50,44,.08)); transform-style:preserve-3d; animation:wireframe-turn 18s linear infinite; }
 .portfolio-wireframe-frame.is-welcoming .portfolio-wireframe-model { opacity:0; }
 .portfolio-welcome-overlay { position:fixed; inset:0; z-index:9998; display:flex; align-items:center; justify-content:center; pointer-events:none; background:rgba(32,29,25,.18); backdrop-filter:blur(2px); animation:welcome-screen-in .25s ease both; }
@@ -486,16 +486,16 @@ export function PortfolioWebsite() {
 .portfolio-welcome-figure { position:relative; z-index:2; width:100%; height:100%; overflow:visible; color:#f7f5f0; filter:drop-shadow(0 18px 28px rgba(0,0,0,.16)); animation:welcome-figure-pop 4.8s cubic-bezier(.2,.78,.2,1) both; }
 .portfolio-wave-arm-left { transform-box:fill-box; transform-origin:100% 8%; animation:welcome-wave-left .52s ease-in-out 4 .65s; }
 .portfolio-wave-arm-right { transform-box:fill-box; transform-origin:0% 8%; animation:welcome-wave-right .52s ease-in-out 4 .65s; }
-.portfolio-welcome-door { position:absolute; z-index:1; right:-3%; top:13%; width:42%; height:72%; overflow:visible; color:#f7f5f0; opacity:0; animation:welcome-door-appear 4.8s ease both; }
+.portfolio-welcome-door { position:absolute; z-index:1; right:-2%; top:13%; width:42%; height:72%; overflow:visible; color:#f7f5f0; opacity:0; animation:welcome-door-appear 4.8s ease both; }
 .portfolio-door-frame,.portfolio-door-leaf path,.portfolio-door-glint { fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 .portfolio-door-leaf { transform-box:view-box; transform-origin:34px 320px; animation:welcome-door-open 4.8s ease both; }
 .portfolio-welcome-greeting { position:absolute; z-index:4; top:5%; right:-1%; padding:13px 22px; border-radius:20px 20px 6px 20px; background:#faf9f6; color:#514d47; font-size:clamp(18px,3vw,25px); font-weight:600; letter-spacing:.08em; box-shadow:0 12px 32px rgba(0,0,0,.15); animation:welcome-bubble-in .35s .28s both; }
 .portfolio-welcome-greeting:after { content:""; position:absolute; right:14px; bottom:-7px; width:13px; height:13px; background:#faf9f6; transform:rotate(45deg); }
 @keyframes welcome-screen-in { from { opacity:0; } to { opacity:1; } }
-@keyframes welcome-figure-pop { 0% { opacity:0; transform:translateY(90px) scale(.24) rotate(-8deg); } 16% { opacity:1; transform:translateY(-14px) scale(1.08) rotate(3deg); } 25%,56% { opacity:1; transform:translate(0,0) scale(1) rotate(0); } 72% { opacity:1; transform:translate(24px,12px) scale(.92) rotate(2deg); } 86% { opacity:.95; transform:translate(38px,8px) scale(.68) rotate(4deg); } 100% { opacity:0; transform:translate(46px,0) scale(.12) rotate(8deg); } }
+@keyframes welcome-figure-pop { 0% { opacity:0; transform:translateY(90px) scale(.24) rotate(-8deg); } 16% { opacity:1; transform:translateY(-14px) scale(1.08) rotate(3deg); } 25%,56% { opacity:1; transform:translate(0,0) scale(1) rotate(0); } 70% { opacity:1; transform:translate(8%,4px) scale(.92) rotate(2deg); } 84% { opacity:1; transform:translate(20%,2px) scale(.58) rotate(3deg); } 100% { opacity:0; transform:translate(29%,0) scale(.08) rotate(5deg); } }
 @keyframes welcome-wave-left { 0%,100% { transform:rotate(0); } 25%,75% { transform:rotate(-28deg); } 50% { transform:rotate(20deg); } }
 @keyframes welcome-wave-right { 0%,100% { transform:rotate(0); } 25%,75% { transform:rotate(28deg); } 50% { transform:rotate(-20deg); } }
-@keyframes welcome-door-appear { 0%,54% { opacity:0; transform:translateX(12px) scale(.94); } 63%,88% { opacity:1; transform:translateX(0) scale(1); } 100% { opacity:0; transform:translateX(12px) scale(.96); } }
+@keyframes welcome-door-appear { 0%,55% { opacity:0; transform:translateX(12px) scale(.94); } 64%,92% { opacity:1; transform:translateX(0) scale(1); } 100% { opacity:0; transform:translateX(0) scale(.96); } }
 @keyframes welcome-door-open { 0%,65% { transform:perspective(500px) rotateY(0); opacity:1; } 82%,94% { transform:perspective(500px) rotateY(-68deg); opacity:1; } 100% { transform:perspective(500px) rotateY(-90deg); opacity:0; } }
 @keyframes welcome-bubble-in { from { opacity:0; transform:translateY(10px) scale(.92); } to { opacity:1; transform:translateY(0) scale(1); } }
 @media (max-width:767px) { .portfolio-welcome-stage { width:92vw; height:min(68vh,500px); } .portfolio-welcome-greeting { top:4%; right:2%; padding:10px 16px; font-size:18px; } .portfolio-welcome-door { right:-5%; top:18%; width:40%; height:65%; } }
@@ -643,7 +643,7 @@ export function PortfolioWebsite() {
             <div className="portfolio-wireframe-backdrop"></div>
             <div className="portfolio-wireframe-corner portfolio-wireframe-corner-a"></div>
             <div className="portfolio-wireframe-corner portfolio-wireframe-corner-b"></div>
-            <div className="portfolio-wireframe-model" aria-label="持续旋转的抽象线框小人">
+            <div className="portfolio-wireframe-model" role="button" tabIndex={0} aria-label="点击小人再次播放 Welcome 欢迎动画" title="点击我，再打一次招呼" onClick={() => { if (!welcomeActive) setWelcomeActive(true); }} onKeyDown={(event) => { if ((event.key === "Enter" || event.key === " ") && !welcomeActive) { event.preventDefault(); setWelcomeActive(true); } }}>
               <svg viewBox="0 0 360 440" role="img" aria-hidden="true" className="portfolio-wireframe-svg">
                 <g fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
                   <g className="portfolio-wire-head">
