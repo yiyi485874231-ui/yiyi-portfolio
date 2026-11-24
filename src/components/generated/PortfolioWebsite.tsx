@@ -1,5 +1,6 @@
 import './portfolio-fonts.css';
 import React, { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
 import pdfWorker from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 
@@ -340,6 +341,10 @@ function SectionHeading({
 }
 export function PortfolioWebsite() {
   const [active, setActive] = useState("首页");
+  const [welcomeActive, setWelcomeActive] = useState(false);
+  const [characterAction, setCharacterAction] = useState<{ part: "head" | "left" | "right" | "body" | "feet"; variant: number } | null>(null);
+  const welcomeFrameRef = useRef<HTMLDivElement>(null);
+  const welcomeTriggered = useRef(false);
   const editableWorkFiles = import.meta.glob("../../../content/works/*.json", {
     eager: true,
     import: "default"
@@ -355,8 +360,54 @@ export function PortfolioWebsite() {
       (a, b) => (a.sortOrder ?? 9999) - (b.sortOrder ?? 9999)
     ));
   }, []);
+  useEffect(() => {
+    const node = welcomeFrameRef.current;
+    if (!node) return;
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some(entry => entry.isIntersecting) && !welcomeTriggered.current) {
+        welcomeTriggered.current = true;
+        window.setTimeout(() => setWelcomeActive(true), 500);
+        observer.disconnect();
+      }
+    }, { threshold: 0.45 });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+  useEffect(() => {
+    if (!characterAction) return;
+    const timer = window.setTimeout(() => setCharacterAction(null), 1700);
+    return () => window.clearTimeout(timer);
+  }, [characterAction]);
+  const playCharacterAction = (part: "head" | "left" | "right" | "body" | "feet") => {
+    const variant = Math.floor(Math.random() * 3);
+    setCharacterAction({ part, variant });
+  };
+  useEffect(() => {
+    if (!welcomeActive) return;
+    const timer = window.setTimeout(() => setWelcomeActive(false), 4800);
+    if ("speechSynthesis" in window && "SpeechSynthesisUtterance" in window) {
+      window.speechSynthesis.cancel();
+      const greeting = new SpeechSynthesisUtterance("Welcome!");
+      greeting.lang = "en-US";
+      greeting.rate = 0.92;
+      greeting.pitch = 1.12;
+      window.speechSynthesis.speak(greeting);
+    }
+    return () => {
+      window.clearTimeout(timer);
+      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    };
+  }, [welcomeActive]);
   const [selected, setSelected] = useState<Work | null>(null);
   const [mobileMenu, setMobileMenu] = useState(false);
+  const [activeVideo, setActiveVideo] = useState(0);
+  const [activeOther, setActiveOther] = useState(0);
+  const otherTouchStart = useRef<{x:number;y:number} | null>(null);
+  const videoTouchStart = useRef<{x:number;y:number} | null>(null);
+  const videoWheelLocked = useRef(false);
+  const videoWheelTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const finishVideoTouch = (event: React.TouchEvent<HTMLElement>) => { if (!videoTouchStart.current || !event.changedTouches.length) return; const touch = event.changedTouches[0]; const dx = touch.clientX - videoTouchStart.current.x; const dy = touch.clientY - videoTouchStart.current.y; if (Math.abs(dy) >= 42 && Math.abs(dy) > Math.abs(dx) * 1.15) moveVideoMobile(dy < 0 ? 1 : -1); videoTouchStart.current = null; };
+  const handleVideoWheel = (event: React.WheelEvent<HTMLElement>) => { event.preventDefault(); const delta = Math.abs(event.deltaY) >= Math.abs(event.deltaX) ? event.deltaY : event.deltaX; if (videoWheelLocked.current || Math.abs(delta) < 12) return; videoWheelLocked.current = true; moveVideo(delta > 0 ? 1 : -1); if (videoWheelTimer.current) clearTimeout(videoWheelTimer.current); videoWheelTimer.current = setTimeout(() => { videoWheelLocked.current = false; }, 280); };
   const go = (id: string) => {
     setActive(id);
     setMobileMenu(false);
@@ -366,7 +417,15 @@ export function PortfolioWebsite() {
     });
   };
   const grouped = (id: string) => works.filter(w => w.category ? w.category === id : id === "运营" ? ["mt", "1688", "sanxiang", "college", "personal"].includes(w.id) : id === "视频" ? w.id.startsWith("v") : id === "视觉" ? w.id.startsWith("d") : w.id.startsWith("o"));
-  const card = (w: Work, i: number) => <button key={w.id} onClick={() => setSelected(w)} className="text-left group bg-white border border-stone-200/80 p-5 md:p-6 flex flex-col min-h-[250px] hover:border-stone-400 hover:-translate-y-0.5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-500">
+  const videoWorks = grouped("视频");
+  const otherWorks = grouped("其他");
+  const moveOther = (direction: number) => setActiveOther(current => (current + direction + Math.max(otherWorks.length, 1)) % Math.max(otherWorks.length, 1));
+  const finishOtherTouch = (event: React.TouchEvent<HTMLElement>) => { if (!otherTouchStart.current || !event.changedTouches.length) return; const touch = event.changedTouches[0]; const dx = touch.clientX - otherTouchStart.current.x; const dy = touch.clientY - otherTouchStart.current.y; if (Math.abs(dx) >= 38 && Math.abs(dx) > Math.abs(dy) * 1.15) moveOther(dx < 0 ? 1 : -1); otherTouchStart.current = null; };
+  const activeVideoWork = videoWorks.length ? videoWorks[activeVideo % videoWorks.length] : null;
+  const moveVideo = (direction: number) => setActiveVideo(current => (current + direction + Math.max(videoWorks.length, 1)) % Math.max(videoWorks.length, 1));
+  const moveVideoMobile = (direction: number) => setActiveVideo(current => Math.min(Math.max(videoWorks.length - 1, 0), Math.max(0, current + direction)));
+  const startVideoTouch = (event: React.TouchEvent<HTMLElement>) => { if (!event.touches.length) return; videoTouchStart.current = { x: event.touches[0].clientX, y: event.touches[0].clientY }; };
+  const card = (w: Work, i: number, stacked = false) => <button key={w.id} onClick={() => setSelected(w)} style={stacked ? { zIndex: i + 1 } : undefined} className={"text-left group bg-white border border-stone-200/80 p-5 md:p-6 flex flex-col min-h-[250px] hover:border-stone-400 hover:-translate-y-0.5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-500 " + (stacked ? "portfolio-stack-card" : "")}>
     <div className="flex justify-between gap-3 text-[11px] text-stone-400"><span>{w.type}</span><span>{String(i + 1).padStart(2, "0")}</span></div>
     <div className={"mt-5 mb-5 flex items-center justify-center relative overflow-hidden " + (toneClass[w.tone] || "bg-stone-100")} style={{ aspectRatio: w.coverRatio === "square" ? "1 / 1" : w.coverRatio === "portrait" ? "3 / 4" : w.coverRatio === "landscape" ? "4 / 3" : "16 / 7" }}>
       {w.coverImage ? <img src={w.coverImage} alt={w.title} className="absolute inset-0 w-full h-full" style={{ objectFit: w.coverFit === "contain" ? "contain" : "cover" }} /> : <span className="text-4xl font-light text-stone-500/50">{String(i + 1).padStart(2, "0")}</span>}
@@ -409,11 +468,11 @@ export function PortfolioWebsite() {
           borderRadius: block.type === "color_panel" || block.type === "canvas" ? (block.radius ?? 8) : 0,
           backgroundColor: block.type === "color_panel" || block.type === "canvas" ? (block.background || "#F1E7DF") : undefined,
         };
-        if (block.type === "image") return block.image ? <div key={index} style={moduleLayoutStyle} className={widthClass + " overflow-hidden"}><img src={block.image} alt={selected.title + " 展示图片"} className="block w-full h-auto object-contain" /></div> : null;
+        if (block.type === "image") return block.image ? <div key={index} style={moduleLayoutStyle} className={widthClass + (selected?.id === "o4" ? " portfolio-museum-canvas-image" : "") + " overflow-hidden"}><img src={block.image} alt={selected.title + " 展示图片"} className="block w-full h-auto object-contain" /></div> : null;
         if (block.type === "text") return <div key={index} style={blockStyle} className={widthClass + " bg-white border border-stone-200"}><h3 className="font-semibold text-base">{block.title}</h3><p className="mt-3 text-sm leading-7 text-stone-600 whitespace-pre-line">{block.body}</p></div>;
         const horizontal = (block.type === "color_panel" || block.type === "canvas") && block.layout === "horizontal" && hasText;
         const imageFirst = block.imagePosition !== "end";
-        return <div key={index} style={blockStyle} className={widthClass + ((selected?.id === "mt" && index < 2 || ["personal", "v1", "v2", "d1", "d2", "d4", "o6"].includes(selected?.id || "")) && placement === "after_project_info" ? " mt-mobile-stack-item personal-mobile-stack-item" : "") + " " + (horizontal ? "flex flex-col md:flex-row" : "flex flex-col") + (isImageOnly ? "" : " gap-5") + " items-center overflow-hidden"}>
+        return <div key={index} style={blockStyle} className={widthClass + (selected?.id === "o4" && block.image ? " portfolio-museum-canvas-image" : "") + ((selected?.id === "mt" && index < 2 || ["personal", "v1", "v2", "d1", "d2", "d4", "o6"].includes(selected?.id || "")) && placement === "after_project_info" ? " mt-mobile-stack-item personal-mobile-stack-item" : "") + " " + (horizontal ? "flex flex-col md:flex-row" : "flex flex-col") + (isImageOnly ? "" : " gap-5") + " items-center overflow-hidden"}>
           {block.image && <img src={block.image} alt={selected.title + " 模块图片"} className={horizontal ? "max-w-full h-auto object-contain" : "h-auto object-contain"} style={{ width: hasIndependentImageWidth ? Math.min(100, Math.max(10, block.imageWidth!)) + "%" : (horizontal ? "50%" : "100%"), aspectRatio: block.imageRatio === "square" ? "1 / 1" : block.imageRatio === "portrait" ? "3 / 4" : block.imageRatio === "landscape" ? "4 / 3" : undefined, objectFit: "contain", alignSelf: block.imageAlign === "left" ? "flex-start" : block.imageAlign === "right" ? "flex-end" : "center", order: horizontal && !imageFirst ? 2 : 1 }} />}
           {hasText && <div className="flex-1 min-w-0 w-full" style={{ order: horizontal && !imageFirst ? 1 : 2 }}>
             {block.title && <h3 className="text-lg font-semibold">{block.title}</h3>}
@@ -424,7 +483,149 @@ export function PortfolioWebsite() {
     </div>;
   };
   return <main className="min-h-screen bg-[#faf9f6] text-stone-900 selection:bg-stone-200">
-    <style>{`@media (max-width: 767px) { .mt-mobile-stack-item { width: 100% !important; max-width: 100% !important; flex: 0 0 100% !important; } .personal-mobile-stack-item img { width: 100% !important; max-width: 100% !important; } }`}</style>
+    <style>{`.portfolio-wireframe-frame { background:#e9e5dd; color:#55534f; isolation:isolate; }
+.portfolio-wireframe-backdrop { position:absolute; inset:0; background:radial-gradient(ellipse at 50% 42%,#faf8f3 0%,transparent 49%),linear-gradient(145deg,#d7d0c5,#eeebe5 55%,#c9c1b5); }
+.portfolio-wireframe-corner { position:absolute; width:62%; height:76%; top:12%; border:1px solid rgba(255,255,255,.66); pointer-events:none; }
+.portfolio-wireframe-corner-a { right:12%; }
+.portfolio-wireframe-corner-b { left:12%; top:17%; width:54%; height:66%; border-color:rgba(90,86,79,.12); }
+.portfolio-wireframe-model { cursor:pointer; position:absolute; inset:14% 10% 6%; display:flex; align-items:center; justify-content:center; perspective:900px; transform-style:preserve-3d; animation:wireframe-hover 4.8s ease-in-out infinite; }
+.portfolio-wireframe-svg { width:min(100%,320px); height:92%; overflow:visible; filter:drop-shadow(0 8px 10px rgba(54,50,44,.08)); transform-style:preserve-3d; animation:wireframe-sway 7s ease-in-out infinite alternate; transform-origin:50% 52%; }
+@keyframes wireframe-hover { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-9px); } }
+@keyframes wireframe-sway { 0% { transform:rotateY(-11deg) rotateX(2deg); } 50% { transform:rotateY(0deg) rotateX(-2deg); } 100% { transform:rotateY(11deg) rotateX(2deg); } }
+.portfolio-wireframe-model { animation:wireframe-hover 4.8s ease-in-out infinite; }
+.portfolio-wireframe-svg.is-action-head-0 .portfolio-wire-head { transform-box:fill-box; transform-origin:50% 100%; animation:character-head-left .8s ease-in-out; }
+.portfolio-wireframe-svg.is-action-head-1 .portfolio-wire-head { transform-box:fill-box; transform-origin:50% 100%; animation:character-head-right .8s ease-in-out; }
+.portfolio-wireframe-svg.is-action-head-2 .portfolio-wire-head { transform-box:fill-box; transform-origin:50% 100%; animation:character-head-bob .8s ease-in-out; }
+.portfolio-wireframe-svg.is-action-left-0 .portfolio-wire-arm-left,.portfolio-wireframe-svg.is-action-right-0 .portfolio-wire-arm-right { transform-box:fill-box; transform-origin:50% 8%; animation:character-arm-wave .8s ease-in-out; }
+.portfolio-wireframe-svg.is-action-left-1 .portfolio-wire-arm-left,.portfolio-wireframe-svg.is-action-right-1 .portfolio-wire-arm-right { transform-box:fill-box; transform-origin:50% 8%; animation:character-arm-wave-alt .8s ease-in-out; }
+.portfolio-wireframe-svg.is-action-left-2 .portfolio-wire-arm-left,.portfolio-wireframe-svg.is-action-right-2 .portfolio-wire-arm-right { transform-box:fill-box; transform-origin:50% 8%; animation:character-arm-bounce .8s ease-in-out; }
+.portfolio-wireframe-svg.is-action-body-0,.portfolio-wireframe-svg.is-action-body-1,.portfolio-wireframe-svg.is-action-body-2 { transform-origin:50% 82%; animation:character-fall-back 1.55s cubic-bezier(.2,.7,.25,1) both; }\n.portfolio-wireframe-svg.is-action-feet-0,.portfolio-wireframe-svg.is-action-feet-1,.portfolio-wireframe-svg.is-action-feet-2 { transform-origin:50% 82%; animation:character-trip-forward 1.55s cubic-bezier(.2,.7,.25,1) both; }
+@keyframes character-head-left { 0%,100% { transform:rotate(0); } 35% { transform:rotate(-18deg); } 70% { transform:rotate(8deg); } }
+@keyframes character-head-right { 0%,100% { transform:rotate(0); } 35% { transform:rotate(18deg); } 70% { transform:rotate(-8deg); } }
+@keyframes character-head-bob { 0%,100% { transform:translateY(0) rotate(0); } 35% { transform:translateY(7px) rotate(-5deg); } 70% { transform:translateY(-3px) rotate(5deg); } }
+@keyframes character-arm-wave { 0%,100% { transform:rotate(0); } 25% { transform:rotate(-32deg); } 50% { transform:rotate(18deg); } 75% { transform:rotate(-20deg); } }
+@keyframes character-arm-wave-alt { 0%,100% { transform:rotate(0); } 30% { transform:rotate(24deg); } 60% { transform:rotate(-26deg); } }
+@keyframes character-arm-bounce { 0%,100% { transform:translateY(0) rotate(0); } 40% { transform:translateY(-9px) rotate(-18deg); } 75% { transform:translateY(2px) rotate(8deg); } }
+@keyframes character-fall-back { 0%,12% { transform:rotate(0) translate(0,0); } 38% { transform:rotate(72deg) translate(30px,18px); } 62% { transform:rotate(82deg) translate(38px,28px); } 78% { transform:rotate(82deg) translate(38px,28px); } 100% { transform:rotate(0) translate(0,0); } }\n@keyframes character-trip-forward { 0%,10% { transform:rotate(0) translate(0,0); } 34% { transform:rotate(-68deg) translate(-30px,18px); } 58% { transform:rotate(-78deg) translate(-38px,28px); } 76% { transform:rotate(-78deg) translate(-38px,28px); } 100% { transform:rotate(0) translate(0,0); } }
+.portfolio-wireframe-frame.is-welcoming .portfolio-wireframe-model { opacity:0; }
+.portfolio-welcome-overlay { position:fixed; inset:0; z-index:9998; display:flex; align-items:center; justify-content:center; pointer-events:none; background:rgba(32,29,25,.18); backdrop-filter:blur(2px); animation:welcome-screen-in .25s ease both; }
+.portfolio-welcome-stage { position:relative; width:min(86vw,520px); height:min(78vh,620px); display:flex; align-items:center; justify-content:center; }
+.portfolio-welcome-figure { position:relative; z-index:2; width:100%; height:100%; overflow:visible; color:#f7f5f0; filter:drop-shadow(0 18px 28px rgba(0,0,0,.16)); animation:welcome-figure-pop 4.8s cubic-bezier(.2,.78,.2,1) both; }
+.portfolio-wave-arm-left { transform-box:fill-box; transform-origin:100% 8%; animation:welcome-wave-left .52s ease-in-out 4 .65s; }
+.portfolio-wave-arm-right { transform-box:fill-box; transform-origin:0% 8%; animation:welcome-wave-right .52s ease-in-out 4 .65s; }
+.portfolio-welcome-door { position:absolute; z-index:1; right:-2%; top:13%; width:42%; height:72%; overflow:visible; color:#f7f5f0; opacity:0; animation:welcome-door-appear 4.8s ease both; }
+.portfolio-door-frame,.portfolio-door-leaf path,.portfolio-door-glint { fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.portfolio-door-leaf { transform-box:view-box; transform-origin:34px 320px; animation:welcome-door-open 4.8s ease both; }
+.portfolio-welcome-greeting { position:absolute; z-index:4; top:5%; right:-1%; padding:13px 22px; border-radius:20px 20px 6px 20px; background:#faf9f6; color:#514d47; font-size:clamp(18px,3vw,25px); font-weight:600; letter-spacing:.08em; box-shadow:0 12px 32px rgba(0,0,0,.15); animation:welcome-bubble-in .35s .28s both; }
+.portfolio-welcome-greeting:after { content:""; position:absolute; right:14px; bottom:-7px; width:13px; height:13px; background:#faf9f6; transform:rotate(45deg); }
+@keyframes welcome-screen-in { from { opacity:0; } to { opacity:1; } }
+@keyframes welcome-figure-pop { 0% { opacity:0; transform:translateY(90px) scale(.24) rotate(-8deg); } 16% { opacity:1; transform:translateY(-14px) scale(1.08) rotate(3deg); } 25%,56% { opacity:1; transform:translate(0,0) scale(1) rotate(0); } 70% { opacity:1; transform:translate(8%,4px) scale(.92) rotate(2deg); } 84% { opacity:1; transform:translate(20%,2px) scale(.58) rotate(3deg); } 100% { opacity:0; transform:translate(29%,0) scale(.08) rotate(5deg); } }
+@keyframes welcome-wave-left { 0%,100% { transform:rotate(0); } 25%,75% { transform:rotate(-28deg); } 50% { transform:rotate(20deg); } }
+@keyframes welcome-wave-right { 0%,100% { transform:rotate(0); } 25%,75% { transform:rotate(28deg); } 50% { transform:rotate(-20deg); } }
+@keyframes welcome-door-appear { 0%,55% { opacity:0; transform:translateX(12px) scale(.94); } 64%,92% { opacity:1; transform:translateX(0) scale(1); } 100% { opacity:0; transform:translateX(0) scale(.96); } }
+@keyframes welcome-door-open { 0%,65% { transform:perspective(500px) rotateY(0); opacity:1; } 82%,94% { transform:perspective(500px) rotateY(-68deg); opacity:1; } 100% { transform:perspective(500px) rotateY(-90deg); opacity:0; } }
+@keyframes welcome-bubble-in { from { opacity:0; transform:translateY(10px) scale(.92); } to { opacity:1; transform:translateY(0) scale(1); } }
+@media (max-width:767px) { .portfolio-welcome-stage { width:92vw; height:min(68vh,500px); } .portfolio-welcome-greeting { top:4%; right:2%; padding:10px 16px; font-size:18px; } .portfolio-welcome-door { right:-5%; top:18%; width:40%; height:65%; } }
+@media (prefers-reduced-motion:reduce) { .portfolio-wireframe-model,.portfolio-wireframe-svg { animation:none !important; } }
+@media (max-width:767px) { .portfolio-museum-canvas-image { width:calc(50% - 8px) !important; max-width:calc(50% - 8px) !important; flex:0 0 calc(50% - 8px) !important; margin:0 !important; padding:6px !important; } .portfolio-museum-canvas-image img { display:block; width:100% !important; max-width:100% !important; height:auto !important; object-fit:contain !important; } }
+@media (max-width:767px) { .portfolio-museum-gallery { grid-template-columns:minmax(0,1fr) !important; } .portfolio-museum-gallery-item { aspect-ratio:auto !important; } .portfolio-museum-gallery-item img { display:block; width:100% !important; height:auto !important; object-fit:contain !important; } }
+.portfolio-holo-gallery { width:100%; position:relative; }
+.portfolio-holo-stage { position:relative; height:490px; overflow:hidden; isolation:isolate; perspective:1200px; background:radial-gradient(ellipse at 50% 48%,rgba(226,220,208,.42),rgba(250,249,246,0) 64%); border:1px solid rgba(120,113,108,.12); border-radius:22px; }
+.portfolio-holo-gridlines { position:absolute; inset:0; opacity:.28; background-image:linear-gradient(rgba(120,113,108,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(120,113,108,.10) 1px,transparent 1px); background-size:44px 44px; mask-image:radial-gradient(ellipse at center,#000 0%,transparent 76%); pointer-events:none; }
+.portfolio-holo-orbit { position:absolute; left:50%; top:54%; width:74%; height:34%; transform:translate(-50%,-50%) rotateX(68deg); border:1px solid rgba(120,113,108,.25); border-radius:50%; box-shadow:0 0 0 22px rgba(120,113,108,.025),0 0 0 48px rgba(120,113,108,.02); pointer-events:none; }
+.portfolio-holo-card { position:absolute; left:50%; top:46%; width:min(48%,470px); padding:15px; text-align:left; border:1px solid rgba(120,113,108,.22); border-radius:17px; background:rgba(255,255,255,.96); box-shadow:0 18px 52px rgba(35,31,26,.13); transform-origin:center center; transition:transform .55s cubic-bezier(.2,.75,.2,1),opacity .45s ease,box-shadow .45s ease,border-color .45s ease; backdrop-filter:blur(12px); }
+.portfolio-holo-card.is-active { border-color:rgba(87,83,78,.5); box-shadow:0 28px 70px rgba(35,31,26,.2),0 0 34px rgba(255,255,255,.85); }
+.portfolio-holo-card-top { display:flex; justify-content:space-between; gap:10px; margin-bottom:11px; color:#a8a29e; font-size:9px; letter-spacing:.16em; }
+.portfolio-holo-card-image { position:relative; display:flex; align-items:center; justify-content:center; width:100%; aspect-ratio:16 / 9; overflow:hidden; }
+.portfolio-holo-card-image img { width:100%; height:100%; object-fit:contain; }
+.portfolio-holo-card-image > span { font-size:58px; font-weight:300; color:rgba(87,83,78,.42); }
+.portfolio-holo-card-image i { position:absolute; inset:10px; border:1px solid rgba(255,255,255,.62); pointer-events:none; }
+.portfolio-holo-card-copy { padding:13px 2px 2px; }
+.portfolio-holo-card-copy > span { color:#a8a29e; font-size:9px; letter-spacing:.12em; }
+.portfolio-holo-card-copy h3 { margin-top:6px; color:#292524; font-size:17px; font-weight:600; }
+.portfolio-holo-card-copy p { margin-top:5px; color:#78716c; font-size:11px; line-height:1.6; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.portfolio-holo-caption { position:absolute; z-index:12; left:22px; right:22px; bottom:18px; display:flex; justify-content:space-between; align-items:center; color:#a8a29e; font-size:9px; letter-spacing:.16em; pointer-events:none; }
+.portfolio-holo-caption strong { color:#57534e; font-size:12px; font-weight:500; letter-spacing:.1em; }
+.portfolio-holo-caption i { color:#c4bdb3; font-style:normal; padding:0 5px; }
+.portfolio-holo-controls { display:flex; justify-content:center; align-items:center; gap:28px; margin-top:18px; color:#a8a29e; font-size:10px; letter-spacing:.08em; }
+.portfolio-holo-controls button { width:42px; height:42px; border:1px solid rgba(120,113,108,.3); border-radius:50%; color:#57534e; font-size:20px; transition:background .2s,color .2s; }
+.portfolio-holo-controls button:hover { background:#252522; color:#fff; }
+.portfolio-holo-mobile-hint { display:none; }
+@media (max-width:767px) {
+ .portfolio-holo-stage { height:410px; margin:0 -4px; border-radius:17px; touch-action:pan-y; }
+ .portfolio-holo-card { width:76%; padding:12px; top:45%; border-radius:14px; }
+ .portfolio-holo-card-image { aspect-ratio:4 / 3; }
+ .portfolio-holo-card-image > span { font-size:44px; }
+ .portfolio-holo-card-copy h3 { font-size:15px; }
+ .portfolio-holo-card-copy p { font-size:10px; }
+ .portfolio-holo-caption { left:14px; right:14px; bottom:13px; font-size:8px; }
+ .portfolio-holo-controls { gap:18px; margin-top:14px; }
+ .portfolio-holo-controls button { width:38px; height:38px; }
+ .portfolio-holo-controls span { font-size:9px; }
+ .portfolio-holo-mobile-hint { display:block; margin-top:10px; text-align:center; color:#a8a29e; font-size:10px; letter-spacing:.08em; }
+}
+@media (prefers-reduced-motion:reduce) { .portfolio-holo-card,.portfolio-holo-controls button { transition:none !important; } }
+.portfolio-visual-gallery { width: 100%; }
+.portfolio-visual-stage { display: grid; grid-template-columns: minmax(360px,1fr) minmax(300px,.9fr); gap: clamp(24px,4vw,64px); align-items: center; min-height: 560px; }
+.portfolio-visual-orbit { width: min(100%, 470px); aspect-ratio: 1; position: relative; margin: 0 auto; border-radius: 50%; touch-action: none; cursor: grab; user-select: none; }
+.portfolio-visual-orbit:active { cursor: grabbing; }
+.portfolio-visual-mobile-stage { touch-action: none; user-select: none; cursor: grab; }
+.portfolio-visual-mobile-stage:active { cursor: grabbing; }
+.portfolio-visual-ring { position: absolute; border: 1px solid rgba(120,113,108,.22); border-radius: 50%; pointer-events: none; }
+.portfolio-visual-ring-outer { inset: 4%; }
+.portfolio-visual-ring-inner { inset: 18%; border-style: dashed; opacity: .7; }
+.portfolio-visual-orbit::before,.portfolio-visual-orbit::after { content: ""; position: absolute; inset: 10%; border: 1px solid rgba(120,113,108,.12); border-radius: 50%; transform: rotate(28deg) scaleX(.72); pointer-events: none; }
+.portfolio-visual-orbit::after { transform: rotate(-28deg) scaleX(.72); }
+.portfolio-visual-orbit-core { position: absolute; inset: 31%; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; background: radial-gradient(circle,#fff 0%,#f7f5f0 72%,rgba(247,245,240,.3) 100%); color: #a8a29e; letter-spacing: .2em; font-size: 9px; }
+.portfolio-visual-orbit-core strong { color: #292524; font-size: 46px; font-weight: 300; letter-spacing: -.06em; }
+.portfolio-visual-orbit-item { position: absolute; transform: translate(-50%,-50%); z-index: 2; max-width: 154px; border: 1px solid transparent; border-radius: 999px; padding: 9px 13px; background: rgba(250,249,246,.94); color: #78716c; font-size: 11px; line-height: 1.35; white-space: nowrap; transition: color .3s,background .3s,border-color .3s,box-shadow .3s,transform .3s; }
+.portfolio-visual-orbit-item.is-active { background: #252522; color: #fff; border-color: #252522; box-shadow: 0 8px 24px rgba(35,31,26,.18); transform: translate(-50%,-50%) scale(1.06); }
+.portfolio-visual-feature { min-width: 0; animation: portfolioVisualReveal .55s ease both; }
+.portfolio-visual-feature-meta { display:flex; justify-content:space-between; gap:12px; color:#a8a29e; font-size:10px; letter-spacing:.12em; margin-bottom:14px; }
+.portfolio-visual-cover { width:100%; text-align:left; display:block; }
+.portfolio-visual-cover-image { position:relative; width:100%; aspect-ratio: 4 / 3; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+.portfolio-visual-cover-image img { width:100%; height:100%; object-fit:contain; transition:transform .7s cubic-bezier(.2,.7,.2,1); }
+.portfolio-visual-cover:hover .portfolio-visual-cover-image img { transform:scale(1.035); }
+.portfolio-visual-cover-image > span { font-size:72px; font-weight:300; color:rgba(87,83,78,.4); }
+.portfolio-visual-cover-image i { position:absolute; inset:14px; border:1px solid rgba(255,255,255,.65); pointer-events:none; }
+.portfolio-visual-cover-copy { padding:18px 2px 0; }
+.portfolio-visual-cover-copy > span { color:#a8a29e; font-size:9px; letter-spacing:.18em; }
+.portfolio-visual-cover-copy h3 { margin-top:8px; font-size:22px; font-weight:600; }
+.portfolio-visual-cover-copy p { margin-top:8px; color:#78716c; font-size:13px; line-height:1.8; }
+.portfolio-visual-controls { display:flex; align-items:center; justify-content:space-between; margin-top:22px; color:#a8a29e; font-size:9px; letter-spacing:.16em; }
+.portfolio-visual-controls button { width:38px; height:38px; border:1px solid rgba(120,113,108,.3); border-radius:50%; color:#57534e; font-size:18px; transition:background .2s,color .2s; }
+.portfolio-visual-controls button:hover { background:#252522; color:#fff; }
+.portfolio-visual-mobile { display:none; }
+@keyframes portfolioVisualReveal { from { opacity:0; transform:translateY(12px) scale(.985); } to { opacity:1; transform:translateY(0) scale(1); } }
+@media (max-width: 767px) {
+ .portfolio-visual-stage { display:none; }
+ .portfolio-visual-mobile { display:block; overflow:hidden; }
+ .portfolio-visual-mobile-stage { height:300px; position:relative; overflow:hidden; margin:0 -4px 18px; touch-action:none; }
+ .portfolio-visual-mobile-arc { position:absolute; inset:0; overflow:hidden; }
+ .portfolio-visual-mobile-ring { position:absolute; width:300px; height:300px; top:50%; left:calc(100% + 0px); transform:translate(-50%,-50%); border:1px solid rgba(120,113,108,.24); border-radius:50%; box-shadow:0 0 0 22px rgba(120,113,108,.035),0 0 0 48px rgba(120,113,108,.025); }
+ .portfolio-visual-mobile-item { position:absolute; transform:translate(-50%,-50%); max-width:130px; border:1px solid transparent; border-radius:999px; padding:8px 10px; background:rgba(250,249,246,.96); color:#78716c; font-size:10px; line-height:1.25; white-space:nowrap; transition:background .25s,color .25s,border-color .25s; }
+ .portfolio-visual-mobile-item.is-active { background:#252522; color:#fff; border-color:#252522; box-shadow:0 7px 20px rgba(35,31,26,.16); }
+ .portfolio-visual-mobile-center { position:absolute; left:0; top:50%; transform:translateY(-50%); width:calc(100% - 118px); display:flex; flex-direction:column; gap:9px; padding:16px 0; border-top:1px solid rgba(120,113,108,.2); border-bottom:1px solid rgba(120,113,108,.2); pointer-events:none; }
+ .portfolio-visual-mobile-center span,.portfolio-visual-mobile-center small { color:#a8a29e; font-size:9px; letter-spacing:.16em; }
+ .portfolio-visual-mobile-center strong { font-size:16px; line-height:1.3; overflow-wrap:anywhere; font-weight:600; color:#292524; }
+ .portfolio-visual-mobile-cover { display:grid; grid-template-columns:minmax(0,1fr); gap:12px; width:100%; text-align:left; align-items:center; animation:portfolioVisualReveal .45s ease both; }
+ .portfolio-visual-mobile-image { position:relative; width:100%; aspect-ratio:16 / 9; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+ .portfolio-visual-mobile-image img { width:100%; height:100%; object-fit:contain; }
+ .portfolio-visual-mobile-image > span { font-size:48px; color:rgba(87,83,78,.4); font-weight:300; }
+ .portfolio-visual-mobile-controls { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:22px; color:#a8a29e; font-size:9px; }
+ .portfolio-visual-mobile-controls button { font-size:11px; color:#57534e; padding:8px 0; }
+}
+@media (max-width: 380px) { .portfolio-visual-mobile-center { width:calc(100% - 112px); } .portfolio-visual-mobile-center strong { font-size:15px; } }
+@media (prefers-reduced-motion: reduce) { .portfolio-visual-feature,.portfolio-visual-mobile-cover { animation:none; } .portfolio-visual-cover-image img { transition:none; } }
+@media (max-width: 767px) { .mt-mobile-stack-item { width: 100% !important; max-width: 100% !important; flex: 0 0 100% !important; } .personal-mobile-stack-item img { width: 100% !important; max-width: 100% !important; } .portfolio-operations-content .portfolio-stack-grid { display: grid; grid-template-columns: minmax(0,1fr); gap: 14px; align-items: start; } .portfolio-operations-content .portfolio-stack-grid > .portfolio-stack-card { position: sticky !important; top: 84px !important; align-self: start; min-height: 0; height: auto; width: 100%; margin: 0; background: #fff; box-shadow: 0 12px 32px rgba(35,31,26,.10); border-radius: 18px; } .portfolio-stack-card:nth-child(1) { margin-top: 0; } } .portfolio-category-card { position: relative; isolation: isolate; margin-top: 28px; margin-bottom: 28px; border: 1px solid rgba(120,113,108,.22); border-radius: 26px; background: #fff; box-shadow: 0 18px 48px rgba(35,31,26,.07); overflow: visible; } @media (min-width: 768px) { .portfolio-category-card::before { content: ""; position: absolute; inset: 8px -7px -8px 7px; z-index: -1; border: 1px solid rgba(120,113,108,.13); border-radius: inherit; background: rgba(255,255,255,.72); } } .portfolio-operations-layout { display: grid; grid-template-columns: minmax(220px,.72fr) minmax(0,1.8fr); gap: clamp(28px,4vw,64px); align-items: start; } .portfolio-operations-heading { position: sticky; top: 104px; align-self: start; } .portfolio-operations-heading > div { margin-bottom: 0; } .portfolio-operations-content { min-width: 0; } .portfolio-operations-content .portfolio-stack-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; } .portfolio-stack-card { position: relative; min-height: 0; border-radius: 16px; box-shadow: 0 5px 18px rgba(35,31,26,.045); transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease; } .portfolio-stack-card:hover { transform: translateY(-4px); box-shadow: 0 14px 28px rgba(35,31,26,.09); } @media (min-width: 1500px) { .portfolio-operations-content .portfolio-stack-grid { grid-template-columns: repeat(3,minmax(0,1fr)); } } @media (min-width: 1024px) {
+ .portfolio-operations-card:not(.portfolio-operations-card-visual) .portfolio-stack-grid { grid-template-columns: repeat(3,minmax(0,1fr)); grid-template-rows: repeat(2,minmax(0,1fr)); }
+ .portfolio-operations-card:not(.portfolio-operations-card-visual) .portfolio-stack-card:nth-child(1) { grid-column:1; grid-row:1; }
+ .portfolio-operations-card:not(.portfolio-operations-card-visual) .portfolio-stack-card:nth-child(2) { grid-column:1; grid-row:2; }
+ .portfolio-operations-card:not(.portfolio-operations-card-visual) .portfolio-stack-card:nth-child(3) { grid-column:2; grid-row:1; }
+ .portfolio-operations-card:not(.portfolio-operations-card-visual) .portfolio-stack-card:nth-child(4) { grid-column:2; grid-row:2; }
+ .portfolio-operations-card:not(.portfolio-operations-card-visual) .portfolio-stack-card:nth-child(5) { grid-column:3; grid-row:1 / span 2; align-self:center; }
+ .portfolio-operations-card-visual .portfolio-stack-grid { grid-template-columns:repeat(2,minmax(0,1fr)) !important; grid-template-rows:repeat(2,minmax(0,1fr)); }
+} @media (max-width: 1023px) { .portfolio-operations-layout { display: block; } .portfolio-operations-heading { position: static; } .portfolio-operations-content .portfolio-stack-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } } @media (max-width: 639px) { .portfolio-category-card { margin: 16px 12px; border-radius: 20px; } .portfolio-operations-content .portfolio-stack-grid { grid-template-columns: minmax(0,1fr); } } @media (prefers-reduced-motion: reduce) { .portfolio-stack-card { transition: none !important; } .portfolio-category-card { animation: none !important; } }`}</style>
     <header className="sticky top-0 z-30 border-b border-stone-200/80 bg-[#faf9f6]/95 backdrop-blur">
       <div className="mx-auto max-w-7xl px-5 md:px-10 h-[68px] flex items-center justify-between gap-4">
         <button onClick={() => go("首页")} className="font-semibold tracking-[.14em] text-xs md:text-sm whitespace-nowrap">TANG YI DAN<span className="text-stone-400">.</span></button>
@@ -465,10 +666,62 @@ export function PortfolioWebsite() {
           </div>
         </div>
         <div className="relative">
-          <div className="aspect-[4/4] md:aspect-[4/5] max-h-[500px] bg-[#e9e5dd] relative overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_65%_35%,#f8f5ef_0%,transparent_45%),linear-gradient(145deg,#d7d0c5,#eeebe5_55%,#c9c1b5)]"></div>
-            <div className="absolute right-[12%] top-[12%] w-[62%] h-[76%] border border-white/60"></div>
-            <div className="absolute left-[12%] bottom-[12%] text-[10px] tracking-[.3em] text-stone-600">SELECTED WORKS / 2026</div>
+          <div ref={welcomeFrameRef} className={"portfolio-wireframe-frame aspect-[4/4] md:aspect-[4/5] max-h-[500px] relative overflow-hidden" + (welcomeActive ? " is-welcoming" : "")}>
+            <div className="portfolio-wireframe-backdrop"></div>
+            <div className="portfolio-wireframe-corner portfolio-wireframe-corner-a"></div>
+            <div className="portfolio-wireframe-corner portfolio-wireframe-corner-b"></div>
+            <div className="portfolio-wireframe-model" aria-label="可互动的抽象线框小人" title="试着点点我的头、手或身体">
+              <svg viewBox="0 0 360 440" role="img" aria-hidden="true" className={"portfolio-wireframe-svg" + (characterAction ? " is-action-" + characterAction.part + "-" + characterAction.variant : "")}>
+                <g fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
+                  <g className="portfolio-wire-head">
+                    <ellipse cx="180" cy="92" rx="49" ry="53"/>
+                    <ellipse cx="180" cy="92" rx="25" ry="53" opacity=".58"/>
+                    <ellipse cx="180" cy="92" rx="49" ry="22" opacity=".72"/>
+                    <path d="M134 82 Q180 48 226 82 M138 108 Q180 135 222 108 M147 57 Q180 79 213 57 M147 127 Q180 105 213 127" opacity=".62"/>
+                    <path d="M158 43 Q180 34 202 43 M158 141 Q180 150 202 141" opacity=".5"/>
+                    <path d="M180 38 Q174 23 185 16 Q195 11 198 23" opacity=".75"/>
+                    <circle cx="198" cy="22" r="3" fill="currentColor" stroke="none" opacity=".65"/>
+                  </g>
+                  <path d="M165 145 Q180 153 195 145 L194 165 Q180 174 166 165 Z"/>
+                  <g className="portfolio-wire-torso">
+                    <path d="M164 164 Q180 155 196 164 Q216 175 211 205 Q207 230 196 246 Q180 255 164 246 Q153 230 149 205 Q144 175 164 164 Z"/>
+                    <path d="M180 163 Q169 188 180 250 Q191 188 180 163Z" opacity=".72"/>
+                    <path d="M151 184 Q180 201 209 184 M150 207 Q180 224 210 207 M158 231 Q180 243 202 231" opacity=".7"/>
+                    <path d="M161 169 Q180 184 199 169 M155 222 Q180 235 205 222" opacity=".48"/>
+                  </g>
+                  <g className="portfolio-wire-limbs">
+                    <g className="portfolio-wire-arms">
+                    <g className="portfolio-wire-arm-left"><path d="M153 177 Q137 178 129 193 Q122 207 132 217 Q140 224 148 212 L158 198"/></g>
+                    <g className="portfolio-wire-arm-right"><path d="M207 177 Q223 178 231 193 Q238 207 228 217 Q220 224 212 212 L202 198"/></g>
+                    <path d="M129 193 Q138 199 145 205 M231 193 Q222 199 215 205" opacity=".62"/>
+                    </g>
+                    <path d="M165 246 Q160 261 159 278 Q158 289 169 291 Q179 292 180 280 L180 254"/>
+                    <path d="M195 246 Q200 261 201 278 Q202 289 191 291 Q181 292 180 280 L180 254"/>
+                    <path d="M159 278 Q170 285 180 280 M201 278 Q190 285 180 280" opacity=".6"/>
+                    <path d="M160 289 Q151 297 157 302 Q168 306 176 299 M200 289 Q209 297 203 302 Q192 306 184 299"/>
+                  </g>
+                  <g opacity=".42">
+                    <ellipse cx="180" cy="164" rx="18" ry="7"/>
+                    <ellipse cx="180" cy="246" rx="17" ry="7"/>
+                    <ellipse cx="139" cy="196" rx="8" ry="6"/>
+                    <ellipse cx="221" cy="196" rx="8" ry="6"/>
+                    <ellipse cx="160" cy="278" rx="7" ry="5"/>
+                    <ellipse cx="200" cy="278" rx="7" ry="5"/>
+                  </g>
+                  <path d="M180 8 V2 M180 316 V308" opacity=".3"/>
+                  <circle cx="180" cy="2" r="2" fill="currentColor" stroke="none" opacity=".45"/>
+                </g>
+                  <g className="portfolio-character-hit-zones" pointerEvents="all">
+                    <path d="M137 157 Q180 140 223 157 L220 249 Q180 269 140 249 Z" fill="#000" fillOpacity=".001" onClick={(event) => { event.stopPropagation(); playCharacterAction("body"); }} />
+                    <path d="M151 165 Q130 166 116 188 Q101 213 119 237 Q135 253 153 229 L176 190 Z" fill="#000" fillOpacity=".001" onClick={(event) => { event.stopPropagation(); playCharacterAction("left"); }} />
+                    <path d="M209 165 Q230 166 244 188 Q259 213 241 237 Q225 253 207 229 L184 190 Z" fill="#000" fillOpacity=".001" onClick={(event) => { event.stopPropagation(); playCharacterAction("right"); }} />
+                    <path d="M132 266 Q180 246 228 266 L230 310 Q180 328 130 310 Z" fill="#000" fillOpacity=".001" onClick={(event) => { event.stopPropagation(); playCharacterAction("feet"); }} />
+                    <circle cx="180" cy="92" r="70" fill="#000" fillOpacity=".001" onClick={(event) => { event.stopPropagation(); playCharacterAction("head"); }} />
+                  </g>
+              </svg>
+            </div>
+
+            <div className="absolute left-[12%] bottom-[12%] text-[9px] md:text-[10px] tracking-[.3em] text-stone-600">SELECTED WORKS / 2026</div>
             <div className="absolute right-[12%] bottom-[12%] text-6xl md:text-7xl font-light text-white/80 tracking-[-.08em]">T.Y.D</div>
           </div>
         </div>
@@ -481,13 +734,83 @@ export function PortfolioWebsite() {
       </div>
     </section>
 
-    {categories.map((c, i) => <section id={c.id} key={c.id} className={"scroll-mt-20 " + (c.id === "视频" || c.id === "其他" ? "bg-[#eeece7]" : "")}>
-      <div className="mx-auto max-w-7xl px-5 md:px-10 py-16 md:py-24">
-        <SectionHeading index={"0" + (i + 1)} title={c.label} en={c.en} intro={c.intro} />
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">{grouped(c.id).map((w, j) => card(w, j))}</div>
-        {c.id === "运营" && <div className="mt-8 text-xs text-stone-500 border-t border-stone-200 pt-5">说明：项目数据按现有作品集资料呈现；团队项目成果与个人职责已分开说明。</div>}
-        {c.id === "视频" && <div className="mt-8 text-xs text-stone-500">视频封面与播放素材待替换为原始文件；点击卡片可先查看作品说明。</div>}
-        {c.id === "视觉" && <div className="mt-8 text-xs text-stone-500">视觉作品支持按项目上传不同尺寸的原图，不强制统一图片比例。</div>}
+    {categories.map((c, i) => <section id={c.id} key={c.id} className="scroll-mt-20 py-2 md:py-5">
+      <div className={"portfolio-category-card mx-auto max-w-7xl px-5 md:px-10 py-12 md:py-16 " + (c.id === "运营" ? "portfolio-operations-card" : c.id === "视觉" ? "portfolio-operations-card portfolio-operations-card-visual" : "")}>
+        <div className={["运营", "视觉"].includes(c.id) ? "portfolio-operations-layout" : ""}>
+          <div className={["运营", "视觉"].includes(c.id) ? "portfolio-operations-heading" : ""}>
+            <SectionHeading index={"0" + (i + 1)} title={c.label} en={c.en} intro={c.intro} />
+          </div>
+          <div className={["运营", "视觉"].includes(c.id) ? "portfolio-operations-content" : ""}>
+            {c.id === "视频" ? <div className="portfolio-visual-gallery">
+              {activeVideoWork && <div className="portfolio-visual-stage" onWheel={handleVideoWheel}>
+                <div className="portfolio-visual-orbit" aria-label="视频与 AI 创作圆弧导航">
+                  <div className="portfolio-visual-ring portfolio-visual-ring-outer"></div>
+                  <div className="portfolio-visual-ring portfolio-visual-ring-inner"></div>
+                  <div className="portfolio-visual-orbit-core"><span>SELECTED</span><strong>{String(activeVideo + 1).padStart(2, "0")}</strong><span>VIDEO WORKS</span></div>
+                  {videoWorks.map((work, index) => {
+                    const count = videoWorks.length;
+                    const angle = -90 + ((index - activeVideo + count) % count) * (360 / count);
+                    const radians = angle * Math.PI / 180;
+                    const x = Math.cos(radians) * 174;
+                    const y = Math.sin(radians) * 174;
+                    const isCurrent = index === activeVideo;
+                    return <button key={work.id} type="button"  className={"portfolio-visual-orbit-item" + (isCurrent ? " is-active" : "")} onClick={() => setActiveVideo(index)} style={{ left: `calc(50% + ${x}px)`, top: `calc(50% + ${y}px)` }} aria-pressed={isCurrent}>
+                      <span>{work.title}</span>
+                    </button>;
+                  })}
+                </div>
+                <div className="portfolio-visual-feature" key={activeVideoWork.id}>
+                  <div className="portfolio-visual-feature-meta"><span>{activeVideoWork.type}</span><span>{String(activeVideo + 1).padStart(2, "0")} / {String(videoWorks.length).padStart(2, "0")}</span></div>
+                  <button type="button" onClick={() => setSelected(activeVideoWork)} className="portfolio-visual-cover group">
+                    <div className={"portfolio-visual-cover-image " + (toneClass[activeVideoWork.tone] || "bg-stone-100")}>
+                      {activeVideoWork.coverImage ? <img src={activeVideoWork.coverImage} alt={activeVideoWork.title} /> : <span>{String(activeVideo + 1).padStart(2, "0")}</span>}
+                      <i></i>
+                    </div>
+                    <div className="portfolio-visual-cover-copy"><span>OPEN PROJECT ↗</span><h3>{activeVideoWork.title}</h3><p>{activeVideoWork.desc}</p></div>
+                  </button>
+                  <div className="portfolio-visual-controls"><button type="button" onClick={() => moveVideo(-1)} aria-label="上一个作品">←</button><span>SCROLL / CLICK TO EXPLORE</span><button type="button" onClick={() => moveVideo(1)} aria-label="下一个作品">→</button></div>
+                </div>
+              </div>}
+              <div className="portfolio-visual-mobile">
+                {activeVideoWork && <div className="portfolio-visual-mobile-stage" onTouchStart={startVideoTouch} onTouchEnd={finishVideoTouch} onTouchCancel={() => { videoTouchStart.current = null; }}>
+                  <div className="portfolio-visual-mobile-arc">
+                    <div className="portfolio-visual-mobile-ring"></div>
+                    {videoWorks.map((work, index) => {
+                      const count = videoWorks.length;
+                      const offset = index - activeVideo;
+                      const angle = 180 + offset * Math.min(34, 170 / Math.max(count - 1, 1));
+                      const radians = angle * Math.PI / 180;
+                      const x = Math.cos(radians) * 150;
+                      const y = Math.sin(radians) * 150;
+                      const isCurrent = index === activeVideo;
+                      return <button key={work.id} type="button"  className={"portfolio-visual-mobile-item" + (isCurrent ? " is-active" : "")} onClick={() => setActiveVideo(index)} style={{ left: `calc(100% + ${x}px)`, top: `calc(50% + ${y}px)` }} aria-pressed={isCurrent}><span>{work.title}</span></button>;
+                    })}
+                  </div>
+                  <div className="portfolio-visual-mobile-center"><span>NOW SELECTED</span><strong>{activeVideoWork.title}</strong><small>{String(activeVideo + 1).padStart(2, "0")} / {String(videoWorks.length).padStart(2, "0")}</small></div>
+                </div>}
+                {activeVideoWork && <button type="button" onClick={() => setSelected(activeVideoWork)} className="portfolio-visual-mobile-cover group">
+                  <div className={"portfolio-visual-mobile-image " + (toneClass[activeVideoWork.tone] || "bg-stone-100")}>{activeVideoWork.coverImage ? <img src={activeVideoWork.coverImage} alt={activeVideoWork.title} /> : <span>{String(activeVideo + 1).padStart(2, "0")}</span>}</div>
+                  <div className="pt-4"><span className="text-[10px] tracking-[.18em] text-stone-400">{activeVideoWork.type}</span><h3 className="mt-2 text-lg font-semibold">{activeVideoWork.title}</h3><p className="mt-2 text-sm leading-6 text-stone-500">{activeVideoWork.desc}</p><span className="mt-4 inline-block text-xs text-stone-500">查看作品详情 ↗</span></div>
+                </button>}
+                <div className="portfolio-visual-mobile-controls"><button type="button" onClick={() => moveVideo(-1)}>← 上一个</button><span>拨动弧线切换作品</span><button type="button" onClick={() => moveVideo(1)}>下一个 →</button></div>
+              </div>
+            </div> : c.id === "视觉" ? <div className="portfolio-stack-grid">{grouped(c.id).map((w, j) => card(w, j, true))}</div> : c.id === "其他" ? <div className="portfolio-holo-gallery">
+              <div className="portfolio-holo-stage" onTouchStart={event => { if (event.touches.length) otherTouchStart.current = { x: event.touches[0].clientX, y: event.touches[0].clientY }; }} onTouchEnd={finishOtherTouch} onTouchCancel={() => { otherTouchStart.current = null; }}>
+                <div className="portfolio-holo-gridlines"></div><div className="portfolio-holo-orbit"></div>
+                {otherWorks.map((work, index) => { const count = otherWorks.length; let offset = (index - activeOther + count) % count; if (offset > count / 2) offset -= count; const distance = Math.abs(offset); const scale = distance === 0 ? 1 : distance === 1 ? .78 : .58; const opacity = distance === 0 ? 1 : distance === 1 ? .78 : distance === 2 ? .42 : .12; const isActive = index === activeOther; return <button key={work.id} type="button" className={"portfolio-holo-card" + (isActive ? " is-active" : "")} style={{ transform: `translate(-50%,-50%) translateX(${offset * 66}%) scale(${scale})`, opacity, zIndex: 10 - distance, pointerEvents: distance > 2 ? "none" : "auto" }} onClick={() => isActive ? setSelected(work) : setActiveOther(index)} aria-label={isActive ? `打开${work.title}` : `切换到${work.title}`} aria-pressed={isActive}>
+                  <div className="portfolio-holo-card-top"><span>WORK / {String(index + 1).padStart(2, "0")}</span><span>{isActive ? "SELECTED" : "EXPLORE"}</span></div>
+                  <div className={"portfolio-holo-card-image " + (toneClass[work.tone] || "bg-stone-100")}>{work.coverImage ? <img src={work.coverImage} alt={work.title} /> : <span>{String(index + 1).padStart(2, "0")}</span>}<i></i></div>
+                  <div className="portfolio-holo-card-copy"><span>{work.type}</span><h3>{work.title}</h3><p>{work.desc}</p></div>
+                </button>; })}
+                <div className="portfolio-holo-caption"><span>HOLOGRAPHIC WORKSPACE</span><strong>{String(activeOther + 1).padStart(2, "0")} <i>/</i> {String(otherWorks.length).padStart(2, "0")}</strong></div>
+              </div>
+              <div className="portfolio-holo-controls"><button type="button" onClick={() => moveOther(-1)} aria-label="上一个作品">←</button><span>选择两侧作品，或左右切换探索</span><button type="button" onClick={() => moveOther(1)} aria-label="下一个作品">→</button></div>
+              <div className="portfolio-holo-mobile-hint">左右滑动，探索六件作品</div>
+            </div> : <div className={c.id === "运营" ? "portfolio-stack-grid" : "grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5"}>{grouped(c.id).map((w, j) => card(w, j, c.id === "运营"))}</div>}
+            {c.id === "运营" && <div className="mt-8 text-xs text-stone-500 border-t border-stone-200 pt-5">说明：项目数据按现有作品集资料呈现；团队项目成果与个人职责已分开说明。</div>}
+            {c.id === "视频" && <div className="mt-8 text-xs text-stone-500">视频封面与播放素材待替换为原始文件；点击卡片可先查看作品说明。</div>}
+          </div>
+        </div>
       </div>
     </section>)}
 
@@ -504,7 +827,7 @@ export function PortfolioWebsite() {
       <footer className="border-t border-white/15 mx-auto max-w-7xl px-5 md:px-10 py-7 flex flex-wrap justify-between gap-3 text-xs text-stone-500"><span>© 2026 TANG YI DAN · PORTFOLIO</span><span>THANK YOU FOR YOUR TIME.</span></footer>
     </section>
 
-    {selected && <div className="fixed inset-0 z-50 bg-stone-950/55 p-3 md:p-8 flex items-center justify-center" role="dialog" aria-modal="true" aria-label={selected.title} onClick={e => {
+    {selected && createPortal(<div className="fixed inset-0 z-[9999] bg-stone-950/55 p-3 md:p-8 flex items-center justify-center" role="dialog" aria-modal="true" aria-label={selected.title} onClick={e => {
       if (e.target === e.currentTarget) setSelected(null);
     }}>
       <div className="bg-[#faf9f6] w-full max-w-3xl max-h-[92vh] overflow-y-auto shadow-2xl">
@@ -522,7 +845,7 @@ export function PortfolioWebsite() {
           </div>
           {renderCanvasBlocks("after_cover")}
           {selected.galleryPosition !== "after" && renderCanvasBlocks("before_gallery")}
-          {selected.galleryPosition !== "after" && selected.gallery && selected.gallery.length > 0 && <div className="mt-5 grid gap-3" style={{ gridTemplateColumns: `repeat(${Math.min(3, Math.max(1, Number(selected.galleryColumns) || 2))}, minmax(0, 1fr))` }}>{selected.gallery.map((src, index) => <div key={index} className="bg-white overflow-hidden" style={{ aspectRatio: selected.galleryRatio === "square" ? "1 / 1" : selected.galleryRatio === "portrait" ? "3 / 4" : selected.galleryRatio === "landscape" ? "4 / 3" : undefined }}><img src={src} alt={selected.title + " " + (index + 1)} className={selected.galleryRatio === "original" || !selected.galleryRatio ? "w-full h-auto" : "w-full h-full"} style={{ objectFit: selected.galleryRatio === "original" || !selected.galleryRatio ? "contain" : selected.galleryFit === "cover" ? "cover" : "contain" }} /></div>)}</div>}
+          {selected.galleryPosition !== "after" && selected.gallery && selected.gallery.length > 0 && <div className={"mt-5 grid gap-3 " + (selected.id === "o4" ? "portfolio-museum-gallery" : "")} style={{ gridTemplateColumns: `repeat(${Math.min(3, Math.max(1, Number(selected.galleryColumns) || 2))}, minmax(0, 1fr))` }}>{selected.gallery.map((src, index) => <div key={index} className={"bg-white overflow-hidden " + (selected.id === "o4" ? "portfolio-museum-gallery-item" : "")} style={{ aspectRatio: selected.galleryRatio === "square" ? "1 / 1" : selected.galleryRatio === "portrait" ? "3 / 4" : selected.galleryRatio === "landscape" ? "4 / 3" : undefined }}><img src={src} alt={selected.title + " " + (index + 1)} className={selected.galleryRatio === "original" || !selected.galleryRatio ? "w-full h-auto" : "w-full h-full"} style={{ objectFit: selected.galleryRatio === "original" || !selected.galleryRatio ? "contain" : selected.galleryFit === "cover" ? "cover" : "contain" }} /></div>)}</div>}
           {selected.galleryPosition !== "after" && renderCanvasBlocks("after_gallery")}
           {selected.videoFile && <video className="mt-5 w-full max-h-[560px] bg-black" src={selected.videoFile} controls playsInline />}
           {selected.pdfUrl && <section className="mt-7"><div className="mb-3 flex items-center justify-between gap-3"><h3 className="text-sm font-semibold">运营 SOP 文档预览</h3><a href={selected.pdfUrl} target="_blank" rel="noreferrer" className="text-xs text-stone-500 underline underline-offset-4">打开原 PDF ↗</a></div><PdfPreview url={selected.pdfUrl} title={selected.title + " PDF 在线阅读"} /><p className="mt-2 text-xs text-stone-400">可直接上下滑动阅读全部页面，无需下载文件</p></section>}
@@ -564,7 +887,7 @@ export function PortfolioWebsite() {
           </div>}
           {renderCanvasBlocks("after_gallery")}
           {selected.galleryPosition === "after" && renderCanvasBlocks("before_gallery")}
-          {selected.galleryPosition === "after" && selected.gallery && selected.gallery.length > 0 && <div className="mt-5 grid gap-3" style={{ gridTemplateColumns: `repeat(${Math.min(3, Math.max(1, Number(selected.galleryColumns) || 2))}, minmax(0, 1fr))` }}>{selected.gallery.map((src, index) => <div key={index} className="bg-white overflow-hidden" style={{ aspectRatio: selected.galleryRatio === "square" ? "1 / 1" : selected.galleryRatio === "portrait" ? "3 / 4" : selected.galleryRatio === "landscape" ? "4 / 3" : undefined }}><img src={src} alt={selected.title + " " + (index + 1)} className={selected.galleryRatio === "original" || !selected.galleryRatio ? "w-full h-auto" : "w-full h-full"} style={{ objectFit: selected.galleryRatio === "original" || !selected.galleryRatio ? "contain" : selected.galleryFit === "cover" ? "cover" : "contain" }} /></div>)}</div>}
+          {selected.galleryPosition === "after" && selected.gallery && selected.gallery.length > 0 && <div className={"mt-5 grid gap-3 " + (selected.id === "o4" ? "portfolio-museum-gallery" : "")} style={{ gridTemplateColumns: `repeat(${Math.min(3, Math.max(1, Number(selected.galleryColumns) || 2))}, minmax(0, 1fr))` }}>{selected.gallery.map((src, index) => <div key={index} className={"bg-white overflow-hidden " + (selected.id === "o4" ? "portfolio-museum-gallery-item" : "")} style={{ aspectRatio: selected.galleryRatio === "square" ? "1 / 1" : selected.galleryRatio === "portrait" ? "3 / 4" : selected.galleryRatio === "landscape" ? "4 / 3" : undefined }}><img src={src} alt={selected.title + " " + (index + 1)} className={selected.galleryRatio === "original" || !selected.galleryRatio ? "w-full h-auto" : "w-full h-full"} style={{ objectFit: selected.galleryRatio === "original" || !selected.galleryRatio ? "contain" : selected.galleryFit === "cover" ? "cover" : "contain" }} /></div>)}</div>}
           {selected.galleryPosition === "after" && renderCanvasBlocks("after_gallery")}
           {selected.id !== "sanxiang" && selected.id !== "college" && selected.id !== "d5" && renderCanvasBlocks("after_project_info")}
           {renderCanvasBlocks("bottom")}
@@ -572,6 +895,33 @@ export function PortfolioWebsite() {
           <p className="mt-8 pt-5 border-t border-stone-200 text-xs leading-6 text-stone-400">当前为作品详情结构预览，正式素材（图片、视频、文档或外部链接）将在下一步通过内容后台逐项补充。</p>
         </div>
       </div>
-    </div>}
+    </div>, document.body)}
+    {welcomeActive && createPortal(
+      <div className="portfolio-welcome-overlay" role="status" aria-label="Welcome">
+        <div className="portfolio-welcome-stage">
+          <svg viewBox="0 0 360 440" role="img" aria-hidden="true" className="portfolio-welcome-figure">
+            <g fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
+              <g>
+                <ellipse cx="180" cy="92" rx="49" ry="53"/><ellipse cx="180" cy="92" rx="25" ry="53" opacity=".58"/><ellipse cx="180" cy="92" rx="49" ry="22" opacity=".72"/>
+                <path d="M134 82 Q180 48 226 82 M138 108 Q180 135 222 108 M147 57 Q180 79 213 57 M147 127 Q180 105 213 127 M158 43 Q180 34 202 43 M158 141 Q180 150 202 141 M180 38 Q174 23 185 16 Q195 11 198 23"/>
+                <circle cx="198" cy="22" r="3" fill="currentColor" stroke="none" opacity=".65"/>
+              </g>
+              <path d="M165 145 Q180 153 195 145 L194 165 Q180 174 166 165 Z"/>
+              <g><path d="M164 164 Q180 155 196 164 Q216 175 211 205 Q207 230 196 246 Q180 255 164 246 Q153 230 149 205 Q144 175 164 164 Z"/><path d="M180 163 Q169 188 180 250 Q191 188 180 163Z" opacity=".72"/><path d="M151 184 Q180 201 209 184 M150 207 Q180 224 210 207 M158 231 Q180 243 202 231 M161 169 Q180 184 199 169 M155 222 Q180 235 205 222" opacity=".62"/></g>
+              <g className="portfolio-wire-arms"><g className="portfolio-wave-arm-left"><path d="M153 177 Q137 178 129 193 Q122 207 132 217 Q140 224 148 212 L158 198"/><path d="M129 193 Q138 199 145 205" opacity=".62"/></g><g className="portfolio-wave-arm-right"><path d="M207 177 Q223 178 231 193 Q238 207 228 217 Q220 224 212 212 L202 198"/><path d="M231 193 Q222 199 215 205" opacity=".62"/></g></g>
+              <path d="M165 246 Q160 261 159 278 Q158 289 169 291 Q179 292 180 280 L180 254 M195 246 Q200 261 201 278 Q202 289 191 291 Q181 292 180 280 L180 254 M159 278 Q170 285 180 280 M201 278 Q190 285 180 280 M160 289 Q151 297 157 302 Q168 306 176 299 M200 289 Q209 297 203 302 Q192 306 184 299"/>
+              <g opacity=".42"><ellipse cx="180" cy="164" rx="18" ry="7"/><ellipse cx="180" cy="246" rx="17" ry="7"/><ellipse cx="139" cy="196" rx="8" ry="6"/><ellipse cx="221" cy="196" rx="8" ry="6"/><ellipse cx="160" cy="278" rx="7" ry="5"/><ellipse cx="200" cy="278" rx="7" ry="5"/></g>
+            </g>
+          </svg>
+          <svg className="portfolio-welcome-door" viewBox="0 0 220 330" aria-hidden="true">
+            <path className="portfolio-door-frame" d="M22 320 V18 Q22 8 34 8 H186 Q198 8 198 18 V320 M8 320 H212"/>
+            <g className="portfolio-door-leaf"><path d="M34 320 V28 H186 V320 Z"/><path d="M48 304 V44 H172 V304 Z" opacity=".5"/><circle cx="166" cy="178" r="3" fill="currentColor" stroke="none"/></g>
+            <path className="portfolio-door-glint" d="M22 18 Q110 -4 198 18" opacity=".6"/>
+          </svg>
+          <div className="portfolio-welcome-greeting">Welcome!</div>
+        </div>
+      </div>,
+      document.body
+    )}
   </main>;
 }
