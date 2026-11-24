@@ -347,7 +347,8 @@ export function PortfolioWebsite() {
     "运营": { title: "内容运营与策划", speech: "这里是我的内容运营与策划作品。" },
     "视频": { title: "视频与 AI 创作", speech: "这里收录了我的视频和 AI 创作。" },
     "视觉": { title: "视觉设计作品", speech: "这里是我的视觉设计作品。" },
-    "其他": { title: "感谢你的浏览", speech: "Thank you for exploring my portfolio!" }
+    "其他": { title: "其他作品", speech: "这里还有一些不同类型的作品。" },
+    "关于我": { title: "感谢你的浏览", speech: "Thank you for exploring my portfolio!" }
   };
   const preferredVoice = (lang: string) => {
     const voices = window.speechSynthesis.getVoices();
@@ -361,7 +362,7 @@ export function PortfolioWebsite() {
     if (!copy || !("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) return;
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(copy.speech);
-    const isEnglish = section === "其他";
+    const isEnglish = section === "关于我";
     utterance.lang = isEnglish ? "en-US" : "zh-CN";
     const voice = preferredVoice(utterance.lang);
     if (voice) utterance.voice = voice;
@@ -402,7 +403,7 @@ export function PortfolioWebsite() {
     return () => observer.disconnect();
   }, []);
   useEffect(() => {
-    const nodes = ["运营", "视频", "视觉", "其他"].map(id => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    const nodes = ["运营", "视频", "视觉", "其他", "关于我"].map(id => document.getElementById(id)).filter(Boolean) as HTMLElement[];
     if (!nodes.length) return;
     const observer = new IntersectionObserver(entries => {
       const visible = entries.filter(entry => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
