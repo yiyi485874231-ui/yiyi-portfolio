@@ -359,6 +359,9 @@ export function PortfolioWebsite() {
   const [mobileMenu, setMobileMenu] = useState(false);
   const [activeVideo, setActiveVideo] = useState(0);
   const videoDragStart = useRef<{x:number;y:number} | null>(null);
+  const videoWheelDelta = useRef(0);
+  const finishVideoGesture = (event: React.PointerEvent<HTMLElement>) => { if (!videoDragStart.current) return; const dx = event.clientX - videoDragStart.current.x; const dy = event.clientY - videoDragStart.current.y; const delta = Math.abs(dx) > Math.abs(dy) ? dx : dy; if (Math.abs(delta) >= 58) moveVideo(delta < 0 ? 1 : -1); videoDragStart.current = null; };
+  const handleVideoWheel = (event: React.WheelEvent<HTMLElement>) => { event.preventDefault(); const delta = Math.abs(event.deltaY) >= Math.abs(event.deltaX) ? event.deltaY : event.deltaX; videoWheelDelta.current += delta; if (Math.abs(videoWheelDelta.current) >= 55) { moveVideo(videoWheelDelta.current > 0 ? 1 : -1); videoWheelDelta.current = 0; } };
   const go = (id: string) => {
     setActive(id);
     setMobileMenu(false);
@@ -371,8 +374,7 @@ export function PortfolioWebsite() {
   const videoWorks = grouped("视频");
   const activeVideoWork = videoWorks.length ? videoWorks[activeVideo % videoWorks.length] : null;
   const moveVideo = (direction: number) => setActiveVideo(current => (current + direction + Math.max(videoWorks.length, 1)) % Math.max(videoWorks.length, 1));
-  const startVideoDrag = (event: React.PointerEvent<HTMLElement>) => { videoDragStart.current = { x: event.clientX, y: event.clientY }; event.currentTarget.setPointerCapture?.(event.pointerId); };
-  const continueVideoDrag = (event: React.PointerEvent<HTMLElement>) => { if (!videoDragStart.current) return; const dx = event.clientX - videoDragStart.current.x; const dy = event.clientY - videoDragStart.current.y; const delta = Math.abs(dx) > Math.abs(dy) ? dx : dy; if (Math.abs(delta) >= 24) { moveVideo(delta < 0 ? 1 : -1); videoDragStart.current = { x: event.clientX, y: event.clientY }; } };
+  const startVideoDrag = (event: React.PointerEvent<HTMLElement>) => { if (event.pointerType === "mouse") return; videoDragStart.current = { x: event.clientX, y: event.clientY }; };
   const card = (w: Work, i: number, stacked = false) => <button key={w.id} onClick={() => setSelected(w)} style={stacked ? { zIndex: i + 1 } : undefined} className={"text-left group bg-white border border-stone-200/80 p-5 md:p-6 flex flex-col min-h-[250px] hover:border-stone-400 hover:-translate-y-0.5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-500 " + (stacked ? "portfolio-stack-card" : "")}>
     <div className="flex justify-between gap-3 text-[11px] text-stone-400"><span>{w.type}</span><span>{String(i + 1).padStart(2, "0")}</span></div>
     <div className={"mt-5 mb-5 flex items-center justify-center relative overflow-hidden " + (toneClass[w.tone] || "bg-stone-100")} style={{ aspectRatio: w.coverRatio === "square" ? "1 / 1" : w.coverRatio === "portrait" ? "3 / 4" : w.coverRatio === "landscape" ? "4 / 3" : "16 / 7" }}>
@@ -548,8 +550,8 @@ export function PortfolioWebsite() {
           </div>
           <div className={c.id === "运营" ? "portfolio-operations-content" : ""}>
             {c.id === "视频" ? <div className="portfolio-visual-gallery">
-              {activeVideoWork && <div className="portfolio-visual-stage" onPointerDown={startVideoDrag} onPointerMove={continueVideoDrag} onPointerUp={() => { videoDragStart.current = null; }} onPointerCancel={() => { videoDragStart.current = null; }}>
-                <div className="portfolio-visual-orbit" aria-label="视频与 AI 创作圆弧导航">
+              {activeVideoWork && <div className="portfolio-visual-stage">
+                <div className="portfolio-visual-orbit" aria-label="视频与 AI 创作圆弧导航" onWheel={handleVideoWheel}>
                   <div className="portfolio-visual-ring portfolio-visual-ring-outer"></div>
                   <div className="portfolio-visual-ring portfolio-visual-ring-inner"></div>
                   <div className="portfolio-visual-orbit-core"><span>SELECTED</span><strong>{String(activeVideo + 1).padStart(2, "0")}</strong><span>VIDEO WORKS</span></div>
@@ -560,7 +562,7 @@ export function PortfolioWebsite() {
                     const x = Math.cos(radians) * 174;
                     const y = Math.sin(radians) * 174;
                     const isCurrent = index === activeVideo;
-                    return <button key={work.id} type="button"  className={"portfolio-visual-orbit-item" + (isCurrent ? " is-active" : "")} style={{ left: `calc(50% + ${x}px)`, top: `calc(50% + ${y}px)` }} aria-pressed={isCurrent}>
+                    return <button key={work.id} type="button"  className={"portfolio-visual-orbit-item" + (isCurrent ? " is-active" : "")} onClick={() => setActiveVideo(index)} style={{ left: `calc(50% + ${x}px)`, top: `calc(50% + ${y}px)` }} aria-pressed={isCurrent}>
                       <span>{work.title}</span>
                     </button>;
                   })}
@@ -574,11 +576,11 @@ export function PortfolioWebsite() {
                     </div>
                     <div className="portfolio-visual-cover-copy"><span>OPEN PROJECT ↗</span><h3>{activeVideoWork.title}</h3><p>{activeVideoWork.desc}</p></div>
                   </button>
-                  <div className="portfolio-visual-controls"><button type="button" onClick={() => moveVideo(-1)} aria-label="上一个作品">←</button><span>SCROLL / DRAG TO EXPLORE</span><button type="button" onClick={() => moveVideo(1)} aria-label="下一个作品">→</button></div>
+                  <div className="portfolio-visual-controls"><button type="button" onClick={() => moveVideo(-1)} aria-label="上一个作品">←</button><span>SCROLL / CLICK TO EXPLORE</span><button type="button" onClick={() => moveVideo(1)} aria-label="下一个作品">→</button></div>
                 </div>
               </div>}
               <div className="portfolio-visual-mobile">
-                {activeVideoWork && <div className="portfolio-visual-mobile-stage" onPointerDown={startVideoDrag} onPointerMove={continueVideoDrag} onPointerUp={() => { videoDragStart.current = null; }} onPointerCancel={() => { videoDragStart.current = null; }}>
+                {activeVideoWork && <div className="portfolio-visual-mobile-stage" onPointerDown={startVideoDrag} onPointerUp={finishVideoGesture} onPointerCancel={() => { videoDragStart.current = null; }}>
                   <div className="portfolio-visual-mobile-arc">
                     <div className="portfolio-visual-mobile-ring"></div>
                     {videoWorks.map((work, index) => {
@@ -589,7 +591,7 @@ export function PortfolioWebsite() {
                       const x = Math.cos(radians) * 150;
                       const y = Math.sin(radians) * 150;
                       const isCurrent = index === activeVideo;
-                      return <button key={work.id} type="button"  className={"portfolio-visual-mobile-item" + (isCurrent ? " is-active" : "")} style={{ left: `calc(100% + ${x}px)`, top: `calc(50% + ${y}px)` }} aria-pressed={isCurrent}><span>{work.title}</span></button>;
+                      return <button key={work.id} type="button"  className={"portfolio-visual-mobile-item" + (isCurrent ? " is-active" : "")} onClick={() => setActiveVideo(index)} style={{ left: `calc(100% + ${x}px)`, top: `calc(50% + ${y}px)` }} aria-pressed={isCurrent}><span>{work.title}</span></button>;
                     })}
                   </div>
                   <div className="portfolio-visual-mobile-center"><span>NOW SELECTED</span><strong>{activeVideoWork.title}</strong><small>{String(activeVideo + 1).padStart(2, "0")} / {String(videoWorks.length).padStart(2, "0")}</small></div>
@@ -598,7 +600,7 @@ export function PortfolioWebsite() {
                   <div className={"portfolio-visual-mobile-image " + (toneClass[activeVideoWork.tone] || "bg-stone-100")}>{activeVideoWork.coverImage ? <img src={activeVideoWork.coverImage} alt={activeVideoWork.title} /> : <span>{String(activeVideo + 1).padStart(2, "0")}</span>}</div>
                   <div className="pt-4"><span className="text-[10px] tracking-[.18em] text-stone-400">{activeVideoWork.type}</span><h3 className="mt-2 text-lg font-semibold">{activeVideoWork.title}</h3><p className="mt-2 text-sm leading-6 text-stone-500">{activeVideoWork.desc}</p><span className="mt-4 inline-block text-xs text-stone-500">查看作品详情 ↗</span></div>
                 </button>}
-                <div className="portfolio-visual-mobile-controls"><button type="button" onClick={() => moveVideo(-1)}>← 上一个</button><span>滑动弧线切换作品</span><button type="button" onClick={() => moveVideo(1)}>下一个 →</button></div>
+                <div className="portfolio-visual-mobile-controls"><button type="button" onClick={() => moveVideo(-1)}>← 上一个</button><span>拨动弧线切换作品</span><button type="button" onClick={() => moveVideo(1)}>下一个 →</button></div>
               </div>
             </div> : <div className={c.id === "运营" ? "portfolio-stack-grid" : "grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5"}>{grouped(c.id).map((w, j) => card(w, j, c.id === "运营"))}</div>}
             {c.id === "运营" && <div className="mt-8 text-xs text-stone-500 border-t border-stone-200 pt-5">说明：项目数据按现有作品集资料呈现；团队项目成果与个人职责已分开说明。</div>}
