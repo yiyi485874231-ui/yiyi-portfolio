@@ -1,8 +1,9 @@
 {
   "id": "o5",
   "title": "创意公众号作品",
+  "category": "其他",
   "type": "创意内容 / 公众号",
-  "desc": "以创意表达为核心的公众号内容作品。",
+  "desc": "以创意表达为核心的公众号内容作品",
   "role": "创意构思与内容制作实践。",
   "tags": [
     "创意策划",
@@ -12,6 +13,15 @@
     "展示创意主题、内容结构与最终呈现。"
   ],
   "tone": "rose",
-  "category": "其他",
+  "coverImage": "/uploads/covers/20261124-200652.jpg",
+  "coverFit": "cover",
+  "coverRatio": "wide",
+  "externalLinks": [
+    {
+      "type": "link",
+      "title": "2026年的夏天属于西财天府",
+      "url": "https://r.xiumius.cn/board/v5/71kXu/709963719"
+    }
+  ],
   "sortOrder": 210
 }
