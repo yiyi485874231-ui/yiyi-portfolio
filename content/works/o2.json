@@ -14,9 +14,8 @@
     "展示公众号运营流程、内容发布步骤与协作规范。"
   ],
   "tone": "sage",
-  "coverImage": "/uploads/covers/8.jpg",
+  "coverImage": "/uploads/covers/8-1.jpg",
   "coverFit": "cover",
   "coverRatio": "wide",
-  "sortOrder": 180,
-  "pdfUrl": "/秀米SOP.pdf"
+  "sortOrder": 180
 }
