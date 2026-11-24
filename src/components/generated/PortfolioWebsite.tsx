@@ -439,38 +439,85 @@ export function PortfolioWebsite() {
       </nav>}
     </header>
 
-    <section id="首页" className="scroll-mt-20 bg-[#09090b] text-white overflow-hidden relative">
-      <div className="mx-auto max-w-7xl px-5 md:px-10 pt-16 md:pt-24 pb-16 md:pb-24 grid md:grid-cols-[1.15fr_.85fr] gap-10 md:gap-14 items-center relative z-10">
-        <div>
-          <div className="inline-flex items-center gap-2 text-[11px] tracking-[.2em] text-stone-400 mb-7"><span className="w-7 h-px bg-[#b7ff4a]"></span> PERSONAL PORTFOLIO · 2026</div>
-          <h1 className="text-6xl sm:text-7xl md:text-8xl leading-[1.02] tracking-[-.065em] font-semibold">唐艺丹<span className="text-[#b7ff4a]">.</span></h1>
-          <p className="mt-5 text-lg md:text-xl tracking-wide text-stone-200">网络与新媒体专业 <span className="text-stone-500 text-xs tracking-[.18em] ml-2">NEW MEDIA & COMMUNICATION</span></p>
-          <div className="mt-6 flex flex-col sm:flex-row sm:flex-wrap gap-x-8 gap-y-3 text-sm text-stone-400">
-            <a href="tel:13982418101" className="inline-flex items-center gap-3 hover:text-[#b7ff4a] transition-colors">
-              <span className="text-[10px] tracking-[.18em] text-stone-500">TEL</span>
-              <span>13982418101</span>
-            </a>
-            <a href="mailto:485874231@qq.com" className="inline-flex items-center gap-3 hover:text-stone-900 transition-colors">
-              <span className="text-[10px] tracking-[.18em] text-stone-500">EMAIL</span>
-              <span>485874231@qq.com</span>
-            </a>
-          </div>
-          <p className="mt-7 max-w-xl text-sm md:text-base leading-8 text-stone-400">关注内容策划、新媒体运营、视频与 AI 创作及视觉设计。希望把观察、想法与创意，转化为真实、具体的内容和作品。</p>
-          <div className="mt-8 flex flex-wrap gap-2">
-            {["内容策划", "新媒体运营", "视频与 AI 创作", "视觉设计"].map(x => <span key={x} className="rounded-full border border-white/20 bg-white/[0.03] px-3.5 py-2 text-xs text-stone-300">{x}</span>)}
-          </div>
-          <div className="mt-10 flex flex-wrap gap-5 text-sm">
-            <button onClick={() => go("运营")} className="border-b border-[#b7ff4a] pb-2 font-medium text-[#b7ff4a] hover:text-white transition-colors">浏览全部作品 ↓</button>
-            <button onClick={() => go("关于我")} className="text-stone-400 pb-2 border-b border-white/20 hover:text-white transition-colors">了解我 →</button>
+    <section id="首页" className="scroll-mt-20 relative overflow-hidden bg-[#050506] text-[#f2f0eb]">
+      <style>{`
+        #首页 { min-height: 100svh; isolation: isolate; }
+        #首页 .book-stage { perspective: 1500px; }
+        #首页 .book-spread { position:relative; width:min(100%,1080px); min-height:590px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; transform:rotateX(5deg) rotateZ(-1deg); transform-style:preserve-3d; filter:drop-shadow(0 38px 45px rgba(0,0,0,.55)); }
+        #首页 .book-page { position:relative; min-height:590px; padding:clamp(28px,5vw,66px); overflow:visible; background:linear-gradient(145deg,#252528 0%,#171719 58%,#111113 100%); border:1px solid rgba(255,255,255,.14); }
+        #首页 .book-page-left { border-radius:5px 0 0 5px; transform:rotateY(2deg); transform-origin:right center; }
+        #首页 .book-page-right { border-radius:0 5px 5px 0; transform:rotateY(-2deg); transform-origin:left center; }
+        #首页 .book-page-left:after,#首页 .book-page-right:after { content:""; position:absolute; inset:0; pointer-events:none; background:linear-gradient(90deg,rgba(255,255,255,.055),transparent 18%,transparent 82%,rgba(0,0,0,.2)); }
+        #首页 .book-gutter { position:absolute; z-index:2; left:50%; top:0; bottom:0; width:26px; transform:translateX(-50%); background:linear-gradient(90deg,rgba(0,0,0,.32),rgba(255,255,255,.07) 48%,rgba(0,0,0,.42)); }
+        #首页 .book-line { position:relative; z-index:3; display:block; width:max-content; max-width:100%; margin:0 0 17px; transform-origin:center; will-change:transform; }
+        #首页 .book-line-small { color:#a6a5a3; font-size:11px; letter-spacing:.22em; }
+        #首页 .book-line-title { font-size:clamp(42px,7vw,88px); line-height:1; letter-spacing:-.08em; font-weight:500; color:#f4f2ed; }
+        #首页 .book-line-sub { font-size:clamp(15px,1.8vw,20px); letter-spacing:.08em; color:#dedbd5; }
+        #首页 .book-line-copy { max-width:390px; white-space:normal; font-size:14px; line-height:2.1; color:#aaa9a6; }
+        #首页 .book-line-rule { width:54px; height:1px; background:#777; margin:27px 0; }
+        #首页 .book-line-meta { font-size:12px; letter-spacing:.06em; color:#c1bfba; }
+        #首页 .book-page-number { position:absolute; bottom:28px; color:#777; font-size:10px; letter-spacing:.2em; }
+        #首页 .book-float-a { animation:bookFloatA linear both; animation-timeline:scroll(root block); animation-range:0px 430px; }
+        #首页 .book-float-b { animation:bookFloatB linear both; animation-timeline:scroll(root block); animation-range:0px 470px; }
+        #首页 .book-float-c { animation:bookFloatC linear both; animation-timeline:scroll(root block); animation-range:0px 390px; }
+        #首页 .book-float-d { animation:bookFloatD linear both; animation-timeline:scroll(root block); animation-range:0px 500px; }
+        #首页 .book-float-e { animation:bookFloatE linear both; animation-timeline:scroll(root block); animation-range:0px 450px; }
+        #首页 .book-float-f { animation:bookFloatF linear both; animation-timeline:scroll(root block); animation-range:0px 410px; }
+        @keyframes bookFloatA { to { transform:translate3d(-75px,-105px,100px) rotate(-13deg); opacity:.15; } }
+        @keyframes bookFloatB { to { transform:translate3d(90px,-125px,150px) rotate(10deg); opacity:.18; } }
+        @keyframes bookFloatC { to { transform:translate3d(-105px,-35px,80px) rotate(-8deg); opacity:.12; } }
+        @keyframes bookFloatD { to { transform:translate3d(95px,-70px,120px) rotate(12deg); opacity:.16; } }
+        @keyframes bookFloatE { to { transform:translate3d(-40px,-145px,170px) rotate(-6deg); opacity:.12; } }
+        @keyframes bookFloatF { to { transform:translate3d(55px,-95px,110px) rotate(7deg); opacity:.15; } }
+        @media (max-width:767px) {
+          #首页 { min-height:auto; }
+          #首页 .book-spread { min-height:500px; transform:rotateX(3deg); }
+          #首页 .book-page { min-height:500px; padding:22px 17px; }
+          #首页 .book-gutter { width:14px; }
+          #首页 .book-line-title { font-size:clamp(32px,9vw,48px); }
+          #首页 .book-line-copy { font-size:11px; line-height:1.9; }
+          #首页 .book-line-meta { font-size:10px; overflow-wrap:anywhere; }
+          #首页 .book-line-small { font-size:8px; letter-spacing:.12em; }
+          #首页 .book-line { margin-bottom:13px; }
+          #首页 .book-page-number { bottom:16px; font-size:8px; }
+          #首页 .book-float-a { animation-range:0px 300px; } #首页 .book-float-b { animation-range:0px 330px; }
+          #首页 .book-float-c { animation-range:0px 280px; } #首页 .book-float-d { animation-range:0px 350px; }
+          #首页 .book-float-e { animation-range:0px 310px; } #首页 .book-float-f { animation-range:0px 290px; }
+        }
+        @media (prefers-reduced-motion:reduce) { #首页 .book-line { animation:none !important; } }
+      `}</style>
+      <div className="mx-auto max-w-7xl px-4 md:px-10 pt-12 md:pt-16 pb-14 md:pb-20">
+        <div className="mb-8 md:mb-10 flex items-center justify-between gap-4 text-[10px] tracking-[.24em] text-stone-500"><span>PERSONAL PORTFOLIO · 2026</span><span>AN OPEN BOOK OF IDEAS</span></div>
+        <div className="book-stage">
+          <div className="book-spread">
+            <div className="book-page book-page-left">
+              <span className="book-line book-line-small book-float-a">CONTENTS / ABOUT THE AUTHOR</span>
+              <div className="book-line book-line-rule book-float-c"></div>
+              <h1 className="book-line book-line-title book-float-b">唐艺丹</h1>
+              <p className="book-line book-line-sub book-float-d">网络与新媒体专业</p>
+              <p className="book-line book-line-small book-float-e">NEW MEDIA & COMMUNICATION</p>
+              <div className="book-line book-line-rule book-float-f"></div>
+              <p className="book-line book-line-copy book-float-a">关注内容策划、新媒体运营、视频与 AI 创作及视觉设计。希望把观察、想法与创意，转化为真实、具体的内容和作品。</p>
+              <span className="book-page-number">01 — THE BEGINNING</span>
+            </div>
+            <div className="book-page book-page-right">
+              <span className="book-line book-line-small book-float-d">A COLLECTION OF PRACTICE</span>
+              <div className="book-line book-line-rule book-float-b"></div>
+              <p className="book-line book-line-sub book-float-e">把想法，变成作品</p>
+              <p className="book-line book-line-copy book-float-c">从内容观察与选题策划，到影像表达、AI 工具应用和视觉设计，记录每一次尝试与实践。</p>
+              <div className="book-line book-line-rule book-float-a"></div>
+              <p className="book-line book-line-meta book-float-f">TEL　13982418101</p>
+              <p className="book-line book-line-meta book-float-b">MAIL　485874231@qq.com</p>
+              <div className="book-line book-line-rule book-float-e"></div>
+              <p className="book-line book-line-small book-float-c">CONTENT · VIDEO · AI · VISUAL</p>
+              <span className="book-page-number right-7">02 — SELECTED WORKS</span>
+            </div>
+            <div className="book-gutter"></div>
           </div>
         </div>
-        <div className="relative">
-          <div className="aspect-[4/4] md:aspect-[4/5] max-h-[500px] bg-[#151518] relative overflow-hidden border border-white/10">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_25%,rgba(183,255,74,.22)_0%,transparent_34%),radial-gradient(ellipse_at_20%_80%,rgba(125,90,255,.24)_0%,transparent_42%),linear-gradient(145deg,#202024,#0b0b0d_62%,#17171c)]"></div>
-            <div className="absolute right-[12%] top-[12%] w-[62%] h-[76%] border border-white/20 rotate-[7deg]"></div><div className="absolute right-[19%] top-[20%] w-[48%] h-[62%] border border-[#b7ff4a]/50 -rotate-[5deg]"></div><div className="absolute right-[22%] top-[25%] w-[42%] h-[52%] bg-[#b7ff4a] mix-blend-screen opacity-10 blur-2xl"></div>
-            <div className="absolute left-[8%] bottom-[10%] text-[10px] tracking-[.3em] text-stone-400">SELECTED WORKS / 2026</div>
-            <div className="absolute right-[8%] bottom-[8%] text-6xl md:text-7xl font-light text-[#b7ff4a] tracking-[-.08em]">T.Y.D<span className="text-white">.</span></div>
-          </div>
+        <div className="mt-10 md:mt-12 flex flex-wrap items-center justify-between gap-5">
+          <div className="flex flex-wrap gap-x-6 gap-y-2 text-[11px] tracking-[.12em] text-stone-500"><span>CONTENT & OPERATIONS</span><span>VIDEO & AI</span><span>VISUAL DESIGN</span></div>
+          <button onClick={() => go("运营")} className="border-b border-stone-500 pb-2 text-xs tracking-[.12em] text-stone-200 hover:text-white hover:border-white transition-colors">EXPLORE THE WORKS　↓</button>
         </div>
       </div>
     </section>
