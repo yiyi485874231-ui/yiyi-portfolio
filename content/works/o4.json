@@ -27,7 +27,7 @@
       "size": "standard",
       "radius": 15,
       "image": "/uploads/gallery/10.jpg",
-      "imageWidth": 20,
+      "imageWidth": 100,
       "imageRatio": "original",
       "imageAlign": "center"
     },
@@ -41,7 +41,7 @@
       "size": "standard",
       "radius": 14,
       "image": "/uploads/gallery/11.jpg",
-      "imageWidth": 20,
+      "imageWidth": 100,
       "imageRatio": "original",
       "imageAlign": "center"
     }
