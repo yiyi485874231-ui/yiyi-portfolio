@@ -399,7 +399,7 @@ export function PortfolioWebsite() {
         const isImageOnly = Boolean(block.image && !hasText);
         const hasIndependentImageWidth = block.type === "canvas" && Boolean(block.image && block.imageWidth && block.imageWidth > 0) && !isPortfolioInfoImage;
         const widthClass = "w-full";
-        const moduleWidth = block.width === "third" ? "calc((100% - 2rem) / 3)" : block.width === "half" ? "calc((100% - 1rem) / 2)" : "100%";
+        const moduleWidth = block.width === "third" ? "calc(33.333333% - 0.666667rem)" : block.width === "half" ? "calc(50% - 0.5rem)" : "100%";
         const moduleSpacing = block.spacing === "compact" ? 8 : block.spacing === "spacious" ? 40 : 24;
         const sizePadding = block.size === "compact" ? 8 : block.size === "spacious" ? 24 : 16;
         const moduleLayoutStyle: React.CSSProperties = {
