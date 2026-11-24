@@ -441,7 +441,7 @@ export function PortfolioWebsite() {
     </div>;
   };
   return <main className="min-h-screen bg-[#faf9f6] text-stone-900 selection:bg-stone-200">
-    <style>{`@media (max-width:767px) { .portfolio-museum-canvas-image { width:100% !important; max-width:100% !important; flex:0 0 100% !important; margin-left:0 !important; margin-right:0 !important; } .portfolio-museum-canvas-image img { display:block; width:100% !important; max-width:100% !important; height:auto !important; object-fit:contain !important; } }
+    <style>{`@media (max-width:767px) { .portfolio-museum-canvas-image { width:calc(50% - 8px) !important; max-width:calc(50% - 8px) !important; flex:0 0 calc(50% - 8px) !important; margin:0 !important; padding:6px !important; } .portfolio-museum-canvas-image img { display:block; width:100% !important; max-width:100% !important; height:auto !important; object-fit:contain !important; } }
 @media (max-width:767px) { .portfolio-museum-gallery { grid-template-columns:minmax(0,1fr) !important; } .portfolio-museum-gallery-item { aspect-ratio:auto !important; } .portfolio-museum-gallery-item img { display:block; width:100% !important; height:auto !important; object-fit:contain !important; } }
 .portfolio-holo-gallery { width:100%; position:relative; }
 .portfolio-holo-stage { position:relative; height:490px; overflow:hidden; isolation:isolate; perspective:1200px; background:radial-gradient(ellipse at 50% 48%,rgba(226,220,208,.42),rgba(250,249,246,0) 64%); border:1px solid rgba(120,113,108,.12); border-radius:22px; }
