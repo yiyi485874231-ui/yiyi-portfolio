@@ -344,19 +344,29 @@ export function PortfolioWebsite() {
   const [guideSection, setGuideSection] = useState<string | null>(null);
   const spokenSections = useRef<Set<string>>(new Set());
   const guideCopy: Record<string, { title: string; speech: string }> = {
-    "运营": { title: "内容运营与策划", speech: "这里是内容运营与策划板块，展示了我在内容选题、文案创作、账号运营和数据复盘方面的实践。" },
-    "视频": { title: "视频与 AI 创作", speech: "接下来是视频与 AI 创作板块，收录了短视频、主题影像以及人工智能辅助创作的作品。" },
-    "视觉": { title: "视觉设计作品", speech: "这里是视觉设计作品，包含海报、标识和信息可视化等不同类型的视觉实践。" },
-    "其他": { title: "其他作品", speech: "最后是其他作品，展示交互项目、运营工具、采访写作和摄影摄像等跨媒介尝试。" }
+    "运营": { title: "内容运营与策划", speech: "这里是我的内容运营与策划作品。" },
+    "视频": { title: "视频与 AI 创作", speech: "这里收录了我的视频和 AI 创作。" },
+    "视觉": { title: "视觉设计作品", speech: "这里是我的视觉设计作品。" },
+    "其他": { title: "感谢你的浏览", speech: "Thank you for exploring my portfolio!" }
+  };
+  const preferredVoice = (lang: string) => {
+    const voices = window.speechSynthesis.getVoices();
+    const matching = voices.filter(voice => voice.lang.toLowerCase().startsWith(lang.toLowerCase()));
+    return matching.find(voice => /female|woman|女|xiaoxiao|xiaoyi|晓晓|晓伊/i.test(voice.name))
+      || matching.find(voice => /natural|neural|premium|online/i.test(voice.name))
+      || matching[0];
   };
   const speakGuide = (section: string) => {
     const copy = guideCopy[section];
     if (!copy || !("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) return;
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(copy.speech);
-    utterance.lang = "zh-CN";
-    utterance.rate = 0.96;
-    utterance.pitch = 1.02;
+    const isEnglish = section === "其他";
+    utterance.lang = isEnglish ? "en-US" : "zh-CN";
+    const voice = preferredVoice(utterance.lang);
+    if (voice) utterance.voice = voice;
+    utterance.rate = isEnglish ? 0.98 : 1.08;
+    utterance.pitch = 1.22;
     window.speechSynthesis.speak(utterance);
   };
   const [welcomeActive, setWelcomeActive] = useState(false);
@@ -399,14 +409,14 @@ export function PortfolioWebsite() {
       if (!visible) return;
       const section = visible.target.id;
       setGuideSection(section);
-      if (!spokenSections.current.has(section)) {
+      if (!spokenSections.current.has(section) && welcomeTriggered.current && !welcomeActive) {
         spokenSections.current.add(section);
         window.setTimeout(() => speakGuide(section), 650);
       }
     }, { threshold: [0.22, 0.4, 0.6], rootMargin: "-18% 0px -28% 0px" });
     nodes.forEach(node => observer.observe(node));
     return () => observer.disconnect();
-  }, []);
+  }, [welcomeActive]);
   useEffect(() => {
     if (!characterAction) return;
     const timer = window.setTimeout(() => setCharacterAction(null), 1700);
@@ -423,8 +433,10 @@ export function PortfolioWebsite() {
       window.speechSynthesis.cancel();
       const greeting = new SpeechSynthesisUtterance("Welcome!");
       greeting.lang = "en-US";
-      greeting.rate = 0.92;
-      greeting.pitch = 1.12;
+      const voice = preferredVoice("en-US");
+      if (voice) greeting.voice = voice;
+      greeting.rate = 0.98;
+      greeting.pitch = 1.24;
       window.speechSynthesis.speak(greeting);
     }
     return () => {
@@ -523,9 +535,17 @@ export function PortfolioWebsite() {
 .portfolio-guide-title { margin-top:5px; font-size:13px; font-weight:650; color:#292524; }
 .portfolio-guide-copy { margin-top:5px; font-size:11px; line-height:1.7; color:#78716c; }
 .portfolio-guide-replay { margin-top:8px; font-size:10px; color:#57534e; text-decoration:underline; text-underline-offset:3px; }
-.portfolio-guide-mascot { width:58px; height:76px; flex:none; color:#57534e; filter:drop-shadow(0 5px 8px rgba(35,31,26,.12)); animation:wireframe-hover 4.8s ease-in-out infinite; pointer-events:none; }
+.portfolio-guide-mascot { width:72px; height:94px; flex:none; color:#57534e; filter:drop-shadow(0 5px 8px rgba(35,31,26,.12)); animation:wireframe-hover 4.8s ease-in-out infinite; cursor:pointer; pointer-events:auto; }
+.portfolio-guide-mascot.guide-action-head { animation:guide-head 700ms ease; }
+.portfolio-guide-mascot.guide-action-hand { animation:guide-wave 850ms ease; }
+.portfolio-guide-mascot.guide-action-body { animation:guide-bounce 850ms ease; }
+.portfolio-guide-mascot.guide-action-feet { animation:guide-trip 950ms ease; }
+@keyframes guide-head { 0%,100% { transform:rotate(0); } 35% { transform:rotate(-18deg) translateY(-3px); } 70% { transform:rotate(12deg); } }
+@keyframes guide-wave { 0%,100% { transform:translateY(0) rotate(0); } 30% { transform:translateY(-8px) rotate(-13deg); } 65% { transform:translateY(-3px) rotate(12deg); } }
+@keyframes guide-bounce { 0%,100% { transform:translateY(0) scale(1); } 35% { transform:translateY(-12px) scale(1.04,.96); } 65% { transform:translateY(2px) scale(.97,1.04); } }
+@keyframes guide-trip { 0%,100% { transform:rotate(0) translateY(0); } 35% { transform:rotate(22deg) translateY(5px); } 65% { transform:rotate(-8deg) translateY(-3px); } }
 @keyframes guide-in { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-@media(max-width:767px) { .portfolio-guide { right:12px; bottom:calc(12px + env(safe-area-inset-bottom)); width:min(290px,calc(100vw - 24px)); gap:6px; } .portfolio-guide-card { padding:10px 12px; border-radius:13px 13px 4px 13px; } .portfolio-guide-title { font-size:12px; } .portfolio-guide-copy { font-size:10px; line-height:1.55; } .portfolio-guide-mascot { width:43px; height:62px; } }
+@media(max-width:767px) { .portfolio-guide { right:12px; bottom:calc(12px + env(safe-area-inset-bottom)); width:min(290px,calc(100vw - 24px)); gap:6px; } .portfolio-guide-card { padding:10px 12px; border-radius:13px 13px 4px 13px; } .portfolio-guide-title { font-size:12px; } .portfolio-guide-copy { font-size:10px; line-height:1.55; } .portfolio-guide-mascot { width:54px; height:74px; } }
 .portfolio-wireframe-frame { background:#e9e5dd; color:#55534f; isolation:isolate; }
 .portfolio-wireframe-backdrop { position:absolute; inset:0; background:radial-gradient(ellipse at 50% 42%,#faf8f3 0%,transparent 49%),linear-gradient(145deg,#d7d0c5,#eeebe5 55%,#c9c1b5); }
 .portfolio-wireframe-corner { position:absolute; width:62%; height:76%; top:12%; border:1px solid rgba(255,255,255,.66); pointer-events:none; }
@@ -946,7 +966,7 @@ export function PortfolioWebsite() {
         <p className="portfolio-guide-copy">{guideCopy[guideSection].speech}</p>
         <button type="button" className="portfolio-guide-replay" onClick={() => speakGuide(guideSection)}>再听一次 ↗</button>
       </div>
-      <svg className="portfolio-guide-mascot" viewBox="0 0 360 440" aria-hidden="true">
+      <svg className={`portfolio-guide-mascot ${characterAction ? (characterAction.part === "head" ? "guide-action-head" : characterAction.part === "left" || characterAction.part === "right" ? "guide-action-hand" : characterAction.part === "feet" ? "guide-action-feet" : "guide-action-body") : ""}`} viewBox="0 0 360 440" aria-hidden="true" onClick={() => playCharacterAction((["head", "left", "right", "body", "feet"] as const)[Math.floor(Math.random() * 5)])}>
         <g fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round">
           <ellipse cx="180" cy="92" rx="49" ry="53"/><ellipse cx="180" cy="92" rx="25" ry="53" opacity=".58"/><ellipse cx="180" cy="92" rx="49" ry="22" opacity=".72"/>
           <path d="M165 145 Q180 153 195 145 L194 165 Q180 174 166 165 Z"/>
