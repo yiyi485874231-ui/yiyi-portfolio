@@ -3,7 +3,7 @@
   "title": "公众号运营 SOP",
   "category": "其他",
   "type": "运营工具 / 流程梳理",
-  "desc": "围绕公众号运营流程整理的标准化操作文档。",
+  "desc": "围绕公众号运营流程整理的标准化操作文档",
   "role": "梳理内容运营环节与执行流程。",
   "tags": [
     "SOP",
@@ -17,6 +17,5 @@
   "coverImage": "/uploads/covers/8-1.jpg",
   "coverFit": "cover",
   "coverRatio": "wide",
-  "sortOrder": 180,
-  "pdfUrl": "/秀米SOP.pdf"
+  "sortOrder": 180
 }
