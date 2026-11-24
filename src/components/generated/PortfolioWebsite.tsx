@@ -374,7 +374,7 @@ export function PortfolioWebsite() {
   }, []);
   useEffect(() => {
     if (!welcomeActive) return;
-    const timer = window.setTimeout(() => setWelcomeActive(false), 2600);
+    const timer = window.setTimeout(() => setWelcomeActive(false), 3200);
     if ("speechSynthesis" in window && "SpeechSynthesisUtterance" in window) {
       window.speechSynthesis.cancel();
       const greeting = new SpeechSynthesisUtterance("Welcome!");
@@ -480,20 +480,15 @@ export function PortfolioWebsite() {
 .portfolio-wireframe-corner-b { left:12%; top:17%; width:54%; height:66%; border-color:rgba(90,86,79,.12); }
 .portfolio-wireframe-model { position:absolute; inset:14% 10% 6%; display:flex; align-items:center; justify-content:center; perspective:900px; transform-style:preserve-3d; animation:wireframe-hover 4.8s ease-in-out infinite; }
 .portfolio-wireframe-svg { width:min(100%,320px); height:92%; overflow:visible; filter:drop-shadow(0 8px 10px rgba(54,50,44,.08)); transform-style:preserve-3d; animation:wireframe-turn 18s linear infinite; }
-.portfolio-wireframe-frame.is-welcoming { overflow:visible; z-index:30; }
-.portfolio-wireframe-frame.is-welcoming .portfolio-wireframe-model { z-index:7; animation:wireframe-hover 4.8s ease-in-out infinite,wireframe-popout 2.6s cubic-bezier(.2,.8,.2,1) both; }
-.portfolio-wireframe-frame.is-welcoming .portfolio-wire-arms { transform-box:fill-box; transform-origin:50% 18%; animation:wireframe-wave .42s ease-in-out 4; }
-.portfolio-welcome-bubble { position:absolute; z-index:9; top:8%; right:7%; padding:11px 17px; border:1px solid rgba(91,86,78,.18); border-radius:18px 18px 5px 18px; background:rgba(255,255,255,.94); color:#514d47; font-size:14px; font-weight:600; letter-spacing:.08em; box-shadow:0 10px 28px rgba(48,43,36,.12); animation:welcome-bubble-in .32s cubic-bezier(.2,.8,.2,1) both; }
-.portfolio-welcome-tail { position:absolute; right:10px; bottom:-6px; width:10px; height:10px; background:#fff; border-right:1px solid rgba(91,86,78,.18); border-bottom:1px solid rgba(91,86,78,.18); transform:rotate(45deg); }
-@keyframes wireframe-popout { 0% { transform:translate3d(0,0,0) scale(1); } 17% { transform:translate3d(0,-48px,110px) scale(1.16); } 34%,68% { transform:translate3d(0,-30px,85px) scale(1.12); } 88% { transform:translate3d(0,-5px,20px) scale(1.02); } 100% { transform:translate3d(0,0,0) scale(1); } }
-@keyframes wireframe-wave { 0%,100% { transform:rotate(0deg); } 25% { transform:rotate(-9deg); } 50% { transform:rotate(8deg); } 75% { transform:rotate(-7deg); } }
-@keyframes welcome-bubble-in { from { opacity:0; transform:translateY(10px) scale(.92); } to { opacity:1; transform:translateY(0) scale(1); } }
-@media (max-width:767px) { .portfolio-welcome-bubble { top:7%; right:3%; padding:8px 12px; font-size:12px; } .portfolio-wireframe-frame.is-welcoming .portfolio-wireframe-model { animation:wireframe-hover 4.8s ease-in-out infinite,wireframe-popout-mobile 2.6s cubic-bezier(.2,.8,.2,1) both; } }
-@keyframes wireframe-popout-mobile { 0% { transform:translate3d(0,0,0) scale(1); } 17% { transform:translate3d(0,-30px,70px) scale(1.12); } 34%,68% { transform:translate3d(0,-20px,55px) scale(1.09); } 88% { transform:translate3d(0,-3px,15px) scale(1.02); } 100% { transform:translate3d(0,0,0) scale(1); } }
-.portfolio-wireframe-label { position:absolute; left:12%; right:12%; bottom:9%; display:flex; justify-content:space-between; gap:10px; color:rgba(65,62,57,.62); font-size:8px; letter-spacing:.2em; }
-@keyframes wireframe-turn { 0% { transform:rotateY(0deg) rotateZ(-3deg); } 50% { transform:rotateY(180deg) rotateZ(3deg); } 100% { transform:rotateY(360deg) rotateZ(-3deg); } }
-@keyframes wireframe-hover { 0%,100% { translate:0 0; } 50% { translate:0 -9px; } }
-@media (max-width:767px) { .portfolio-wireframe-model { inset:15% 7% 7%; } }
+.portfolio-wireframe-frame.is-welcoming .portfolio-wireframe-model { opacity:0; }
+.portfolio-welcome-overlay { position:fixed; inset:0; z-index:9998; display:flex; align-items:center; justify-content:center; pointer-events:none; background:rgba(32,29,25,.18); backdrop-filter:blur(2px); animation:welcome-screen-in .25s ease both; }
+.portfolio-welcome-stage { position:relative; width:min(86vw,520px); height:min(78vh,620px); display:flex; align-items:center; justify-content:center; }
+.portfolio-welcome-figure { width:100%; height:100%; overflow:visible; color:#f7f5f0; filter:drop-shadow(0 18px 28px rgba(0,0,0,.16)); animation:welcome-figure-pop 3.2s cubic-bezier(.2,.78,.2,1) both; }
+.portfolio-welcome-greeting { position:absolute; top:5%; right:0; padding:13px 22px; border-radius:20px 20px 6px 20px; background:#faf9f6; color:#514d47; font-size:clamp(18px,3vw,25px); font-weight:600; letter-spacing:.08em; box-shadow:0 12px 32px rgba(0,0,0,.15); animation:welcome-bubble-in .35s .28s both; }
+.portfolio-welcome-greeting:after { content:""; position:absolute; right:14px; bottom:-7px; width:13px; height:13px; background:#faf9f6; transform:rotate(45deg); }
+@keyframes welcome-screen-in { from { opacity:0; } to { opacity:1; } }
+@keyframes welcome-figure-pop { 0% { opacity:0; transform:translateY(90px) scale(.24) rotate(-8deg); } 22% { opacity:1; transform:translateY(-14px) scale(1.08) rotate(3deg); } 34%,78% { opacity:1; transform:translateY(0) scale(1) rotate(0); } 90% { opacity:1; transform:translateY(8px) scale(.98); } 100% { opacity:0; transform:translateY(45px) scale(.3); } }
+@media (max-width:767px) { .portfolio-welcome-stage { width:92vw; height:min(68vh,500px); } .portfolio-welcome-greeting { top:4%; right:2%; padding:10px 16px; font-size:18px; } }
 @media (prefers-reduced-motion:reduce) { .portfolio-wireframe-model,.portfolio-wireframe-svg { animation:none !important; } }
 @media (max-width:767px) { .portfolio-museum-canvas-image { width:calc(50% - 8px) !important; max-width:calc(50% - 8px) !important; flex:0 0 calc(50% - 8px) !important; margin:0 !important; padding:6px !important; } .portfolio-museum-canvas-image img { display:block; width:100% !important; max-width:100% !important; height:auto !important; object-fit:contain !important; } }
 @media (max-width:767px) { .portfolio-museum-gallery { grid-template-columns:minmax(0,1fr) !important; } .portfolio-museum-gallery-item { aspect-ratio:auto !important; } .portfolio-museum-gallery-item img { display:block; width:100% !important; height:auto !important; object-fit:contain !important; } }
@@ -681,7 +676,7 @@ export function PortfolioWebsite() {
                 </g>
               </svg>
             </div>
-            {welcomeActive && <div className="portfolio-welcome-bubble" role="status">Welcome!<span className="portfolio-welcome-tail"></span></div>}
+
             <div className="absolute left-[12%] bottom-[12%] text-[9px] md:text-[10px] tracking-[.3em] text-stone-600">SELECTED WORKS / 2026</div>
             <div className="absolute right-[12%] bottom-[12%] text-6xl md:text-7xl font-light text-white/80 tracking-[-.08em]">T.Y.D</div>
           </div>
@@ -857,5 +852,27 @@ export function PortfolioWebsite() {
         </div>
       </div>
     </div>, document.body)}
+    {welcomeActive && createPortal(
+      <div className="portfolio-welcome-overlay" role="status" aria-label="Welcome">
+        <div className="portfolio-welcome-stage">
+          <svg viewBox="0 0 360 440" role="img" aria-hidden="true" className="portfolio-welcome-figure">
+            <g fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
+              <g>
+                <ellipse cx="180" cy="92" rx="49" ry="53"/><ellipse cx="180" cy="92" rx="25" ry="53" opacity=".58"/><ellipse cx="180" cy="92" rx="49" ry="22" opacity=".72"/>
+                <path d="M134 82 Q180 48 226 82 M138 108 Q180 135 222 108 M147 57 Q180 79 213 57 M147 127 Q180 105 213 127 M158 43 Q180 34 202 43 M158 141 Q180 150 202 141 M180 38 Q174 23 185 16 Q195 11 198 23"/>
+                <circle cx="198" cy="22" r="3" fill="currentColor" stroke="none" opacity=".65"/>
+              </g>
+              <path d="M165 145 Q180 153 195 145 L194 165 Q180 174 166 165 Z"/>
+              <g><path d="M164 164 Q180 155 196 164 Q216 175 211 205 Q207 230 196 246 Q180 255 164 246 Q153 230 149 205 Q144 175 164 164 Z"/><path d="M180 163 Q169 188 180 250 Q191 188 180 163Z" opacity=".72"/><path d="M151 184 Q180 201 209 184 M150 207 Q180 224 210 207 M158 231 Q180 243 202 231 M161 169 Q180 184 199 169 M155 222 Q180 235 205 222" opacity=".62"/></g>
+              <g className="portfolio-wire-arms"><path d="M153 177 Q137 178 129 193 Q122 207 132 217 Q140 224 148 212 L158 198"/><path d="M207 177 Q223 178 231 193 Q238 207 228 217 Q220 224 212 212 L202 198"/><path d="M129 193 Q138 199 145 205 M231 193 Q222 199 215 205" opacity=".62"/></g>
+              <path d="M165 246 Q160 261 159 278 Q158 289 169 291 Q179 292 180 280 L180 254 M195 246 Q200 261 201 278 Q202 289 191 291 Q181 292 180 280 L180 254 M159 278 Q170 285 180 280 M201 278 Q190 285 180 280 M160 289 Q151 297 157 302 Q168 306 176 299 M200 289 Q209 297 203 302 Q192 306 184 299"/>
+              <g opacity=".42"><ellipse cx="180" cy="164" rx="18" ry="7"/><ellipse cx="180" cy="246" rx="17" ry="7"/><ellipse cx="139" cy="196" rx="8" ry="6"/><ellipse cx="221" cy="196" rx="8" ry="6"/><ellipse cx="160" cy="278" rx="7" ry="5"/><ellipse cx="200" cy="278" rx="7" ry="5"/></g>
+            </g>
+          </svg>
+          <div className="portfolio-welcome-greeting">Welcome!</div>
+        </div>
+      </div>,
+      document.body
+    )}
   </main>;
 }
