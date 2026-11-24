@@ -489,10 +489,9 @@ export function PortfolioWebsite() {
 .portfolio-wireframe-corner-a { right:12%; }
 .portfolio-wireframe-corner-b { left:12%; top:17%; width:54%; height:66%; border-color:rgba(90,86,79,.12); }
 .portfolio-wireframe-model { cursor:pointer; position:absolute; inset:14% 10% 6%; display:flex; align-items:center; justify-content:center; perspective:900px; transform-style:preserve-3d; animation:wireframe-hover 4.8s ease-in-out infinite; }
-.portfolio-wireframe-svg { width:min(100%,320px); height:92%; overflow:visible; filter:drop-shadow(0 8px 10px rgba(54,50,44,.08)); transform-style:preserve-3d; animation:wireframe-turn 18s linear infinite; }
+.portfolio-wireframe-svg { width:min(100%,320px); height:92%; overflow:visible; filter:drop-shadow(0 8px 10px rgba(54,50,44,.08)); transform-style:preserve-3d; animation:wireframe-sway 7s ease-in-out infinite alternate; transform-origin:50% 52%; }
 @keyframes wireframe-hover { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-9px); } }
-@keyframes wireframe-turn { from { transform:rotateY(0deg); } to { transform:rotateY(360deg); } }
-.portfolio-wireframe-svg { animation:wireframe-turn 18s linear infinite; }
+@keyframes wireframe-sway { 0% { transform:rotateY(-11deg) rotateX(2deg); } 50% { transform:rotateY(0deg) rotateX(-2deg); } 100% { transform:rotateY(11deg) rotateX(2deg); } }
 .portfolio-wireframe-model { animation:wireframe-hover 4.8s ease-in-out infinite; }
 .portfolio-wireframe-svg.is-action-head-0 .portfolio-wire-head { transform-box:fill-box; transform-origin:50% 100%; animation:character-head-left .8s ease-in-out; }
 .portfolio-wireframe-svg.is-action-head-1 .portfolio-wire-head { transform-box:fill-box; transform-origin:50% 100%; animation:character-head-right .8s ease-in-out; }
@@ -712,11 +711,11 @@ export function PortfolioWebsite() {
                   <path d="M180 8 V2 M180 316 V308" opacity=".3"/>
                   <circle cx="180" cy="2" r="2" fill="currentColor" stroke="none" opacity=".45"/>
                 </g>
-                  <g className="portfolio-character-hit-zones" fill="transparent" stroke="transparent" pointerEvents="all">
-                    <circle cx="180" cy="92" r="61" onClick={(event) => { event.stopPropagation(); playCharacterAction("head"); }} />
-                    <path d="M115 170 Q90 205 130 235" strokeWidth="25" onClick={(event) => { event.stopPropagation(); playCharacterAction("left"); }} />
-                    <path d="M245 170 Q270 205 230 235" strokeWidth="25" onClick={(event) => { event.stopPropagation(); playCharacterAction("right"); }} />
-                    <path d="M145 158 Q180 145 215 158 L220 250 Q180 270 140 250 Z" onClick={(event) => { event.stopPropagation(); playCharacterAction("body"); }} />
+                  <g className="portfolio-character-hit-zones" fill="rgba(0,0,0,0.001)" stroke="transparent" pointerEvents="all">
+                    <circle cx="180" cy="92" r="70" onClick={(event) => { event.stopPropagation(); playCharacterAction("head"); }} />
+                    <path d="M153 176 Q132 174 119 194 Q108 215 128 231 Q142 242 155 218 L166 195" strokeWidth="42" onClick={(event) => { event.stopPropagation(); playCharacterAction("left"); }} />
+                    <path d="M207 176 Q228 174 241 194 Q252 215 232 231 Q218 242 205 218 L194 195" strokeWidth="42" onClick={(event) => { event.stopPropagation(); playCharacterAction("right"); }} />
+                    <path d="M139 153 Q180 139 221 153 L229 253 Q180 279 131 253 Z" onClick={(event) => { event.stopPropagation(); playCharacterAction("body"); }} />
                   </g>
               </svg>
             </div>
