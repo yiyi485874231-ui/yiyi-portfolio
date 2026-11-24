@@ -589,7 +589,7 @@ export function PortfolioWebsite() {
                       const x = Math.cos(radians) * 150;
                       const y = Math.sin(radians) * 150;
                       const isCurrent = index === activeVideo;
-                      return <button key={work.id} type="button" onClick={() => setActiveVisual(index)} className={"portfolio-visual-mobile-item" + (isCurrent ? " is-active" : "")} style={{ left: `calc(100% + ${x}px)`, top: `calc(50% + ${y}px)` }} aria-pressed={isCurrent}><span>{work.title}</span></button>;
+                      return <button key={work.id} type="button"  className={"portfolio-visual-mobile-item" + (isCurrent ? " is-active" : "")} style={{ left: `calc(100% + ${x}px)`, top: `calc(50% + ${y}px)` }} aria-pressed={isCurrent}><span>{work.title}</span></button>;
                     })}
                   </div>
                   <div className="portfolio-visual-mobile-center"><span>NOW SELECTED</span><strong>{activeVideoWork.title}</strong><small>{String(activeVideo + 1).padStart(2, "0")} / {String(videoWorks.length).padStart(2, "0")}</small></div>
