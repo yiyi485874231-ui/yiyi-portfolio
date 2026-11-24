@@ -425,59 +425,59 @@ export function PortfolioWebsite() {
   };
   return <main className="min-h-screen bg-[#faf9f6] text-stone-900 selection:bg-stone-200">
     <style>{`@media (max-width: 767px) { .mt-mobile-stack-item { width: 100% !important; max-width: 100% !important; flex: 0 0 100% !important; } .personal-mobile-stack-item img { width: 100% !important; max-width: 100% !important; } }`}</style>
-    <header className="sticky top-0 z-30 border-b border-stone-200/80 bg-[#faf9f6]/95 backdrop-blur">
+    <header className="sticky top-0 z-30 border-b border-white/10 bg-[#09090b]/95 text-white backdrop-blur">
       <div className="mx-auto max-w-7xl px-5 md:px-10 h-[68px] flex items-center justify-between gap-4">
-        <button onClick={() => go("首页")} className="font-semibold tracking-[.14em] text-xs md:text-sm whitespace-nowrap">TANG YI DAN<span className="text-stone-400">.</span></button>
+        <button onClick={() => go("首页")} className="font-semibold tracking-[.14em] text-xs md:text-sm whitespace-nowrap">TANG YI DAN<span className="text-[#b7ff4a]">.</span></button>
         <nav className="hidden lg:flex items-center gap-6">
-          {["首页", "运营", "视频", "视觉", "其他", "关于我"].map(n => <button key={n} onClick={() => go(n)} className={"text-sm transition-colors " + (active === n ? "text-stone-950" : "text-stone-400 hover:text-stone-800")}>{n === "运营" ? "内容运营" : n === "视频" ? "视频与 AI" : n === "视觉" ? "视觉设计" : n === "其他" ? "其他作品" : n}</button>)}
+          {["首页", "运营", "视频", "视觉", "其他", "关于我"].map(n => <button key={n} onClick={() => go(n)} className={"text-sm transition-colors " + (active === n ? "text-white" : "text-stone-400 hover:text-white")}>{n === "运营" ? "内容运营" : n === "视频" ? "视频与 AI" : n === "视觉" ? "视觉设计" : n === "其他" ? "其他作品" : n}</button>)}
         </nav>
         <button onClick={() => setMobileMenu(!mobileMenu)} className="lg:hidden border border-stone-300 rounded-full px-3 py-2 text-xs">{mobileMenu ? "收起" : "菜单"}</button>
-        <button onClick={() => go("关于我")} className="hidden sm:block text-xs tracking-wider border border-stone-300 rounded-full px-4 py-2 hover:bg-stone-900 hover:text-white transition">联系 / 关于</button>
+        <button onClick={() => go("关于我")} className="hidden sm:block text-xs tracking-wider border border-white/25 rounded-full px-4 py-2 hover:bg-[#b7ff4a] hover:text-black hover:border-[#b7ff4a] transition">联系 / 关于</button>
       </div>
-      {mobileMenu && <nav className="lg:hidden border-t border-stone-200 px-5 py-3 grid grid-cols-3 gap-2 bg-[#faf9f6]">
-        {["首页", "运营", "视频", "视觉", "其他", "关于我"].map(n => <button key={n} onClick={() => go(n)} className="text-sm py-2 text-stone-600">{n === "运营" ? "内容运营" : n === "视频" ? "视频与AI" : n === "视觉" ? "视觉设计" : n === "其他" ? "其他作品" : n}</button>)}
+      {mobileMenu && <nav className="lg:hidden border-t border-white/10 px-5 py-3 grid grid-cols-3 gap-2 bg-[#09090b]">
+        {["首页", "运营", "视频", "视觉", "其他", "关于我"].map(n => <button key={n} onClick={() => go(n)} className="text-sm py-2 text-stone-300 hover:text-white">{n === "运营" ? "内容运营" : n === "视频" ? "视频与AI" : n === "视觉" ? "视觉设计" : n === "其他" ? "其他作品" : n}</button>)}
       </nav>}
     </header>
 
-    <section id="首页" className="scroll-mt-20">
-      <div className="mx-auto max-w-7xl px-5 md:px-10 pt-16 md:pt-24 pb-16 md:pb-24 grid md:grid-cols-[1.15fr_.85fr] gap-10 md:gap-14 items-center">
+    <section id="首页" className="scroll-mt-20 bg-[#09090b] text-white overflow-hidden relative">
+      <div className="mx-auto max-w-7xl px-5 md:px-10 pt-16 md:pt-24 pb-16 md:pb-24 grid md:grid-cols-[1.15fr_.85fr] gap-10 md:gap-14 items-center relative z-10">
         <div>
-          <div className="inline-flex items-center gap-2 text-[11px] tracking-[.2em] text-stone-500 mb-7"><span className="w-7 h-px bg-stone-400"></span> PERSONAL PORTFOLIO · 2026</div>
-          <h1 className="text-5xl sm:text-6xl md:text-7xl leading-[1.08] tracking-[-.055em] font-semibold">唐艺丹<span className="text-stone-400">.</span></h1>
-          <p className="mt-5 text-lg md:text-xl tracking-wide text-stone-700">网络与新媒体专业</p>
-          <div className="mt-6 flex flex-col sm:flex-row sm:flex-wrap gap-x-8 gap-y-3 text-sm text-stone-500">
-            <a href="tel:13982418101" className="inline-flex items-center gap-3 hover:text-stone-900 transition-colors">
-              <span className="text-[10px] tracking-[.18em] text-stone-400">TEL</span>
+          <div className="inline-flex items-center gap-2 text-[11px] tracking-[.2em] text-stone-400 mb-7"><span className="w-7 h-px bg-[#b7ff4a]"></span> PERSONAL PORTFOLIO · 2026</div>
+          <h1 className="text-6xl sm:text-7xl md:text-8xl leading-[1.02] tracking-[-.065em] font-semibold">唐艺丹<span className="text-[#b7ff4a]">.</span></h1>
+          <p className="mt-5 text-lg md:text-xl tracking-wide text-stone-200">网络与新媒体专业 <span className="text-stone-500 text-xs tracking-[.18em] ml-2">NEW MEDIA & COMMUNICATION</span></p>
+          <div className="mt-6 flex flex-col sm:flex-row sm:flex-wrap gap-x-8 gap-y-3 text-sm text-stone-400">
+            <a href="tel:13982418101" className="inline-flex items-center gap-3 hover:text-[#b7ff4a] transition-colors">
+              <span className="text-[10px] tracking-[.18em] text-stone-500">TEL</span>
               <span>13982418101</span>
             </a>
             <a href="mailto:485874231@qq.com" className="inline-flex items-center gap-3 hover:text-stone-900 transition-colors">
-              <span className="text-[10px] tracking-[.18em] text-stone-400">EMAIL</span>
+              <span className="text-[10px] tracking-[.18em] text-stone-500">EMAIL</span>
               <span>485874231@qq.com</span>
             </a>
           </div>
-          <p className="mt-7 max-w-xl text-sm md:text-base leading-8 text-stone-500">关注内容策划、新媒体运营、视频与 AI 创作及视觉设计。希望把观察、想法与创意，转化为真实、具体的内容和作品。</p>
+          <p className="mt-7 max-w-xl text-sm md:text-base leading-8 text-stone-400">关注内容策划、新媒体运营、视频与 AI 创作及视觉设计。希望把观察、想法与创意，转化为真实、具体的内容和作品。</p>
           <div className="mt-8 flex flex-wrap gap-2">
-            {["内容策划", "新媒体运营", "视频与 AI 创作", "视觉设计"].map(x => <span key={x} className="rounded-full border border-stone-300 px-3.5 py-2 text-xs text-stone-600">{x}</span>)}
+            {["内容策划", "新媒体运营", "视频与 AI 创作", "视觉设计"].map(x => <span key={x} className="rounded-full border border-white/20 bg-white/[0.03] px-3.5 py-2 text-xs text-stone-300">{x}</span>)}
           </div>
           <div className="mt-10 flex flex-wrap gap-5 text-sm">
-            <button onClick={() => go("运营")} className="border-b border-stone-900 pb-2 font-medium">浏览全部作品 ↓</button>
-            <button onClick={() => go("关于我")} className="text-stone-500 pb-2 border-b border-stone-300">了解我 →</button>
+            <button onClick={() => go("运营")} className="border-b border-[#b7ff4a] pb-2 font-medium text-[#b7ff4a] hover:text-white transition-colors">浏览全部作品 ↓</button>
+            <button onClick={() => go("关于我")} className="text-stone-400 pb-2 border-b border-white/20 hover:text-white transition-colors">了解我 →</button>
           </div>
         </div>
         <div className="relative">
-          <div className="aspect-[4/4] md:aspect-[4/5] max-h-[500px] bg-[#e9e5dd] relative overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_65%_35%,#f8f5ef_0%,transparent_45%),linear-gradient(145deg,#d7d0c5,#eeebe5_55%,#c9c1b5)]"></div>
-            <div className="absolute right-[12%] top-[12%] w-[62%] h-[76%] border border-white/60"></div>
-            <div className="absolute left-[12%] bottom-[12%] text-[10px] tracking-[.3em] text-stone-600">SELECTED WORKS / 2026</div>
-            <div className="absolute right-[12%] bottom-[12%] text-6xl md:text-7xl font-light text-white/80 tracking-[-.08em]">T.Y.D</div>
+          <div className="aspect-[4/4] md:aspect-[4/5] max-h-[500px] bg-[#151518] relative overflow-hidden border border-white/10">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_25%,rgba(183,255,74,.22)_0%,transparent_34%),radial-gradient(ellipse_at_20%_80%,rgba(125,90,255,.24)_0%,transparent_42%),linear-gradient(145deg,#202024,#0b0b0d_62%,#17171c)]"></div>
+            <div className="absolute right-[12%] top-[12%] w-[62%] h-[76%] border border-white/20 rotate-[7deg]"></div><div className="absolute right-[19%] top-[20%] w-[48%] h-[62%] border border-[#b7ff4a]/50 -rotate-[5deg]"></div><div className="absolute right-[22%] top-[25%] w-[42%] h-[52%] bg-[#b7ff4a] mix-blend-screen opacity-10 blur-2xl"></div>
+            <div className="absolute left-[8%] bottom-[10%] text-[10px] tracking-[.3em] text-stone-400">SELECTED WORKS / 2026</div>
+            <div className="absolute right-[8%] bottom-[8%] text-6xl md:text-7xl font-light text-[#b7ff4a] tracking-[-.08em]">T.Y.D<span className="text-white">.</span></div>
           </div>
         </div>
       </div>
     </section>
 
-    <section className="border-y border-stone-200 bg-white/60">
+    <section className="border-y border-white/10 bg-[#111114] text-white">
       <div className="mx-auto max-w-7xl px-5 md:px-10 py-7 md:py-8 grid grid-cols-2 md:grid-cols-4 gap-5">
-        {categories.map((c, i) => <button key={c.id} onClick={() => go(c.id)} className="text-left flex items-center gap-3 group"><span className="text-xs text-stone-400">0{i + 1}</span><span className="text-xs md:text-sm text-stone-700 group-hover:text-stone-950">{c.label}</span></button>)}
+        {categories.map((c, i) => <button key={c.id} onClick={() => go(c.id)} className="text-left flex items-center gap-3 group"><span className="text-xs text-[#b7ff4a]">0{i + 1}</span><span className="text-xs md:text-sm text-stone-300 group-hover:text-white transition-colors">{c.label}</span></button>)}
       </div>
     </section>
 
