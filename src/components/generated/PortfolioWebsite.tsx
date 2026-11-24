@@ -87,6 +87,7 @@ type Work = {
   videoFile?: string;
   pdfUrl?: string;
   externalUrl?: string;
+  externalLinks?: { type?: string; title?: string; url?: string }[];
   coverFit?: string;
   coverRatio?: string;
   galleryColumns?: string;
@@ -517,7 +518,8 @@ export function PortfolioWebsite() {
           {selected.galleryPosition !== "after" && renderCanvasBlocks("after_gallery")}
           {selected.videoFile && <video className="mt-5 w-full max-h-[560px] bg-black" src={selected.videoFile} controls playsInline />}
           {selected.pdfUrl && <section className="mt-7"><div className="mb-3 flex items-center justify-between gap-3"><h3 className="text-sm font-semibold">运营 SOP 文档预览</h3><a href={selected.pdfUrl} target="_blank" rel="noreferrer" className="text-xs text-stone-500 underline underline-offset-4">打开原 PDF ↗</a></div><PdfPreview url={selected.pdfUrl} title={selected.title + " PDF 在线阅读"} /><p className="mt-2 text-xs text-stone-400">可直接上下滑动阅读全部页面，无需下载文件</p></section>}
-          {selected.videoUrl ? <div className="mt-5 w-full overflow-hidden rounded-lg bg-black" style={{ aspectRatio: "16 / 9" }}><iframe src={selected.videoUrl + (selected.videoUrl.includes("?") ? "&" : "?") + "embed=1&layout=full"} title={selected.title + " 视频播放器"} className="block w-full h-full border-0" allow="autoplay *; fullscreen *; encrypted-media *; picture-in-picture *" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" /></div> : selected.externalUrl && <div className="mt-5 flex flex-wrap gap-3"><a href={selected.externalUrl} target="_blank" rel="noreferrer" className="text-sm underline underline-offset-4">打开作品链接 ↗</a></div>}
+          {selected.videoUrl && <div className="mt-5 w-full overflow-hidden rounded-lg bg-black" style={{ aspectRatio: "16 / 9" }}><iframe src={selected.videoUrl + (selected.videoUrl.includes("?") ? "&" : "?") + "embed=1&layout=full"} title={selected.title + " 视频播放器"} className="block w-full h-full border-0" allow="autoplay *; fullscreen *; encrypted-media *; picture-in-picture *" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" /></div>}
+          {((selected.externalLinks && selected.externalLinks.filter(link => link.url)) || (selected.externalUrl ? [{ title: "打开作品链接", url: selected.externalUrl }] : [])).length > 0 && <div className="mt-5 flex flex-wrap gap-4">{(selected.externalLinks && selected.externalLinks.filter(link => link.url).length ? selected.externalLinks.filter(link => link.url) : selected.externalUrl ? [{ title: "打开作品链接", url: selected.externalUrl }] : []).map((link, index) => <a key={index} href={link.url} target="_blank" rel="noreferrer" className="text-sm underline underline-offset-4">{link.title || "打开作品链接"} ↗</a>)}</div>}
           {renderCanvasBlocks("before_project_info")}
           {selected.id === "1688" ? <>
             <div className="mt-7 grid grid-cols-3 gap-2 md:gap-3">
