@@ -548,57 +548,57 @@ export function PortfolioWebsite() {
           </div>
           <div className={c.id === "运营" ? "portfolio-operations-content" : ""}>
             {c.id === "视频" ? <div className="portfolio-visual-gallery">
-              {activeVideoWork && <div className="portfolio-visual-stage" onWheel={event => { if (Math.abs(event.deltaY) > 8) moveVideo(event.deltaY > 0 ? 1 : -1); }} onPointerDown={event => { visualDragStart.current = event.clientX; }} onPointerUp={event => { if (visualDragStart.current !== null && Math.abs(event.clientX - visualDragStart.current) > 35) moveVisual(event.clientX < visualDragStart.current ? 1 : -1); visualDragStart.current = null; }} onPointerCancel={() => { visualDragStart.current = null; }}>
+              {activeVideoWork && <div className="portfolio-visual-stage" onPointerDown={startVideoDrag} onPointerMove={continueVideoDrag} onPointerUp={() => { videoDragStart.current = null; }} onPointerCancel={() => { videoDragStart.current = null; }}>
                 <div className="portfolio-visual-orbit" aria-label="视频与 AI 创作圆弧导航">
                   <div className="portfolio-visual-ring portfolio-visual-ring-outer"></div>
                   <div className="portfolio-visual-ring portfolio-visual-ring-inner"></div>
                   <div className="portfolio-visual-orbit-core"><span>SELECTED</span><strong>{String(activeVideo + 1).padStart(2, "0")}</strong><span>VIDEO WORKS</span></div>
                   {videoWorks.map((work, index) => {
-                    const count = visualWorks.length;
-                    const angle = -90 + ((index - activeVisual + count) % count) * (360 / count);
+                    const count = videoWorks.length;
+                    const angle = -90 + ((index - activeVideo + count) % count) * (360 / count);
                     const radians = angle * Math.PI / 180;
                     const x = Math.cos(radians) * 174;
                     const y = Math.sin(radians) * 174;
-                    const isCurrent = index === activeVisual;
+                    const isCurrent = index === activeVideo;
                     return <button key={work.id} type="button" onClick={() => setActiveVisual(index)} className={"portfolio-visual-orbit-item" + (isCurrent ? " is-active" : "")} style={{ left: `calc(50% + ${x}px)`, top: `calc(50% + ${y}px)` }} aria-pressed={isCurrent}>
                       <span>{work.title}</span>
                     </button>;
                   })}
                 </div>
-                <div className="portfolio-visual-feature" key={activeVisualWork.id}>
-                  <div className="portfolio-visual-feature-meta"><span>{activeVisualWork.type}</span><span>{String(activeVisual + 1).padStart(2, "0")} / {String(visualWorks.length).padStart(2, "0")}</span></div>
-                  <button type="button" onClick={() => setSelected(activeVisualWork)} className="portfolio-visual-cover group">
-                    <div className={"portfolio-visual-cover-image " + (toneClass[activeVisualWork.tone] || "bg-stone-100")}>
-                      {activeVisualWork.coverImage ? <img src={activeVisualWork.coverImage} alt={activeVisualWork.title} /> : <span>{String(activeVisual + 1).padStart(2, "0")}</span>}
+                <div className="portfolio-visual-feature" key={activeVideoWork.id}>
+                  <div className="portfolio-visual-feature-meta"><span>{activeVideoWork.type}</span><span>{String(activeVideo + 1).padStart(2, "0")} / {String(videoWorks.length).padStart(2, "0")}</span></div>
+                  <button type="button" onClick={() => setSelected(activeVideoWork)} className="portfolio-visual-cover group">
+                    <div className={"portfolio-visual-cover-image " + (toneClass[activeVideoWork.tone] || "bg-stone-100")}>
+                      {activeVideoWork.coverImage ? <img src={activeVideoWork.coverImage} alt={activeVideoWork.title} /> : <span>{String(activeVideo + 1).padStart(2, "0")}</span>}
                       <i></i>
                     </div>
-                    <div className="portfolio-visual-cover-copy"><span>OPEN PROJECT ↗</span><h3>{activeVisualWork.title}</h3><p>{activeVisualWork.desc}</p></div>
+                    <div className="portfolio-visual-cover-copy"><span>OPEN PROJECT ↗</span><h3>{activeVideoWork.title}</h3><p>{activeVideoWork.desc}</p></div>
                   </button>
-                  <div className="portfolio-visual-controls"><button type="button" onClick={() => moveVisual(-1)} aria-label="上一个作品">←</button><span>SCROLL / DRAG TO EXPLORE</span><button type="button" onClick={() => moveVisual(1)} aria-label="下一个作品">→</button></div>
+                  <div className="portfolio-visual-controls"><button type="button" onClick={() => moveVideo(-1)} aria-label="上一个作品">←</button><span>SCROLL / DRAG TO EXPLORE</span><button type="button" onClick={() => moveVideo(1)} aria-label="下一个作品">→</button></div>
                 </div>
               </div>}
               <div className="portfolio-visual-mobile">
-                {activeVisualWork && <div className="portfolio-visual-mobile-stage" onTouchStart={event => { visualDragStart.current = event.touches[0]?.clientY ?? null; }} onTouchEnd={event => { const end = event.changedTouches[0]?.clientY; if (visualDragStart.current !== null && end !== undefined && Math.abs(end - visualDragStart.current) > 28) moveVisual(end < visualDragStart.current ? 1 : -1); visualDragStart.current = null; }}>
+                {activeVideoWork && <div className="portfolio-visual-mobile-stage" onPointerDown={startVideoDrag} onPointerMove={continueVideoDrag} onPointerUp={() => { videoDragStart.current = null; }} onPointerCancel={() => { videoDragStart.current = null; }}>
                   <div className="portfolio-visual-mobile-arc">
                     <div className="portfolio-visual-mobile-ring"></div>
-                    {visualWorks.map((work, index) => {
-                      const count = visualWorks.length;
-                      const offset = index - activeVisual;
+                    {videoWorks.map((work, index) => {
+                      const count = videoWorks.length;
+                      const offset = index - activeVideo;
                       const angle = 180 + offset * Math.min(34, 170 / Math.max(count - 1, 1));
                       const radians = angle * Math.PI / 180;
                       const x = Math.cos(radians) * 150;
                       const y = Math.sin(radians) * 150;
-                      const isCurrent = index === activeVisual;
+                      const isCurrent = index === activeVideo;
                       return <button key={work.id} type="button" onClick={() => setActiveVisual(index)} className={"portfolio-visual-mobile-item" + (isCurrent ? " is-active" : "")} style={{ left: `calc(100% + ${x}px)`, top: `calc(50% + ${y}px)` }} aria-pressed={isCurrent}><span>{work.title}</span></button>;
                     })}
                   </div>
-                  <div className="portfolio-visual-mobile-center"><span>NOW SELECTED</span><strong>{activeVisualWork.title}</strong><small>{String(activeVisual + 1).padStart(2, "0")} / {String(visualWorks.length).padStart(2, "0")}</small></div>
+                  <div className="portfolio-visual-mobile-center"><span>NOW SELECTED</span><strong>{activeVideoWork.title}</strong><small>{String(activeVideo + 1).padStart(2, "0")} / {String(videoWorks.length).padStart(2, "0")}</small></div>
                 </div>}
-                {activeVisualWork && <button type="button" onClick={() => setSelected(activeVisualWork)} className="portfolio-visual-mobile-cover group">
-                  <div className={"portfolio-visual-mobile-image " + (toneClass[activeVisualWork.tone] || "bg-stone-100")}>{activeVisualWork.coverImage ? <img src={activeVisualWork.coverImage} alt={activeVisualWork.title} /> : <span>{String(activeVisual + 1).padStart(2, "0")}</span>}</div>
-                  <div className="pt-4"><span className="text-[10px] tracking-[.18em] text-stone-400">{activeVisualWork.type}</span><h3 className="mt-2 text-lg font-semibold">{activeVisualWork.title}</h3><p className="mt-2 text-sm leading-6 text-stone-500">{activeVisualWork.desc}</p><span className="mt-4 inline-block text-xs text-stone-500">查看作品详情 ↗</span></div>
+                {activeVideoWork && <button type="button" onClick={() => setSelected(activeVideoWork)} className="portfolio-visual-mobile-cover group">
+                  <div className={"portfolio-visual-mobile-image " + (toneClass[activeVideoWork.tone] || "bg-stone-100")}>{activeVideoWork.coverImage ? <img src={activeVideoWork.coverImage} alt={activeVideoWork.title} /> : <span>{String(activeVideo + 1).padStart(2, "0")}</span>}</div>
+                  <div className="pt-4"><span className="text-[10px] tracking-[.18em] text-stone-400">{activeVideoWork.type}</span><h3 className="mt-2 text-lg font-semibold">{activeVideoWork.title}</h3><p className="mt-2 text-sm leading-6 text-stone-500">{activeVideoWork.desc}</p><span className="mt-4 inline-block text-xs text-stone-500">查看作品详情 ↗</span></div>
                 </button>}
-                <div className="portfolio-visual-mobile-controls"><button type="button" onClick={() => moveVisual(-1)}>← 上一个</button><span>滑动弧线切换作品</span><button type="button" onClick={() => moveVisual(1)}>下一个 →</button></div>
+                <div className="portfolio-visual-mobile-controls"><button type="button" onClick={() => moveVideo(-1)}>← 上一个</button><span>滑动弧线切换作品</span><button type="button" onClick={() => moveVideo(1)}>下一个 →</button></div>
               </div>
             </div> : <div className={c.id === "运营" ? "portfolio-stack-grid" : "grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5"}>{grouped(c.id).map((w, j) => card(w, j, c.id === "运营"))}</div>}
             {c.id === "运营" && <div className="mt-8 text-xs text-stone-500 border-t border-stone-200 pt-5">说明：项目数据按现有作品集资料呈现；团队项目成果与个人职责已分开说明。</div>}
