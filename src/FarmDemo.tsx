@@ -201,19 +201,7 @@ export function FarmDemo() {
     <section className="farm-works" id="works">
       <div className="farm-section-head farm-reveal"><div><p className="farm-kicker">THE FARM NOTICE BOARD · 01</p><h2>内容策划与<span>运营</span></h2><p className="farm-section-desc">把每一次观察、表达与尝试，认真钉在这里</p></div><div className="farm-doodle-carrot">🥕<small>fresh ideas</small></div></div>
       <div className="farm-meadow-scene">
-      <div className="farm-board-wrap"><svg className="board-wood-art" viewBox="0 0 1200 820" preserveAspectRatio="none" aria-hidden="true">
-          <defs>
-            <linearGradient id="farmWood" x1="0" x2="1"><stop offset="0" stopColor="#98704d"/><stop offset=".18" stopColor="#c09a6d"/><stop offset=".48" stopColor="#aa8057"/><stop offset=".73" stopColor="#c29b70"/><stop offset="1" stopColor="#936b48"/></linearGradient>
-            <linearGradient id="farmWoodEdge" x1="0" x2="0" y1="0" y2="1"><stop stopColor="#e1c49a"/><stop offset=".12" stopColor="#8d6747"/><stop offset=".88" stopColor="#765337"/><stop offset="1" stopColor="#d0ae80"/></linearGradient>
-            <pattern id="farmWoodGrain" width="260" height="94" patternUnits="userSpaceOnUse"><path d="M0 20 Q60 9 120 21 T260 18 M-20 58 Q50 48 110 60 T280 56 M35 83 Q95 75 160 84" fill="none" stroke="#65482f" strokeOpacity=".22" strokeWidth="2"/><path d="M0 25 Q60 17 120 26 T260 23" fill="none" stroke="#f3d9ad" strokeOpacity=".22" strokeWidth="3"/></pattern>
-          </defs>
-          <path d="M24 18 Q28 8 50 12 L1150 12 Q1172 9 1177 27 L1172 565 Q1168 584 1150 582 L1040 578 L1029 808 Q1004 814 982 807 L971 582 L235 582 L224 808 Q200 816 177 807 L166 580 L48 583 Q24 580 24 559Z" fill="url(#farmWood)" stroke="#765338" strokeWidth="12" strokeLinejoin="round"/>
-          <path d="M24 18 Q28 8 50 12 L1150 12 Q1172 9 1177 27 L1172 565 Q1168 584 1150 582 L1040 578 L1029 808 Q1004 814 982 807 L971 582 L235 582 L224 808 Q200 816 177 807 L166 580 L48 583 Q24 580 24 559Z" fill="url(#farmWoodGrain)" opacity=".95"/>
-          <path d="M42 35 Q47 29 64 31 L1136 31 Q1153 29 1159 43 L1153 548 Q1151 558 1137 558 L1020 554 L1012 787 L994 790 L988 554 L211 554 L205 790 L188 790 L181 555 L62 558 Q43 556 42 540Z" fill="none" stroke="url(#farmWoodEdge)" strokeWidth="7" opacity=".9"/>
-          <g fill="none" stroke="#6f4d31" strokeOpacity=".45" strokeWidth="3" strokeLinecap="round"><path d="M85 105 Q260 91 430 107 T790 103 T1115 108 M70 520 Q260 505 440 520 T810 516 T1128 522"/><path d="M194 610 Q197 675 190 754 M207 617 Q210 692 202 775 M1000 608 Q1004 685 998 770 M1015 612 Q1019 692 1011 779"/><path d="M305 72 q30 -10 58 0 M780 480 q35 -12 68 0 M550 142 q24 -7 48 0"/></g>
-          <g fill="none" stroke="#e2c49a" strokeWidth="2" opacity=".65"><path d="M74 44 Q300 37 520 45 T970 44 T1130 46 M55 545 Q280 551 510 545 T950 548 T1140 543"/><path d="M184 620 Q185 690 181 780 M997 620 Q1000 690 994 780"/></g>
-          <g fill="#6f5035" opacity=".48"><ellipse cx="132" cy="170" rx="14" ry="5" transform="rotate(-8 132 170)"/><ellipse cx="1070" cy="405" rx="12" ry="4" transform="rotate(8 1070 405)"/><ellipse cx="720" cy="80" rx="9" ry="3"/></g>
-        </svg>
+      <div className="farm-board-wrap">
         <div className="board-topline"><span>PINNED WITH CARE</span><span>FIELD NOTES / 2026</span></div>
         <div className="farm-project-grid">
           {projects.filter(p => p.category === "内容策划与运营").map((project,index) => <button className={"farm-project farm-project-"+(index+1)} key={project.no} onClick={() => setOpenProject(project)}>
