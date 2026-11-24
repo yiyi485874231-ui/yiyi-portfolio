@@ -711,11 +711,11 @@ export function PortfolioWebsite() {
                   <path d="M180 8 V2 M180 316 V308" opacity=".3"/>
                   <circle cx="180" cy="2" r="2" fill="currentColor" stroke="none" opacity=".45"/>
                 </g>
-                  <g className="portfolio-character-hit-zones" fill="rgba(0,0,0,0.001)" stroke="transparent" pointerEvents="all">
-                    <circle cx="180" cy="92" r="70" onClick={(event) => { event.stopPropagation(); playCharacterAction("head"); }} />
-                    <path d="M153 176 Q132 174 119 194 Q108 215 128 231 Q142 242 155 218 L166 195" strokeWidth="42" onClick={(event) => { event.stopPropagation(); playCharacterAction("left"); }} />
-                    <path d="M207 176 Q228 174 241 194 Q252 215 232 231 Q218 242 205 218 L194 195" strokeWidth="42" onClick={(event) => { event.stopPropagation(); playCharacterAction("right"); }} />
-                    <path d="M139 153 Q180 139 221 153 L229 253 Q180 279 131 253 Z" onClick={(event) => { event.stopPropagation(); playCharacterAction("body"); }} />
+                  <g className="portfolio-character-hit-zones" pointerEvents="all">
+                    <circle cx="180" cy="92" r="70" fill="#000" fillOpacity=".025" onClick={(event) => { event.stopPropagation(); playCharacterAction("head"); }} />
+                    <path d="M151 165 Q130 166 116 188 Q101 213 119 237 Q135 253 153 229 L176 190 Z" fill="#000" fillOpacity=".025" onClick={(event) => { event.stopPropagation(); playCharacterAction("left"); }} />
+                    <path d="M209 165 Q230 166 244 188 Q259 213 241 237 Q225 253 207 229 L184 190 Z" fill="#000" fillOpacity=".025" onClick={(event) => { event.stopPropagation(); playCharacterAction("right"); }} />
+                    <path d="M132 151 Q180 133 228 151 L237 256 Q180 286 123 256 Z" fill="#000" fillOpacity=".025" onClick={(event) => { event.stopPropagation(); playCharacterAction("body"); }} />
                   </g>
               </svg>
             </div>
