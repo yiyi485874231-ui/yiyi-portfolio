@@ -397,7 +397,7 @@ export function PortfolioWebsite() {
       {blocks.map((block, index) => {
         const hasText = Boolean(block.title || block.body);
         const isImageOnly = Boolean(block.image && !hasText);
-        const hasIndependentImageWidth = block.type === "canvas" && Boolean(block.image && block.imageWidth && block.imageWidth > 0) && !isPortfolioInfoImage && selected.id !== "o4";
+        const hasIndependentImageWidth = block.type === "canvas" && Boolean(block.image && block.imageWidth && block.imageWidth > 0) && !isPortfolioInfoImage;
         const widthClass = "w-full";
         const moduleWidth = block.width === "third" ? "calc(33.333333% - 0.666667rem)" : block.width === "half" ? "calc(50% - 0.5rem)" : "100%";
         const moduleSpacing = block.spacing === "compact" ? 8 : block.spacing === "spacious" ? 40 : 24;
