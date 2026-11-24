@@ -398,7 +398,7 @@ export function PortfolioWebsite() {
         const hasText = Boolean(block.title || block.body);
         const isImageOnly = Boolean(block.image && !hasText);
         const hasIndependentImageWidth = block.type === "canvas" && Boolean(block.image && block.imageWidth && block.imageWidth > 0) && !isPortfolioInfoImage;
-        const widthClass = hasIndependentImageWidth ? "col-span-1 md:col-span-6" : block.width === "third" ? "col-span-1 md:col-span-2" : block.width === "half" ? "col-span-1 md:col-span-3" : "col-span-1 md:col-span-6";
+        const widthClass = block.width === "third" ? "col-span-1 md:col-span-2" : block.width === "half" ? "col-span-1 md:col-span-3" : "col-span-1 md:col-span-6";
         const moduleSpacing = block.spacing === "compact" ? 8 : block.spacing === "spacious" ? 40 : 24;
         const sizePadding = block.size === "compact" ? 8 : block.size === "spacious" ? 24 : 16;
         const blockStyle: React.CSSProperties = {
@@ -408,16 +408,13 @@ export function PortfolioWebsite() {
           backgroundColor: block.type === "color_panel" || block.type === "canvas" ? (block.background || "#F1E7DF") : undefined,
           marginTop: isPortfolioInfoImage ? 0 : moduleSpacing,
           justifySelf: block.moduleAlign === "left" ? "start" : block.moduleAlign === "right" ? "end" : "center",
-          ...(hasIndependentImageWidth ? {
-            width: Math.min(100, Math.max(10, block.imageWidth!)) + "%"
-          } : {})
         };
         if (block.type === "image") return block.image ? <div key={index} className={widthClass + " overflow-hidden"}><img src={block.image} alt={selected.title + " 展示图片"} className="block w-full h-auto object-contain" /></div> : null;
         if (block.type === "text") return <div key={index} style={blockStyle} className={widthClass + " bg-white border border-stone-200"}><h3 className="font-semibold text-base">{block.title}</h3><p className="mt-3 text-sm leading-7 text-stone-600 whitespace-pre-line">{block.body}</p></div>;
         const horizontal = (block.type === "color_panel" || block.type === "canvas") && block.layout === "horizontal" && hasText;
         const imageFirst = block.imagePosition !== "end";
         return <div key={index} style={blockStyle} className={widthClass + " " + (horizontal ? "flex flex-col md:flex-row" : "flex flex-col") + (isImageOnly ? "" : " gap-5") + " items-center overflow-hidden"}>
-          {block.image && <img src={block.image} alt={selected.title + " 模块图片"} className={horizontal ? "max-w-full h-auto object-contain" : "h-auto object-contain"} style={{ width: hasIndependentImageWidth ? "100%" : (horizontal ? "50%" : "100%"), aspectRatio: block.imageRatio === "square" ? "1 / 1" : block.imageRatio === "portrait" ? "3 / 4" : block.imageRatio === "landscape" ? "4 / 3" : undefined, objectFit: "contain", alignSelf: block.imageAlign === "left" ? "flex-start" : block.imageAlign === "right" ? "flex-end" : "center", order: horizontal && !imageFirst ? 2 : 1 }} />}
+          {block.image && <img src={block.image} alt={selected.title + " 模块图片"} className={horizontal ? "max-w-full h-auto object-contain" : "h-auto object-contain"} style={{ width: hasIndependentImageWidth ? Math.min(100, Math.max(10, block.imageWidth!)) + "%" : (horizontal ? "50%" : "100%"), aspectRatio: block.imageRatio === "square" ? "1 / 1" : block.imageRatio === "portrait" ? "3 / 4" : block.imageRatio === "landscape" ? "4 / 3" : undefined, objectFit: "contain", alignSelf: block.imageAlign === "left" ? "flex-start" : block.imageAlign === "right" ? "flex-end" : "center", order: horizontal && !imageFirst ? 2 : 1 }} />}
           {hasText && <div className="flex-1 min-w-0 w-full" style={{ order: horizontal && !imageFirst ? 1 : 2 }}>
             {block.title && <h3 className="text-lg font-semibold">{block.title}</h3>}
             {block.body && <p className="mt-3 text-sm leading-7 text-stone-700 whitespace-pre-line">{block.body}</p>}
@@ -555,7 +552,6 @@ export function PortfolioWebsite() {
             <div><h3 className="text-sm font-semibold">个人参与</h3><p className="mt-3 text-sm leading-7 text-stone-500">{selected.role}</p>{selected.result && <><h3 className="mt-6 text-sm font-semibold">项目结果</h3><p className="mt-2 text-sm leading-7 text-stone-700">{selected.result}</p></>}</div>
           </div>}
           {renderCanvasBlocks("after_gallery")}
-          {renderCanvasBlocks("before_project_info")}
           {selected.galleryPosition === "after" && renderCanvasBlocks("before_gallery")}
           {selected.galleryPosition === "after" && selected.gallery && selected.gallery.length > 0 && <div className="mt-5 grid gap-3" style={{ gridTemplateColumns: `repeat(${Math.min(3, Math.max(1, Number(selected.galleryColumns) || 2))}, minmax(0, 1fr))` }}>{selected.gallery.map((src, index) => <div key={index} className="bg-white overflow-hidden" style={{ aspectRatio: selected.galleryRatio === "square" ? "1 / 1" : selected.galleryRatio === "portrait" ? "3 / 4" : selected.galleryRatio === "landscape" ? "4 / 3" : undefined }}><img src={src} alt={selected.title + " " + (index + 1)} className={selected.galleryRatio === "original" || !selected.galleryRatio ? "w-full h-auto" : "w-full h-full"} style={{ objectFit: selected.galleryRatio === "original" || !selected.galleryRatio ? "contain" : selected.galleryFit === "cover" ? "cover" : "contain" }} /></div>)}</div>}
           {selected.galleryPosition === "after" && renderCanvasBlocks("after_gallery")}
