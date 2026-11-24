@@ -393,12 +393,13 @@ export function PortfolioWebsite() {
     const isSanxiangInfoImage = selected?.id === "sanxiang" && placement === "after_project_info";
     const isCollegeInfoImage = selected?.id === "college" && placement === "after_project_info";
     const isPortfolioInfoImage = isSanxiangInfoImage || isCollegeInfoImage;
-    return <div className={(isPortfolioInfoImage ? "mt-0" : "mt-6") + " grid grid-cols-1 md:grid-cols-6 gap-4"}>
+    return <div className={(isPortfolioInfoImage ? "mt-0" : "mt-6") + " flex flex-wrap items-start gap-4"}>
       {blocks.map((block, index) => {
         const hasText = Boolean(block.title || block.body);
         const isImageOnly = Boolean(block.image && !hasText);
         const hasIndependentImageWidth = block.type === "canvas" && Boolean(block.image && block.imageWidth && block.imageWidth > 0) && !isPortfolioInfoImage;
-        const widthClass = block.width === "third" ? "col-span-1 md:col-span-2" : block.width === "half" ? "col-span-1 md:col-span-3" : "col-span-1 md:col-span-6";
+        const widthClass = "w-full";
+        const moduleWidth = block.width === "third" ? "calc((100% - 2rem) / 3)" : block.width === "half" ? "calc((100% - 1rem) / 2)" : "100%";
         const moduleSpacing = block.spacing === "compact" ? 8 : block.spacing === "spacious" ? 40 : 24;
         const sizePadding = block.size === "compact" ? 8 : block.size === "spacious" ? 24 : 16;
         const blockStyle: React.CSSProperties = {
@@ -407,9 +408,11 @@ export function PortfolioWebsite() {
           borderRadius: block.type === "color_panel" || block.type === "canvas" ? (block.radius ?? 8) : 0,
           backgroundColor: block.type === "color_panel" || block.type === "canvas" ? (block.background || "#F1E7DF") : undefined,
           marginTop: isPortfolioInfoImage ? 0 : moduleSpacing,
-          justifySelf: block.moduleAlign === "left" ? "start" : block.moduleAlign === "right" ? "end" : "center",
+          marginLeft: block.moduleAlign === "right" ? "auto" : block.moduleAlign === "center" ? "auto" : 0,
+          marginRight: block.moduleAlign === "left" ? 0 : "auto",
+          width: moduleWidth,
         };
-        if (block.type === "image") return block.image ? <div key={index} className={widthClass + " overflow-hidden"}><img src={block.image} alt={selected.title + " 展示图片"} className="block w-full h-auto object-contain" /></div> : null;
+        if (block.type === "image") return block.image ? <div key={index} style={{ width: moduleWidth, marginLeft: block.moduleAlign === "right" || block.moduleAlign === "center" ? "auto" : 0, marginRight: block.moduleAlign === "left" ? 0 : "auto" }} className={widthClass + " overflow-hidden"}><img src={block.image} alt={selected.title + " 展示图片"} className="block w-full h-auto object-contain" /></div> : null;
         if (block.type === "text") return <div key={index} style={blockStyle} className={widthClass + " bg-white border border-stone-200"}><h3 className="font-semibold text-base">{block.title}</h3><p className="mt-3 text-sm leading-7 text-stone-600 whitespace-pre-line">{block.body}</p></div>;
         const horizontal = (block.type === "color_panel" || block.type === "canvas") && block.layout === "horizontal" && hasText;
         const imageFirst = block.imagePosition !== "end";
