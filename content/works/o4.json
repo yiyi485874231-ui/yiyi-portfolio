@@ -3,7 +3,7 @@
   "title": "美术馆公众号推文",
   "category": "其他",
   "type": "新媒体内容 / 推文",
-  "desc": "围绕美术馆内容进行的公众号推文创作。",
+  "desc": "围绕美术馆内容进行的公众号推文创作",
   "role": "参与推文内容策划与编辑。",
   "tags": [
     "公众号推文",
@@ -16,6 +16,47 @@
   "coverImage": "/uploads/covers/1-3.png",
   "coverFit": "cover",
   "coverRatio": "wide",
-  "externalUrl": "https://mp.weixin.qq.com/s/OXrzjp3TAMk9U42ScNBG0A",
+  "canvasBlocks": [
+    {
+      "type": "canvas",
+      "placement": "before_project_info",
+      "background": "#F5F0E6",
+      "width": "half",
+      "moduleAlign": "left",
+      "spacing": "standard",
+      "size": "standard",
+      "radius": 15,
+      "image": "/uploads/gallery/10.jpg",
+      "imageWidth": 50,
+      "imageRatio": "original",
+      "imageAlign": "left"
+    },
+    {
+      "type": "canvas",
+      "placement": "before_project_info",
+      "background": "#F5F0E6",
+      "width": "half",
+      "moduleAlign": "right",
+      "spacing": "standard",
+      "size": "standard",
+      "radius": 14,
+      "image": "/uploads/gallery/11.jpg",
+      "imageWidth": 50,
+      "imageRatio": "original",
+      "imageAlign": "right"
+    }
+  ],
+  "externalLinks": [
+    {
+      "type": "link",
+      "title": "追踪涂形之行｜穿梭在涂鸦的长河",
+      "url": "https://mp.weixin.qq.com/s/OXrzjp3TAMk9U42ScNBG0A"
+    },
+    {
+      "type": "link",
+      "title": "TCAG｜艺周资讯：涂鸦：亲爱的世界，我们重逢于圆满",
+      "url": "https://mp.weixin.qq.com/s/fzxU8vGPZwuWRLsI9Heyag"
+    }
+  ],
   "sortOrder": 200
 }
