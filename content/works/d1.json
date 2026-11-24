@@ -27,7 +27,7 @@
       "size": "standard",
       "radius": 16,
       "image": "/uploads/gallery/file-2.jpg",
-      "imageWidth": 80,
+      "imageWidth": 100,
       "imageRatio": "original",
       "imageAlign": "center"
     }
