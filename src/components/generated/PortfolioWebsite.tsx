@@ -441,7 +441,19 @@ export function PortfolioWebsite() {
     </div>;
   };
   return <main className="min-h-screen bg-[#faf9f6] text-stone-900 selection:bg-stone-200">
-    <style>{`@media (max-width:767px) { .portfolio-museum-canvas-image { width:calc(50% - 8px) !important; max-width:calc(50% - 8px) !important; flex:0 0 calc(50% - 8px) !important; margin:0 !important; padding:6px !important; } .portfolio-museum-canvas-image img { display:block; width:100% !important; max-width:100% !important; height:auto !important; object-fit:contain !important; } }
+    <style>{`.portfolio-wireframe-frame { background:#e9e5dd; color:#55534f; isolation:isolate; }
+.portfolio-wireframe-backdrop { position:absolute; inset:0; background:radial-gradient(ellipse at 50% 42%,#faf8f3 0%,transparent 49%),linear-gradient(145deg,#d7d0c5,#eeebe5 55%,#c9c1b5); }
+.portfolio-wireframe-corner { position:absolute; width:62%; height:76%; top:12%; border:1px solid rgba(255,255,255,.66); pointer-events:none; }
+.portfolio-wireframe-corner-a { right:12%; }
+.portfolio-wireframe-corner-b { left:12%; top:17%; width:54%; height:66%; border-color:rgba(90,86,79,.12); }
+.portfolio-wireframe-model { position:absolute; inset:8% 10% 12%; display:flex; align-items:center; justify-content:center; perspective:900px; transform-style:preserve-3d; animation:wireframe-hover 4.8s ease-in-out infinite; }
+.portfolio-wireframe-svg { width:min(100%,340px); height:100%; overflow:visible; filter:drop-shadow(0 8px 10px rgba(54,50,44,.08)); transform-style:preserve-3d; animation:wireframe-turn 14s linear infinite; }
+.portfolio-wireframe-label { position:absolute; left:12%; right:12%; bottom:9%; display:flex; justify-content:space-between; gap:10px; color:rgba(65,62,57,.62); font-size:8px; letter-spacing:.2em; }
+@keyframes wireframe-turn { 0% { transform:rotateY(0deg) rotateZ(-3deg); } 50% { transform:rotateY(180deg) rotateZ(3deg); } 100% { transform:rotateY(360deg) rotateZ(-3deg); } }
+@keyframes wireframe-hover { 0%,100% { translate:0 0; } 50% { translate:0 -9px; } }
+@media (max-width:767px) { .portfolio-wireframe-model { inset:9% 7% 13%; } .portfolio-wireframe-label { font-size:7px; letter-spacing:.14em; } }
+@media (prefers-reduced-motion:reduce) { .portfolio-wireframe-model,.portfolio-wireframe-svg { animation:none !important; } }
+@media (max-width:767px) { .portfolio-museum-canvas-image { width:calc(50% - 8px) !important; max-width:calc(50% - 8px) !important; flex:0 0 calc(50% - 8px) !important; margin:0 !important; padding:6px !important; } .portfolio-museum-canvas-image img { display:block; width:100% !important; max-width:100% !important; height:auto !important; object-fit:contain !important; } }
 @media (max-width:767px) { .portfolio-museum-gallery { grid-template-columns:minmax(0,1fr) !important; } .portfolio-museum-gallery-item { aspect-ratio:auto !important; } .portfolio-museum-gallery-item img { display:block; width:100% !important; height:auto !important; object-fit:contain !important; } }
 .portfolio-holo-gallery { width:100%; position:relative; }
 .portfolio-holo-stage { position:relative; height:490px; overflow:hidden; isolation:isolate; perspective:1200px; background:radial-gradient(ellipse at 50% 48%,rgba(226,220,208,.42),rgba(250,249,246,0) 64%); border:1px solid rgba(120,113,108,.12); border-radius:22px; }
@@ -580,11 +592,52 @@ export function PortfolioWebsite() {
           </div>
         </div>
         <div className="relative">
-          <div className="aspect-[4/4] md:aspect-[4/5] max-h-[500px] bg-[#e9e5dd] relative overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_65%_35%,#f8f5ef_0%,transparent_45%),linear-gradient(145deg,#d7d0c5,#eeebe5_55%,#c9c1b5)]"></div>
-            <div className="absolute right-[12%] top-[12%] w-[62%] h-[76%] border border-white/60"></div>
-            <div className="absolute left-[12%] bottom-[12%] text-[10px] tracking-[.3em] text-stone-600">SELECTED WORKS / 2026</div>
-            <div className="absolute right-[12%] bottom-[12%] text-6xl md:text-7xl font-light text-white/80 tracking-[-.08em]">T.Y.D</div>
+          <div className="portfolio-wireframe-frame aspect-[4/4] md:aspect-[4/5] max-h-[500px] relative overflow-hidden">
+            <div className="portfolio-wireframe-backdrop"></div>
+            <div className="portfolio-wireframe-corner portfolio-wireframe-corner-a"></div>
+            <div className="portfolio-wireframe-corner portfolio-wireframe-corner-b"></div>
+            <div className="portfolio-wireframe-model" aria-label="持续旋转的抽象线框小人">
+              <svg viewBox="0 0 360 440" role="img" aria-hidden="true" className="portfolio-wireframe-svg">
+                <g fill="none" stroke="currentColor" strokeWidth="1.15" strokeLinecap="round" strokeLinejoin="round">
+                  <g className="portfolio-wire-head">
+                    <ellipse cx="180" cy="69" rx="31" ry="39"/>
+                    <ellipse cx="180" cy="69" rx="14" ry="39" opacity=".65"/>
+                    <path d="M149 69 Q180 48 211 69 M152 51 Q180 82 208 51 M154 88 Q180 65 206 88" opacity=".75"/>
+                    <path d="M166 32 Q180 25 194 32 M166 106 Q180 114 194 106" opacity=".55"/>
+                  </g>
+                  <path d="M169 108 L169 128 M191 108 L191 128 M169 119 Q180 127 191 119" opacity=".8"/>
+                  <g className="portfolio-wire-torso">
+                    <path d="M169 126 Q180 120 191 126 L218 143 Q229 154 223 174 L207 231 Q180 246 153 231 L137 174 Q131 154 142 143 Z"/>
+                    <path d="M180 126 L180 240 M145 145 Q180 162 215 145 M137 166 Q180 190 223 166 M143 190 Q180 211 217 190 M151 216 Q180 231 209 216" opacity=".8"/>
+                    <path d="M153 133 Q180 151 207 133 M147 154 Q180 176 213 154 M145 179 Q180 202 215 179 M151 204 Q180 225 209 204" opacity=".55"/>
+                    <path d="M142 143 Q180 132 218 143 M137 174 Q180 189 223 174 M153 231 Q180 241 207 231" opacity=".65"/>
+                  </g>
+                  <g className="portfolio-wire-limbs">
+                    <path d="M143 145 Q123 151 112 173 L91 219 Q87 230 96 235 Q104 238 110 226 L137 184" />
+                    <path d="M217 145 Q237 151 248 173 L269 219 Q273 230 264 235 Q256 238 250 226 L223 184"/>
+                    <path d="M112 173 Q125 177 137 184 M248 173 Q235 177 223 184" opacity=".65"/>
+                    <path d="M96 235 L89 248 M264 235 L271 248" opacity=".8"/>
+                    <path d="M155 232 Q153 255 149 280 L143 329 Q141 342 151 344 Q161 345 163 332 L180 267" />
+                    <path d="M205 232 Q207 255 211 280 L217 329 Q219 342 209 344 Q199 345 197 332 L180 267" />
+                    <path d="M149 280 Q180 291 211 280 M145 310 Q180 322 215 310" opacity=".7"/>
+                    <path d="M143 329 Q152 337 163 332 M217 329 Q208 337 197 332" opacity=".75"/>
+                    <path d="M151 344 L145 358 Q157 365 171 358 M209 344 L215 358 Q203 365 189 358" />
+                  </g>
+                  <g opacity=".55">
+                    <ellipse cx="180" cy="143" rx="39" ry="12"/>
+                    <ellipse cx="180" cy="231" rx="27" ry="9"/>
+                    <ellipse cx="112" cy="174" rx="10" ry="8"/>
+                    <ellipse cx="248" cy="174" rx="10" ry="8"/>
+                    <ellipse cx="151" cy="280" rx="9" ry="6"/>
+                    <ellipse cx="209" cy="280" rx="9" ry="6"/>
+                  </g>
+                  <path d="M180 15 V4 M180 380 V367 M72 205 H59 M301 205 H288" opacity=".35"/>
+                  <circle cx="180" cy="4" r="2" fill="currentColor" stroke="none" opacity=".45"/>
+                  <circle cx="180" cy="367" r="2" fill="currentColor" stroke="none" opacity=".45"/>
+                </g>
+              </svg>
+            </div>
+            <div className="portfolio-wireframe-label"><span>FORM STUDY / 001</span><span>YIYI · 2026</span></div>
           </div>
         </div>
       </div>
