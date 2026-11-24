@@ -342,7 +342,7 @@ function SectionHeading({
 export function PortfolioWebsite() {
   const [active, setActive] = useState("首页");
   const [welcomeActive, setWelcomeActive] = useState(false);
-  const [characterAction, setCharacterAction] = useState<{ part: "head" | "left" | "right" | "body"; variant: number } | null>(null);
+  const [characterAction, setCharacterAction] = useState<{ part: "head" | "left" | "right" | "body" | "feet"; variant: number } | null>(null);
   const welcomeFrameRef = useRef<HTMLDivElement>(null);
   const welcomeTriggered = useRef(false);
   const editableWorkFiles = import.meta.glob("../../../content/works/*.json", {
@@ -375,10 +375,10 @@ export function PortfolioWebsite() {
   }, []);
   useEffect(() => {
     if (!characterAction) return;
-    const timer = window.setTimeout(() => setCharacterAction(null), 1050);
+    const timer = window.setTimeout(() => setCharacterAction(null), 1700);
     return () => window.clearTimeout(timer);
   }, [characterAction]);
-  const playCharacterAction = (part: "head" | "left" | "right" | "body") => {
+  const playCharacterAction = (part: "head" | "left" | "right" | "body" | "feet") => {
     const variant = Math.floor(Math.random() * 3);
     setCharacterAction({ part, variant });
   };
@@ -499,14 +499,14 @@ export function PortfolioWebsite() {
 .portfolio-wireframe-svg.is-action-left-0 .portfolio-wire-arm-left,.portfolio-wireframe-svg.is-action-right-0 .portfolio-wire-arm-right { transform-box:fill-box; transform-origin:50% 8%; animation:character-arm-wave .8s ease-in-out; }
 .portfolio-wireframe-svg.is-action-left-1 .portfolio-wire-arm-left,.portfolio-wireframe-svg.is-action-right-1 .portfolio-wire-arm-right { transform-box:fill-box; transform-origin:50% 8%; animation:character-arm-wave-alt .8s ease-in-out; }
 .portfolio-wireframe-svg.is-action-left-2 .portfolio-wire-arm-left,.portfolio-wireframe-svg.is-action-right-2 .portfolio-wire-arm-right { transform-box:fill-box; transform-origin:50% 8%; animation:character-arm-bounce .8s ease-in-out; }
-.portfolio-wireframe-svg.is-action-body-0 .portfolio-wire-torso,.portfolio-wireframe-svg.is-action-body-1 .portfolio-wire-torso,.portfolio-wireframe-svg.is-action-body-2 .portfolio-wire-torso { transform-box:fill-box; transform-origin:50% 0%; animation:character-body-bounce .8s ease-in-out; }
+.portfolio-wireframe-svg.is-action-body-0,.portfolio-wireframe-svg.is-action-body-1,.portfolio-wireframe-svg.is-action-body-2 { transform-origin:50% 82%; animation:character-fall-back 1.55s cubic-bezier(.2,.7,.25,1) both; }\n.portfolio-wireframe-svg.is-action-feet-0,.portfolio-wireframe-svg.is-action-feet-1,.portfolio-wireframe-svg.is-action-feet-2 { transform-origin:50% 82%; animation:character-trip-forward 1.55s cubic-bezier(.2,.7,.25,1) both; }
 @keyframes character-head-left { 0%,100% { transform:rotate(0); } 35% { transform:rotate(-18deg); } 70% { transform:rotate(8deg); } }
 @keyframes character-head-right { 0%,100% { transform:rotate(0); } 35% { transform:rotate(18deg); } 70% { transform:rotate(-8deg); } }
 @keyframes character-head-bob { 0%,100% { transform:translateY(0) rotate(0); } 35% { transform:translateY(7px) rotate(-5deg); } 70% { transform:translateY(-3px) rotate(5deg); } }
 @keyframes character-arm-wave { 0%,100% { transform:rotate(0); } 25% { transform:rotate(-32deg); } 50% { transform:rotate(18deg); } 75% { transform:rotate(-20deg); } }
 @keyframes character-arm-wave-alt { 0%,100% { transform:rotate(0); } 30% { transform:rotate(24deg); } 60% { transform:rotate(-26deg); } }
 @keyframes character-arm-bounce { 0%,100% { transform:translateY(0) rotate(0); } 40% { transform:translateY(-9px) rotate(-18deg); } 75% { transform:translateY(2px) rotate(8deg); } }
-@keyframes character-body-bounce { 0%,100% { transform:scale(1) translateY(0); } 35% { transform:scale(1.05,.96) translateY(-5px); } 70% { transform:scale(.98,1.03) translateY(2px); } }
+@keyframes character-fall-back { 0%,12% { transform:rotate(0) translate(0,0); } 38% { transform:rotate(72deg) translate(30px,18px); } 62% { transform:rotate(82deg) translate(38px,28px); } 78% { transform:rotate(82deg) translate(38px,28px); } 100% { transform:rotate(0) translate(0,0); } }\n@keyframes character-trip-forward { 0%,10% { transform:rotate(0) translate(0,0); } 34% { transform:rotate(-68deg) translate(-30px,18px); } 58% { transform:rotate(-78deg) translate(-38px,28px); } 76% { transform:rotate(-78deg) translate(-38px,28px); } 100% { transform:rotate(0) translate(0,0); } }
 .portfolio-wireframe-frame.is-welcoming .portfolio-wireframe-model { opacity:0; }
 .portfolio-welcome-overlay { position:fixed; inset:0; z-index:9998; display:flex; align-items:center; justify-content:center; pointer-events:none; background:rgba(32,29,25,.18); backdrop-filter:blur(2px); animation:welcome-screen-in .25s ease both; }
 .portfolio-welcome-stage { position:relative; width:min(86vw,520px); height:min(78vh,620px); display:flex; align-items:center; justify-content:center; }
@@ -666,7 +666,7 @@ export function PortfolioWebsite() {
           </div>
         </div>
         <div className="relative">
-          <div ref={welcomeFrameRef} className={"portfolio-wireframe-frame aspect-[4/4] md:aspect-[4/5] max-h-[500px] relative overflow-hidden" + (welcomeActive ? " is-welcoming" : "")} onClick={() => { if (!welcomeActive) setWelcomeActive(true); }}>
+          <div ref={welcomeFrameRef} className={"portfolio-wireframe-frame aspect-[4/4] md:aspect-[4/5] max-h-[500px] relative overflow-hidden" + (welcomeActive ? " is-welcoming" : "")}>
             <div className="portfolio-wireframe-backdrop"></div>
             <div className="portfolio-wireframe-corner portfolio-wireframe-corner-a"></div>
             <div className="portfolio-wireframe-corner portfolio-wireframe-corner-b"></div>
@@ -712,10 +712,11 @@ export function PortfolioWebsite() {
                   <circle cx="180" cy="2" r="2" fill="currentColor" stroke="none" opacity=".45"/>
                 </g>
                   <g className="portfolio-character-hit-zones" pointerEvents="all">
-                    <circle cx="180" cy="92" r="70" fill="#000" fillOpacity=".025" onClick={(event) => { event.stopPropagation(); playCharacterAction("head"); }} />
-                    <path d="M151 165 Q130 166 116 188 Q101 213 119 237 Q135 253 153 229 L176 190 Z" fill="#000" fillOpacity=".025" onClick={(event) => { event.stopPropagation(); playCharacterAction("left"); }} />
-                    <path d="M209 165 Q230 166 244 188 Q259 213 241 237 Q225 253 207 229 L184 190 Z" fill="#000" fillOpacity=".025" onClick={(event) => { event.stopPropagation(); playCharacterAction("right"); }} />
-                    <path d="M132 151 Q180 133 228 151 L237 256 Q180 286 123 256 Z" fill="#000" fillOpacity=".025" onClick={(event) => { event.stopPropagation(); playCharacterAction("body"); }} />
+                    <path d="M137 157 Q180 140 223 157 L220 249 Q180 269 140 249 Z" fill="#000" fillOpacity=".001" onClick={(event) => { event.stopPropagation(); playCharacterAction("body"); }} />
+                    <path d="M151 165 Q130 166 116 188 Q101 213 119 237 Q135 253 153 229 L176 190 Z" fill="#000" fillOpacity=".001" onClick={(event) => { event.stopPropagation(); playCharacterAction("left"); }} />
+                    <path d="M209 165 Q230 166 244 188 Q259 213 241 237 Q225 253 207 229 L184 190 Z" fill="#000" fillOpacity=".001" onClick={(event) => { event.stopPropagation(); playCharacterAction("right"); }} />
+                    <path d="M132 266 Q180 246 228 266 L230 310 Q180 328 130 310 Z" fill="#000" fillOpacity=".001" onClick={(event) => { event.stopPropagation(); playCharacterAction("feet"); }} />
+                    <circle cx="180" cy="92" r="70" fill="#000" fillOpacity=".001" onClick={(event) => { event.stopPropagation(); playCharacterAction("head"); }} />
                   </g>
               </svg>
             </div>
