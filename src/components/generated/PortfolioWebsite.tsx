@@ -560,7 +560,7 @@ export function PortfolioWebsite() {
                     const x = Math.cos(radians) * 174;
                     const y = Math.sin(radians) * 174;
                     const isCurrent = index === activeVideo;
-                    return <button key={work.id} type="button" onClick={() => setActiveVisual(index)} className={"portfolio-visual-orbit-item" + (isCurrent ? " is-active" : "")} style={{ left: `calc(50% + ${x}px)`, top: `calc(50% + ${y}px)` }} aria-pressed={isCurrent}>
+                    return <button key={work.id} type="button"  className={"portfolio-visual-orbit-item" + (isCurrent ? " is-active" : "")} style={{ left: `calc(50% + ${x}px)`, top: `calc(50% + ${y}px)` }} aria-pressed={isCurrent}>
                       <span>{work.title}</span>
                     </button>;
                   })}
