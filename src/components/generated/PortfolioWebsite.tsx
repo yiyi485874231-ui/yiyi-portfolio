@@ -366,7 +366,7 @@ export function PortfolioWebsite() {
     });
   };
   const grouped = (id: string) => works.filter(w => w.category ? w.category === id : id === "运营" ? ["mt", "1688", "sanxiang", "college", "personal"].includes(w.id) : id === "视频" ? w.id.startsWith("v") : id === "视觉" ? w.id.startsWith("d") : w.id.startsWith("o"));
-  const card = (w: Work, i: number) => <button key={w.id} onClick={() => setSelected(w)} className="text-left group bg-white border border-stone-200/80 p-5 md:p-6 flex flex-col min-h-[250px] hover:border-stone-400 hover:-translate-y-0.5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-500">
+  const card = (w: Work, i: number, stacked = false) => <button key={w.id} onClick={() => setSelected(w)} style={stacked ? { zIndex: i + 1 } : undefined} className={"text-left group bg-white border border-stone-200/80 p-5 md:p-6 flex flex-col min-h-[250px] hover:border-stone-400 hover:-translate-y-0.5 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-500 " + (stacked ? "portfolio-stack-card" : "")}>
     <div className="flex justify-between gap-3 text-[11px] text-stone-400"><span>{w.type}</span><span>{String(i + 1).padStart(2, "0")}</span></div>
     <div className={"mt-5 mb-5 flex items-center justify-center relative overflow-hidden " + (toneClass[w.tone] || "bg-stone-100")} style={{ aspectRatio: w.coverRatio === "square" ? "1 / 1" : w.coverRatio === "portrait" ? "3 / 4" : w.coverRatio === "landscape" ? "4 / 3" : "16 / 7" }}>
       {w.coverImage ? <img src={w.coverImage} alt={w.title} className="absolute inset-0 w-full h-full" style={{ objectFit: w.coverFit === "contain" ? "contain" : "cover" }} /> : <span className="text-4xl font-light text-stone-500/50">{String(i + 1).padStart(2, "0")}</span>}
@@ -424,7 +424,7 @@ export function PortfolioWebsite() {
     </div>;
   };
   return <main className="min-h-screen bg-[#faf9f6] text-stone-900 selection:bg-stone-200">
-    <style>{`@media (max-width: 767px) { .mt-mobile-stack-item { width: 100% !important; max-width: 100% !important; flex: 0 0 100% !important; } .personal-mobile-stack-item img { width: 100% !important; max-width: 100% !important; } }`}</style>
+    <style>{`@media (max-width: 767px) { .mt-mobile-stack-item { width: 100% !important; max-width: 100% !important; flex: 0 0 100% !important; } .personal-mobile-stack-item img { width: 100% !important; max-width: 100% !important; } .portfolio-stack-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; } .portfolio-stack-card { position: sticky; top: 84px; min-height: calc(100svh - 108px); background: #fff; box-shadow: 0 12px 32px rgba(35, 31, 26, .08); } .portfolio-stack-card:nth-child(1) { margin-top: 0; } } @media (min-width: 768px) { .portfolio-stack-card { position: relative; } } @media (prefers-reduced-motion: reduce) { .portfolio-stack-card { scroll-behavior: auto; transition: none !important; } }`}</style>
     <header className="sticky top-0 z-30 border-b border-stone-200/80 bg-[#faf9f6]/95 backdrop-blur">
       <div className="mx-auto max-w-7xl px-5 md:px-10 h-[68px] flex items-center justify-between gap-4">
         <button onClick={() => go("首页")} className="font-semibold tracking-[.14em] text-xs md:text-sm whitespace-nowrap">TANG YI DAN<span className="text-stone-400">.</span></button>
@@ -484,7 +484,7 @@ export function PortfolioWebsite() {
     {categories.map((c, i) => <section id={c.id} key={c.id} className={"scroll-mt-20 " + (c.id === "视频" || c.id === "其他" ? "bg-[#eeece7]" : "")}>
       <div className="mx-auto max-w-7xl px-5 md:px-10 py-16 md:py-24">
         <SectionHeading index={"0" + (i + 1)} title={c.label} en={c.en} intro={c.intro} />
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">{grouped(c.id).map((w, j) => card(w, j))}</div>
+        <div className={c.id === "运营" ? "portfolio-stack-grid grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5" : "grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5"}>{grouped(c.id).map((w, j) => card(w, j, c.id === "运营"))}</div>
         {c.id === "运营" && <div className="mt-8 text-xs text-stone-500 border-t border-stone-200 pt-5">说明：项目数据按现有作品集资料呈现；团队项目成果与个人职责已分开说明。</div>}
         {c.id === "视频" && <div className="mt-8 text-xs text-stone-500">视频封面与播放素材待替换为原始文件；点击卡片可先查看作品说明。</div>}
         {c.id === "视觉" && <div className="mt-8 text-xs text-stone-500">视觉作品支持按项目上传不同尺寸的原图，不强制统一图片比例。</div>}
