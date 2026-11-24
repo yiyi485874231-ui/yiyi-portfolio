@@ -14,7 +14,7 @@
   ],
   "tone": "lavender",
   "coverImage": "/uploads/covers/9-1.jpg",
-  "coverFit": "contain",
+  "coverFit": "cover",
   "coverRatio": "wide",
   "sortOrder": 190
 }
