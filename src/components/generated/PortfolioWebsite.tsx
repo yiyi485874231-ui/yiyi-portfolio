@@ -313,15 +313,6 @@ const fallbackWorks: Work[] = [{
   tags: ["摄影", "摄像", "影像表达"],
   detail: ["可按主题或项目展示精选照片与视频片段。"],
   tone: "sage"
-}, {
-  id: "o7",
-  title: "外观专利相关项目",
-  type: "综合实践 / 专利项目",
-  desc: "参与外观专利相关的项目实践与成果整理。",
-  role: "保留该项目展示入口，具体参与内容与成果材料以原始资料为准。",
-  tags: ["综合项目", "设计实践"],
-  detail: ["此处保留原作品集中的外观专利相关项目。", "后续根据原始资料补充项目背景、个人职责与专利/设计成果，不预设未确认的信息。"],
-  tone: "lavender"
 }];
 const toneClass: Record<string, string> = {
   peach: "bg-[#f0e5dc]",
