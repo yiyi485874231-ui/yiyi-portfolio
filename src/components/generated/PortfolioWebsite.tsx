@@ -552,8 +552,8 @@ export function PortfolioWebsite() {
             </div>
             <p className="mt-4 text-xs leading-6 text-stone-400">注：30名商家、14天及≥70%均为模拟方案设定，不代表真实招募、执行或业务结果。项目基于公开资料与个人体验，尚未进行真实用户访谈。</p>
           </> : (selected.id === "sanxiang" || selected.id === "college" || selected.id === "d5") ? <div className="mt-8 grid md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] gap-7 md:gap-9 items-start">
-            <div className="min-w-0">{renderCanvasBlocks("after_project_info")}</div>
-            <div className="min-w-0 space-y-7">
+            <div className={"min-w-0 " + (selected.id === "sanxiang" ? "order-2 md:order-1" : "")}>{renderCanvasBlocks("after_project_info")}</div>
+            <div className={"min-w-0 space-y-7 " + (selected.id === "sanxiang" ? "order-1 md:order-2" : "")}>
               <section><h3 className="text-sm font-semibold">项目 / 作品说明</h3><ul className="mt-3 space-y-2">{selected.detail.map((d, i) => <li key={i} className="text-sm leading-7 text-stone-500">· {d}</li>)}</ul></section>
               <section><h3 className="text-sm font-semibold">个人参与</h3><p className="mt-3 text-sm leading-7 text-stone-500">{selected.role}</p></section>
               {selected.result && <section><h3 className="text-sm font-semibold">项目结果</h3><p className="mt-3 text-sm leading-7 text-stone-700">{selected.result}</p></section>}
