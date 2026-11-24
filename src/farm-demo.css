@@ -757,3 +757,14 @@
  .farm-project-2,.farm-project-4{margin-top:-3px!important}
  .meadow-cow{top:17%!important;right:23%!important}
 }
+
+/* Integrated illustrated timber noticeboard: one SVG for plank and legs */
+.farm-board-wrap{position:relative!important;isolation:isolate!important;width:min(100%,1160px)!important;margin:0 auto!important;padding:48px 54px 42px!important;border:0!important;outline:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;clip-path:none!important}
+.board-wood-art{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:block!important;z-index:0!important;pointer-events:none!important;overflow:visible!important}
+.board-topline,.farm-project-grid,.board-bottomline{position:relative!important;z-index:1!important}
+.board-topline,.board-bottomline{color:#f1dfc2!important;text-shadow:0 1px 1px #5d432d70!important}
+.board-topline{padding:0 8px 12px!important}.board-bottomline{padding:14px 8px 0!important}
+.board-bottomline:before,.board-bottomline:after{display:none!important;content:none!important}
+.farm-project-grid{max-width:none!important}.farm-project{overflow:visible!important}.paper-pin{display:none!important}.paper-tape{z-index:9!important}
+.farm-meadow-floor{position:relative!important;z-index:2!important}
+@media(max-width:760px){.farm-board-wrap{width:100%!important;padding:38px 20px 34px!important}.farm-project-grid{padding:14px 9px 19px!important}}
