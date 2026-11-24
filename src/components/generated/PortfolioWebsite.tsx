@@ -635,7 +635,7 @@ export function PortfolioWebsite() {
                 </button>}
                 <div className="portfolio-visual-mobile-controls"><button type="button" onClick={() => moveVideo(-1)}>← 上一个</button><span>拨动弧线切换作品</span><button type="button" onClick={() => moveVideo(1)}>下一个 →</button></div>
               </div>
-            </div> : {c.id === "视觉" ? <div className="portfolio-design-gallery">
+            </div> : c.id === "视觉" ? <div className="portfolio-design-gallery">
                 <div className="portfolio-design-gallery-top"><span>SELECTED DESIGN WORKS</span><span>横向浏览 · 点击查看详情　↗</span></div>
                 <div className="portfolio-design-rail">
                   {grouped(c.id).map((w, j) => <button key={w.id} type="button" onClick={() => setSelected(w)} className={"portfolio-design-item portfolio-design-item-" + (j % 4)}>
@@ -647,7 +647,7 @@ export function PortfolioWebsite() {
                   </button>)}
                 </div>
                 <div className="portfolio-design-footer"><span>VISUAL ARCHIVE</span><span>← DRAG / SHIFT TO EXPLORE →</span></div>
-              </div> : <div className={c.id === "运营" ? "portfolio-stack-grid" : "grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5"}>{grouped(c.id).map((w, j) => card(w, j, c.id === "运营"))}</div>}}
+              </div> : <div className={c.id === "运营" ? "portfolio-stack-grid" : "grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5"}>{grouped(c.id).map((w, j) => card(w, j, c.id === "运营"))}</div>}
             {c.id === "运营" && <div className="mt-8 text-xs text-stone-500 border-t border-stone-200 pt-5">说明：项目数据按现有作品集资料呈现；团队项目成果与个人职责已分开说明。</div>}
             {c.id === "视频" && <div className="mt-8 text-xs text-stone-500">视频封面与播放素材待替换为原始文件；点击卡片可先查看作品说明。</div>}
           </div>
