@@ -29,7 +29,7 @@
       "image": "/uploads/gallery/10.jpg",
       "imageWidth": 50,
       "imageRatio": "original",
-      "imageAlign": "left"
+      "imageAlign": "center"
     },
     {
       "type": "canvas",
@@ -43,7 +43,7 @@
       "image": "/uploads/gallery/11.jpg",
       "imageWidth": 50,
       "imageRatio": "original",
-      "imageAlign": "right"
+      "imageAlign": "center"
     }
   ],
   "externalLinks": [
