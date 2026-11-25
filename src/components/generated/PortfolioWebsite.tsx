@@ -343,11 +343,11 @@ export function PortfolioWebsite() {
   const [active, setActive] = useState("首页");
   const [guideSection, setGuideSection] = useState<string | null>(null);
   const guideCopy: Record<string, { title: string; speech: string }> = {
-    "运营": { title: "内容运营与策划", speech: "这里是我的内容运营与策划作品。" },
-    "视频": { title: "视频与 AI 创作", speech: "这里收录了我的视频和 AI 创作。" },
-    "视觉": { title: "视觉设计作品", speech: "这里是我的视觉设计作品。" },
-    "其他": { title: "其他作品", speech: "这里还有一些不同类型的作品。" },
-    "关于我": { title: "感谢你的浏览", speech: "Thank you for exploring my portfolio!" }
+    "运营": { title: "内容运营与策划", speech: "上下滑动浏览作品卡片，点击卡片查看详情" },
+    "视频": { title: "视频与 AI 创作", speech: "拨动弧线切换作品，点击卡片查看作品" },
+    "视觉": { title: "视觉设计作品", speech: "上下滑动浏览作品卡片，点击卡片查看详情" },
+    "其他": { title: "其他作品", speech: "左右滑动切换作品，点击中央作品查看详情" },
+    "关于我": { title: "感谢你的浏览", speech: "" }
   };
   const [welcomeActive, setWelcomeActive] = useState(false);
   const [characterAction, setCharacterAction] = useState<{ part: "head" | "left" | "right" | "body" | "feet"; variant: number } | null>(null);
@@ -937,9 +937,9 @@ export function PortfolioWebsite() {
     </div>, document.body)}
     {guideSection && guideCopy[guideSection] && <aside className="portfolio-guide" aria-live="polite">
       <div className="portfolio-guide-card">
-        <div className="portfolio-guide-kicker">PORTFOLIO GUIDE / 随行讲解</div>
+        <div className="portfolio-guide-kicker">随行小我 / PORTFOLIO COMPANION</div>
         <div className="portfolio-guide-title">{guideCopy[guideSection].title}</div>
-        <p className="portfolio-guide-copy">{guideCopy[guideSection].speech}</p>
+        {guideCopy[guideSection].speech && <p className="portfolio-guide-copy">{guideCopy[guideSection].speech}</p>}
       </div>
       <svg className={`portfolio-guide-mascot ${guideSection === "关于我" ? "portfolio-guide-mascot-on-dark" : ""} ${characterAction ? (characterAction.part === "head" ? "guide-action-head" : characterAction.part === "left" || characterAction.part === "right" ? "guide-action-hand" : characterAction.part === "feet" ? "guide-action-feet" : "guide-action-body") : ""}`} viewBox="0 0 360 440" aria-hidden="true" onClick={() => playCharacterAction((["head", "left", "right", "body", "feet"] as const)[Math.floor(Math.random() * 5)])}>
         <g fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round">
