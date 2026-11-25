@@ -342,12 +342,12 @@ function SectionHeading({
 export function PortfolioWebsite() {
   const [active, setActive] = useState("首页");
   const [guideSection, setGuideSection] = useState<string | null>(null);
-  const guideCopy: Record<string, { title: string; speech: string }> = {
-    "运营": { title: "内容运营与策划", speech: "上下滑动浏览作品卡片，点击卡片查看详情" },
-    "视频": { title: "视频与 AI 创作", speech: "拨动弧线切换作品，点击卡片查看作品" },
-    "视觉": { title: "视觉设计作品", speech: "上下滑动浏览作品卡片，点击卡片查看详情" },
-    "其他": { title: "其他作品", speech: "左右滑动切换作品，点击中央作品查看详情" },
-    "关于我": { title: "感谢你的浏览", speech: "" }
+  const guideCopy: Record<string, { title: string; speech: string; desktopSpeech: string }> = {
+    "运营": { title: "内容运营与策划", speech: "上下滑动浏览作品卡片，点击卡片查看详情", desktopSpeech: "浏览作品卡片，点击卡片查看项目详情" },
+    "视频": { title: "视频与 AI 创作", speech: "拨动弧线切换作品，点击卡片查看作品", desktopSpeech: "滚动页面或点击两侧箭头切换作品，点击封面查看详情" },
+    "视觉": { title: "视觉设计作品", speech: "上下滑动浏览作品卡片，点击卡片查看详情", desktopSpeech: "滚动浏览作品卡片，点击卡片查看设计详情" },
+    "其他": { title: "其他作品", speech: "左右滑动切换作品，点击中央作品查看详情", desktopSpeech: "点击两侧卡片或左右箭头切换，点击中央作品查看详情" },
+    "关于我": { title: "感谢你的浏览", speech: "", desktopSpeech: "" }
   };
   const [welcomeActive, setWelcomeActive] = useState(false);
   const [characterAction, setCharacterAction] = useState<{ part: "head" | "left" | "right" | "body" | "feet"; variant: number } | null>(null);
@@ -510,6 +510,8 @@ export function PortfolioWebsite() {
 .portfolio-guide-kicker { color:#a8a29e; font-size:9px; letter-spacing:.16em; }
 .portfolio-guide-title { margin-top:5px; font-size:13px; font-weight:650; color:#292524; }
 .portfolio-guide-copy { margin-top:5px; font-size:11px; line-height:1.7; color:#78716c; }
+.portfolio-guide-copy-mobile { display:none; }
+.portfolio-guide-copy-desktop { display:block; }
 .portfolio-guide-mascot { position:relative; top:43px; width:96px; height:126px; flex:none; color:#57534e; filter:drop-shadow(0 5px 8px rgba(35,31,26,.12)); animation:wireframe-hover 4.8s ease-in-out infinite; cursor:pointer; pointer-events:auto; }
 .portfolio-guide-mascot.portfolio-guide-mascot-on-dark { color:#f5f5f4; filter:drop-shadow(0 0 3px rgba(255,255,255,.28)) drop-shadow(0 5px 10px rgba(0,0,0,.35)); }
 .portfolio-guide-mascot.guide-action-head { animation:guide-head 700ms ease; }
@@ -521,7 +523,7 @@ export function PortfolioWebsite() {
 @keyframes guide-bounce { 0%,100% { transform:translateY(0) scale(1); } 35% { transform:translateY(-12px) scale(1.04,.96); } 65% { transform:translateY(2px) scale(.97,1.04); } }
 @keyframes guide-trip { 0%,100% { transform:rotate(0) translateY(0); } 35% { transform:rotate(22deg) translateY(5px); } 65% { transform:rotate(-8deg) translateY(-3px); } }
 @keyframes guide-in { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-@media(max-width:767px) { .portfolio-guide-card { bottom:auto; } .portfolio-guide-card::after { display:none; } .portfolio-guide { right:12px; bottom:calc(12px + env(safe-area-inset-bottom)); width:min(350px,calc(100vw - 24px)); gap:8px; } .portfolio-guide-card { padding:10px 12px; border-radius:13px 13px 4px 13px; } .portfolio-guide-title { font-size:12px; } .portfolio-guide-copy { font-size:10px; line-height:1.55; } .portfolio-guide-mascot { top:0; width:72px; height:98px; } }
+@media(max-width:767px) { .portfolio-guide-card { bottom:auto; } .portfolio-guide-card::after { display:none; } .portfolio-guide { right:12px; bottom:calc(12px + env(safe-area-inset-bottom)); width:min(350px,calc(100vw - 24px)); gap:8px; } .portfolio-guide-card { padding:10px 12px; border-radius:13px 13px 4px 13px; } .portfolio-guide-title { font-size:12px; } .portfolio-guide-copy { font-size:10px; line-height:1.55; } .portfolio-guide-copy-mobile { display:block; } .portfolio-guide-copy-desktop { display:none; } .portfolio-guide-mascot { top:0; width:72px; height:98px; } }
 .portfolio-wireframe-frame { background:#e9e5dd; color:#55534f; isolation:isolate; }
 .portfolio-wireframe-backdrop { position:absolute; inset:0; background:radial-gradient(ellipse at 50% 42%,#faf8f3 0%,transparent 49%),linear-gradient(145deg,#d7d0c5,#eeebe5 55%,#c9c1b5); }
 .portfolio-wireframe-corner { position:absolute; width:62%; height:76%; top:12%; border:1px solid rgba(255,255,255,.66); pointer-events:none; }
@@ -939,7 +941,8 @@ export function PortfolioWebsite() {
       <div className="portfolio-guide-card">
         <div className="portfolio-guide-kicker">PORTFOLIO COMPANION / 随行小我</div>
         <div className="portfolio-guide-title">{guideCopy[guideSection].title}</div>
-        {guideCopy[guideSection].speech && <p className="portfolio-guide-copy">{guideCopy[guideSection].speech}</p>}
+        {guideCopy[guideSection].speech && <p className="portfolio-guide-copy portfolio-guide-copy-mobile">{guideCopy[guideSection].speech}</p>}
+        {guideCopy[guideSection].desktopSpeech && <p className="portfolio-guide-copy portfolio-guide-copy-desktop">{guideCopy[guideSection].desktopSpeech}</p>}
       </div>
       <svg className={`portfolio-guide-mascot ${guideSection === "关于我" ? "portfolio-guide-mascot-on-dark" : ""} ${characterAction ? (characterAction.part === "head" ? "guide-action-head" : characterAction.part === "left" || characterAction.part === "right" ? "guide-action-hand" : characterAction.part === "feet" ? "guide-action-feet" : "guide-action-body") : ""}`} viewBox="0 0 360 440" aria-hidden="true" onClick={() => playCharacterAction((["head", "left", "right", "body", "feet"] as const)[Math.floor(Math.random() * 5)])}>
         <g fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round">
