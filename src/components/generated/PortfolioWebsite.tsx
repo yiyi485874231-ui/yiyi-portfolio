@@ -426,7 +426,7 @@ export function PortfolioWebsite() {
   const videoTouchStart = useRef<{x:number;y:number} | null>(null);
   const videoWheelLocked = useRef(false);
   const videoWheelTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const finishVideoTouch = (event: React.TouchEvent<HTMLElement>) => { if (!videoTouchStart.current || !event.changedTouches.length) return; const touch = event.changedTouches[0]; const dx = touch.clientX - videoTouchStart.current.x; const dy = touch.clientY - videoTouchStart.current.y; if (Math.abs(dy) >= 42 && Math.abs(dy) > Math.abs(dx) * 1.15) moveVideoMobile(dy < 0 ? 1 : -1); videoTouchStart.current = null; };
+  const finishVideoTouch = (event: React.TouchEvent<HTMLElement>) => { if (!videoTouchStart.current || !event.changedTouches.length) return; const touch = event.changedTouches[0]; const dx = touch.clientX - videoTouchStart.current.x; const dy = touch.clientY - videoTouchStart.current.y; if (Math.abs(dy) >= 42 && Math.abs(dy) > Math.abs(dx) * 1.15) moveVideoMobile(dy < 0 ? -1 : 1); videoTouchStart.current = null; };
   const handleVideoWheel = (event: React.WheelEvent<HTMLElement>) => { event.preventDefault(); const delta = Math.abs(event.deltaY) >= Math.abs(event.deltaX) ? event.deltaY : event.deltaX; if (videoWheelLocked.current || Math.abs(delta) < 12) return; videoWheelLocked.current = true; moveVideo(delta > 0 ? 1 : -1); if (videoWheelTimer.current) clearTimeout(videoWheelTimer.current); videoWheelTimer.current = setTimeout(() => { videoWheelLocked.current = false; }, 280); };
   const go = (id: string) => {
     setActive(id);
