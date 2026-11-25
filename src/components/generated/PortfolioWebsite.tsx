@@ -937,7 +937,7 @@ export function PortfolioWebsite() {
     </div>, document.body)}
     {guideSection && guideCopy[guideSection] && <aside className="portfolio-guide" aria-live="polite">
       <div className="portfolio-guide-card">
-        <div className="portfolio-guide-kicker">随行小我 / PORTFOLIO COMPANION</div>
+        <div className="portfolio-guide-kicker">PORTFOLIO COMPANION / 随行小我</div>
         <div className="portfolio-guide-title">{guideCopy[guideSection].title}</div>
         {guideCopy[guideSection].speech && <p className="portfolio-guide-copy">{guideCopy[guideSection].speech}</p>}
       </div>
