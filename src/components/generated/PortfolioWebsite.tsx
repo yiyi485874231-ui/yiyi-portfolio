@@ -344,7 +344,7 @@ export function PortfolioWebsite() {
   const [guideSection, setGuideSection] = useState<string | null>(null);
   const guideCopy: Record<string, { title: string; speech: string; desktopSpeech: string }> = {
     "运营": { title: "内容运营与策划", speech: "上下滑动浏览作品卡片，点击卡片查看详情", desktopSpeech: "浏览作品卡片，点击卡片查看项目详情" },
-    "视频": { title: "视频与 AI 创作", speech: "拨动弧线切换作品，点击卡片查看作品", desktopSpeech: "滚动页面或点击两侧箭头切换作品，点击封面查看详情" },
+    "视频": { title: "视频与 AI 创作", speech: "拨动弧线切换作品，点击卡片查看作品", desktopSpeech: "滚动页面或点击左侧刻盘标题切换作品，点击封面查看详情" },
     "视觉": { title: "视觉设计作品", speech: "上下滑动浏览作品卡片，点击卡片查看详情", desktopSpeech: "滚动浏览作品卡片，点击卡片查看设计详情" },
     "其他": { title: "其他作品", speech: "左右滑动切换作品，点击中央作品查看详情", desktopSpeech: "点击两侧卡片或左右箭头切换，点击中央作品查看详情" },
     "关于我": { title: "感谢你的浏览", speech: "", desktopSpeech: "" }
